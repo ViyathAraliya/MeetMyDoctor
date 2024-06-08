@@ -3,11 +3,11 @@ const Doctor = require('../models/Doctor');
 
 const addDoctor = async (req, res) => {
     
-   const retrievedDoctor = req.body;
+   const requestedDoctor = req.body;
    
 
     try {
-        const doctor=new Doctor(retrievedDoctor);
+        const doctor=new Doctor(requestedDoctor);
        
 
         await doctor.save();

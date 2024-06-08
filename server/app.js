@@ -1,6 +1,7 @@
+
 const express = require('express');
 const mongoose = require('mongoose');
-const routes=require('./routes');
+const routes = require('./routes');
 
 const app = express();
 app.use(express.json());
@@ -16,7 +17,7 @@ mongoose.connect('mongodb://localhost:27017/meetMyDoctor',
     })
 
 
-    app.use(routes);
+app.use(routes);
 
 app.listen(8080, () => {
     console.log('server is running on port 8080')

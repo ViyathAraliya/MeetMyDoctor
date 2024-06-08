@@ -14,14 +14,13 @@ This is a web application for a medical appointment center to manage appointment
 + generalSlotDuration : general time taken by the doctor to examine one person.
 
 
-### 2. General clinic hours details 
+### 2. Clinic session details 
 This collection stores the clinic details of doctors.
 
 + **id** : ObjectId
 + doctorId : doctor's id from the **doctors** collection.
-+ roomNumber
-+ clinicHours
-+ maxPatients: maximum number patients per clinic session
++ clinicSlotDuration : General time per patient by this doctor.
++ maxPatients: maximum number patients per clinic session.
 
 ### 3. Clinic Sessions
 + **id** : ObjectId
