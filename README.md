@@ -1,7 +1,16 @@
 # MeetYourDoctor
-This is a web application for a medical appointment center to manage appointments. This is a Readme-Driven **MERN Stack** project.
 
-## Collections 
+## Overview
+
+This is a web application enables the patients to book doctor's appointments at the medical appointment center who is registered with this application(Note : This application is exclusive to the medical appointment center, not shared among medical appointment centers). Patients can make doctor's appointments online and the medical appointment center can manage relavant data collections by this application. This application uses **MongoDB** as the database, **Express.js** for backend API development, **React.js** for client-side and **Node.js** for server-side proccessiong. This Application does not perform highly regulated actions like finacial transacations. Therefore there is no need to have highly structured data schema,  hence I opted for MERN Stack methodolgy for fast development and flexibility. 
+
+
+# Technical Info
+
+
+
+## Data Collections 
+*MongoDB* will be used to store data. The application will use following data collections.
 
 ### 1. Doctors 
 + **id** : ObjectId
@@ -37,4 +46,36 @@ This collection stores the clinic details of doctors.
 + queueNumber
 + description 
 + clinicSession : clinicSessionId from **clinicSessions** collection.
+
+## Back-end API developmemt
+
+### Structure
+
+- Server
+    - controllers
+        - DoctorController.js
+        - ClinicSessionDetailController.js
+        - ClinicSesstionController.js 
+        - AppointmentsController.js
+    - models
+        - Doctor.js
+        - ClinicSessionDetail.js
+        - ClinicSession.js
+        - Appointment.js
+    - app.js (Application Entry Point)
+    - routes.js
+
+### Technologies 
+- *Express.js*
+
+### Runtime environment 
+- *Node.js*
+
+### External Libraries
+
+- *Mongoose* for database connectivity
+
+
+
+
 
