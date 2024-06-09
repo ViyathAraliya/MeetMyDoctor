@@ -22,8 +22,12 @@ This web application enables the patients/people to book doctor's appointments a
 + educationAbbrivation : ex-: (MBBS / MD)
 + generalSlotDuration : general time taken by the doctor to examine one person.
 
+### 2. Rooms
 
-### 2. Clinic session details 
++ **id** : ObjectId
++ roomNumber
+
+### 3. Clinic session details 
 This collection stores the clinic details of doctors.
 
 + **id** : ObjectId
@@ -31,7 +35,7 @@ This collection stores the clinic details of doctors.
 + clinicSlotDuration : General time per patient by this doctor.
 + patientsPerHour
 
-### 3. Clinic Sessions
+### 4. Clinic Sessions
 + **id** : ObjectId
 + doctorId : id (from **doctors** collection) of the doctor to whom this session belongs.
 + roomNumber 
@@ -39,7 +43,7 @@ This collection stores the clinic details of doctors.
 + currentQueueSize: number of patients registered at the moment
 + maxQueueSize : (patientsPerHour from ClinicSessionDetail)*clinicHours
 
-### 4. Appointments
+### 5. Appointments
 + **id** : ObjectId
 + patientName
 + contactNo
