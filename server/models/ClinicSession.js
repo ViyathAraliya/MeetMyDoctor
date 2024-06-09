@@ -5,7 +5,10 @@ const ClinicSessionSchema=new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Doctor'
     },
-    roomNumber: Number,
+    roomId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Room'
+    },
     clinicHours: Number,
     currentQueueSize: Number,
     maxQueueSize: Number
