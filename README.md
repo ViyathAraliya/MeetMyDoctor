@@ -25,20 +25,20 @@ This web application enables the patients/people to book doctor's appointments a
 ### 2. Rooms
 
 + **id** : ObjectId
-+ roomNumber
++ roomNumber  
 
 ### 3. Clinic session details 
 This collection stores the clinic details of doctors.
 
 + **id** : ObjectId
 + doctorId : doctor's id from the **doctors** collection.
-+ clinicSlotDuration : General time per patient by this doctor.
++ clinicSlotDuration : general time per patient by this doctor.
 + patientsPerHour
 
 ### 4. Clinic Sessions
 + **id** : ObjectId
 + doctorId : id (from **doctors** collection) of the doctor to whom this session belongs.
-+ roomNumber 
++ roomId
 + clinicHours : clinic hours of this clinic session.
 + currentQueueSize: number of patients registered at the moment
 + maxQueueSize : (patientsPerHour from ClinicSessionDetail)*clinicHours
