@@ -6,6 +6,7 @@ const router=express.Router();
 router.post('/doctors', addDoctor);
 router.post('/clinicSessionDetails', addClinicSessionDetail);
 
+router.post('/rooms');
 
 
 module.exports=router;
