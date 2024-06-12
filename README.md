@@ -63,13 +63,22 @@ This collection stores the clinic details of doctors.
         - ClinicSessionDetailController.js
         - ClinicSesstionController.js 
         - AppointmentsController.js
+        - RoomController.js
     - models
         - Doctor.js
         - ClinicSessionDetail.js
         - ClinicSession.js
         - Appointment.js
+        - Room.js
     - app.js (Application Entry Point)
     - routes.js
+- dtos
+    - DoctorDto.js
+    - ClinicSessionDetailDto.js
+    - ClinicSessionDto.js
+    - AppointmentDto.js
+    - RoomDto.js
+
 
 ### Technologies 
 - *Express.js*
