@@ -27,23 +27,18 @@ This web application enables the patients/people to book doctor's appointments a
 + **id** : ObjectId
 + roomNumber  
 
-### 3. Clinic session details 
-This collection stores the clinic details of doctors.
 
-+ **id** : ObjectId
-+ doctorId : doctor's id from the **doctors** collection.
-+ clinicSlotDuration : general time per patient by this doctor.
-+ patientsPerHour
 
-### 4. Clinic Sessions
+### 3. Clinic Sessions
 + **id** : ObjectId
 + doctorId : id (from **doctors** collection) of the doctor to whom this session belongs.
 + roomId
-+ clinicHours : clinic hours of this clinic session.
++ startsAt
++ endsAt
 + currentQueueSize: number of patients registered at the moment
 + maxQueueSize : (patientsPerHour from ClinicSessionDetail)*clinicHours
 
-### 5. Appointments
+### 3. Appointments
 + **id** : ObjectId
 + patientName
 + contactNo
@@ -60,24 +55,21 @@ This collection stores the clinic details of doctors.
 - Server
     - controllers
         - DoctorController.js
-        - ClinicSessionDetailController.js
         - ClinicSesstionController.js 
         - AppointmentsController.js
         - RoomController.js
     - models
         - Doctor.js
-        - ClinicSessionDetail.js
         - ClinicSession.js
         - Appointment.js
         - Room.js
     - app.js (Application Entry Point)
     - routes.js
 - dtos
-    - DoctorDto.js
-    - ClinicSessionDetailDto.js
+    - DoctorDto.js (same fields as in 'Doctor' model)
     - ClinicSessionDto.js
     - AppointmentDto.js
-    - RoomDto.js
+    - RoomDto.js (same fields as in 'Room' model)
 
 
 ### Technologies 
