@@ -2,6 +2,7 @@ const Room = require("../models/Room");
 
 const addRoom = async (req, res) => {
     const reqRoomNumber = req.params.roomNumber;
+    console.log(22);
 
     try {
         const room = new Room();
@@ -14,3 +15,4 @@ const addRoom = async (req, res) => {
 
 }
 
+module.exports={addRoom};
