@@ -9,7 +9,7 @@ This web application enables the patients/people to book doctor's appointments a
 
 
 
-## Data Collections 
+## Collection Structure
 *MongoDB* will be used to store data. The application will use following data collections.
 
 ### Model: Doctor
@@ -18,14 +18,15 @@ This web application enables the patients/people to book doctor's appointments a
     + **id** : 
         - Description: Unique identifier to for the Doctor document.     
         - Type: ObjectId (MongoDB ObjectId)
+    + contactNumber
+        - Description: Doctor is uniquly identified by Contact number.
+        - Type: String
+        - Required: Yes
+        - Unique: yes
     + name
         - Description: Name of the doctor.
         - Type: String
         - Required: Yes
-    + contactNumber
-        - Description: Contact number of the doctor.
-        - Type: String
-        - Requieed: Yes
     + whatsapp(optional)
         - Descripion: Whatsapp number of the doctor. 
         - Type: String
@@ -38,7 +39,7 @@ This web application enables the patients/people to book doctor's appointments a
     + educationAbbrivation : 
         - Description: Abbrivation for the highest educational degree obtained by the doctor       (MBBS / MD)
         - Type: String
-    + generalSlotDuration : g
+    + generalSlotDuration : 
         - Description:  General / average time taken by the doctor to examine one patient
         - Type: Number 
 
