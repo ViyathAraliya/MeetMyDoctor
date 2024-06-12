@@ -1,8 +1,14 @@
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 
-const DoctorSchema=new mongoose.Schema({
+const DoctorSchema = new mongoose.Schema({
     name: String,
-    contactNumber: String,
+    contactNumber: { // uniquly identified by contactNumber
+        type: String,
+        required: true,
+        unique: true,
+        index: true
+
+    },
     whatsapp: String, //whastappNumber
     email: String,
     specialization: String,
@@ -11,4 +17,4 @@ const DoctorSchema=new mongoose.Schema({
 
 })
 
-module.exports=mongoose.model('Doctor', DoctorSchema);
+module.exports = mongoose.model('Doctor', DoctorSchema);
