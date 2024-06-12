@@ -69,18 +69,15 @@ This web application enables the patients/people to book doctor's appointments a
         - Description: id of the Doctor document related to the Clinic Session.
         - Type: ObjectId(MongoDB ObjectId)
         - Required: Yes
-    +    roomId
-        - Description: id of the Room document related to this Clinic Session.
-        - Type: ObjectId (MongoDB ObjectId)
-        -  Required: Yes
     + startsAt
-        - Type: Date Time
-        - Required: Yes
+        - Type: Date 
+        - Required: Yes 
     + endsAt
-        - Type: Date Time
+        - Type: Date 
         -  Required: Yes
     + currentQueueSize: number of patients registered at the moment
     + maxQueueSize : (patientsPerHour from ClinicSessionDetail)*clinicHours
+
 
 ### Model: Appointment
 - Description: Appointment details
