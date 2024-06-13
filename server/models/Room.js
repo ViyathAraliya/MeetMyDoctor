@@ -1,6 +1,7 @@
 const mongoose=require('mongoose');
 const ClinicSession = require('./ClinicSession');
 
+
 const RoomSchema=new mongoose.Schema({
     roomNumber:{
         type: Number,
@@ -9,10 +10,11 @@ const RoomSchema=new mongoose.Schema({
        index:true
         
     },
-    clinicSessions:{
-        type: [ClinicSession.schema],
+    clinicSessions:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'CliniSession'
        
-    }
+    }]
 })
 
 module.exports=mongoose.model('Room',RoomSchema);
