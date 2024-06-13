@@ -3,3 +3,5 @@ class RoomDto{
             this.roomNumber=roomNumber;
     }
 }
+
+module.exports=RoomDto;
