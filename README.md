@@ -56,17 +56,17 @@ This web application enables the patients/people to book doctor's appointments a
         - Unique: Yes
         - Require: Yes
     + clinicSessions
-        - Description: The list of upcoming Clinic Sessions upto one month that wil be held in this Room.
+        - Description: The list of upcoming id references of  Clinic Sessions upto twp month. 
         - Type:  ObjectId (MongoDB ObjectId)
 
 ### Model: Clinic Session
-- Description: Clinic Session for a specif Room. 
+- Description: Clinic Session for a specif Room. An Clini Session Document and there references in Other docuements will be automatically be deleted once the relevant Clici Session ends. 
 - Fields: 
     + **id** 
         - Description: Unique identifier for the Doctors document.
         - Type:  ObjectId (MongoDB ObjectId)
     + doctorId 
-        - Description: id of the Doctor document related to the Clinic Session.
+        - Description: iObjecId of the Doctor document related to the Clinic Session.
         - Type: ObjectId(MongoDB ObjectId)
         - Required: Yes
     + startsAt
@@ -75,6 +75,7 @@ This web application enables the patients/people to book doctor's appointments a
     + endsAt
         - Type: Date 
         -  Required: Yes
+    + appointmonets: list of ObjectId references of Appointment documents related to this Clinic Session. 
     + currentQueueSize: number of patients registered at the moment
     + maxQueueSize : (patientsPerHour from ClinicSessionDetail)*clinicHours
 
