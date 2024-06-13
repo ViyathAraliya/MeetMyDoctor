@@ -4,15 +4,15 @@ const Room = require("../models/Room");
 
 const addClinicSession = async (req, res) => {
   
-    const { doctorId, startsAt, endsAt } = req.body;
+    const { id, doctorId, startsAt, endsAt } = req.body;
     
-    const clinicSessionDto = new ClinicSessionDto(doctorId, startsAt, endsAt); 
+    const clinicSessionDto = new ClinicSessionDto(id, doctorId, startsAt, endsAt); 
 
     const clinicSession = new ClinicSession();
     clinicSession.doctorId = clinicSessionDto.doctorId;
     clinicSession.startsAt=clinicSessionDto.startsAt;
     clinicSession.endsAt=clinicSessionDto.endsAt;
-   
+  
     try{
         await clinicSession.save();
         res.status(201).send(clinicSession);

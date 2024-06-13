@@ -1,19 +1,25 @@
+
 const mongoose = require('mongoose')
 
 const DoctorSchema = new mongoose.Schema({
     name: String,
-    contactNumber: { // uniquly identified by contactNumber
+    // uniquly identified by contactNumber
+    contactNumber: { 
         type: String,
         required: true,
         unique: true,
         index: true
 
     },
-    whatsapp: String, //whastappNumber
+
+    //whastappNumber
+    whatsapp: String, 
     email: String,
     specialization: String,
     educationAbbrivation: String,
-    generalSlotDuration: Number  //general time per patient
+
+    //general time per patient
+    generalSlotDuration: Number  
 
 })
 
