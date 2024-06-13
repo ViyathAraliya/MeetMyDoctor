@@ -1,7 +1,15 @@
+
+const ClinicSessionDto = require("../dtos/ClinicSessionDto");
 const RoomDto = require("../dtos/RoomDto");
+const ClinicSession = require("../models/ClinicSession");
 const Room = require("../models/Room");
-
-
+/**
+ * 
+ * @param {Request} req 
+ * @param {Response} res 
+ * @returns {Response} 
+ */
+//create Room
 const addRoom = async (req, res) => {
     const { roomNumber } = req.body;
     const roomDto = new RoomDto(roomNumber);
@@ -16,7 +24,13 @@ const addRoom = async (req, res) => {
 
 }
 
+//add clinic session to Room
 const addClinicSessionToRoom=async(req, res)=>{
+    const {id}=req.body;
+    const clinicSessionDto=new ClinicSessionDto(id, doctorId,startsAt,endsAt);
+    const clinicSession=clinicSessionDto.id;
+
+
    
 }
 

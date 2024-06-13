@@ -2,6 +2,11 @@ const ClinicSessionDto = require("../dtos/ClinicSessionDto");
 const ClinicSession = require("../models/ClinicSession");
 const Room = require("../models/Room");
 
+/**
+ * 
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const addClinicSession = async (req, res) => {
   
     const { id, doctorId, startsAt, endsAt } = req.body;

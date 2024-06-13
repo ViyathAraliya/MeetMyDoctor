@@ -1,6 +1,10 @@
 const DoctorDto = require('../dtos/DoctorDto');
 const Doctor = require('../models/Doctor');
-
+/**
+ * 
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 
 
 const addDoctor = async (req, res) => {
