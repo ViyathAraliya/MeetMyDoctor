@@ -13,4 +13,4 @@ const ClinicSessionSchema=new mongoose.Schema({
 
 })
 
-module.exports=mongoose.model('CliniSession',ClinicSessionSchema);
+module.exports=mongoose.model('ClinicSession',ClinicSessionSchema);
