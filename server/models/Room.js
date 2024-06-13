@@ -11,7 +11,7 @@ const RoomSchema=new mongoose.Schema({
     },
     clinicSessions:{
         type: [ClinicSession.schema],
-        unique: true
+       
     }
 })
 
