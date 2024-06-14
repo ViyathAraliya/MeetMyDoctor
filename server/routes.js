@@ -10,6 +10,7 @@ router.post('/doctors', addDoctor);
 
 router.post('/rooms',addRoom);
 router.post('/clinicSessions', addClinicSession);
+router.get('clinicSessions/ : roomDd', addClinicSession);
 
 
 
