@@ -13,11 +13,8 @@ const addClinicSession = async (req, res) => {
     
     const clinicSessionDto = new ClinicSessionDto(id, doctorId, startsAt, endsAt); 
 
-    const clinicSession = new ClinicSession();
-    clinicSession.doctorId = clinicSessionDto.doctorId;
-    clinicSession.startsAt=clinicSessionDto.startsAt;
-    clinicSession.endsAt=clinicSessionDto.endsAt;
-  
+    const clinicSession = new ClinicSession(clinicSessionDto);
+
     try{
         await clinicSession.save();
         res.status(201).send(clinicSession);
