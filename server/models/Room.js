@@ -12,7 +12,9 @@ const RoomSchema=new mongoose.Schema({
     },
     clinicSessions:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'CliniSession'
+        ref: 'CliniSession',
+        unique:true,
+        index:true
        
     }]
 })
