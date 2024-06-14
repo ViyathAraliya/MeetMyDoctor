@@ -83,7 +83,8 @@ This web application enables the patients/people to book doctor's appointments a
         - Description: list of ObjectId references of Appointment documents related to this Clinic Session. 
         - Type: Array
         - Items:
-            - Description: References to the 'Appointment' documents releted to this 'Clinic Session'
+            - Description: References to the 'Appointment' documents releted to this 'Clinic Session'.
+            - Type: Apppintment object
    
     + maxQueueSize 
         -maximum number of Appoinments the doctor can hanlde
@@ -108,18 +109,16 @@ This web application enables the patients/people to book doctor's appointments a
         - Description: Contact number
         - Type: String
         - Required: Yes
-    + doctorId 
-        - Description: doctor's id from the **doctors** collection.
-        - Type:  ObjectId (MongoDB ObjectId)
-        - Required: Yes
+   
     + queueNumber
         - Description: queue number
         - Type: Number
+        - Requied: Yes
         
     + description 
         - Description: any additional information about patient, example:- Symptoms, Disease
         - Type: String
-        - Required: No
+        - Required: Yes
     + clinicSession 
         - Descritpion: id from related Clinic Sessio document.
         - Type: ObjectId (MongoDB ObjectId)

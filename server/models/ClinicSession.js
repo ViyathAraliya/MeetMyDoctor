@@ -8,8 +8,12 @@ const ClinicSessionSchema=new mongoose.Schema({
     
     startsAt: Date,
     endsAt: Date,
-    currentQueueSize: Number,
-    maxQueueSize: Number
+   
+    appointments:[{
+        type: mongoose.Schema.ObjectId,
+        ref: 'Appointment'
+    }]
+  
 
 });
 
