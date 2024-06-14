@@ -12,14 +12,13 @@ const ClinicSessionSchema=new mongoose.Schema({
     appointments:[{
         type: mongoose.Schema.ObjectId,
         ref: 'Appointment'
+       
     }]
   
 
 });
 
 //compuound index 
-ClinicSessionSchema.index({startsAt: 1, endsAt: 1},
-    {unique: true}
-);
+
 
 module.exports=mongoose.model('ClinicSession',ClinicSessionSchema);
