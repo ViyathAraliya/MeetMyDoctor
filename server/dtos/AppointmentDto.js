@@ -1,21 +1,25 @@
+const {ObjectId}=require('mongoose')
+
 class AppointmentDto{/**
  * @param {ObjectId} id, 
  * @param {String} patientName 
  * @param {*Stringg} contactNo 
- * @param {*} address 
- * @param {*} doctorId 
- * @param {*} queueNumber 
- * @param {*} description 
- * @param {*} clinicSession 
+ * @param {String} address 
+
+ * @param {Number} queueNumber 
+ * @param {String} description 
+ * @param {ObjectId} clinicSession 
  */
-    constructor(id=null, patientName=null , contactNo=null , address=null, doctorId=null , 
-        queueNumber=null, description=null, clinicSession=null){
-            this.patientName=String,
-            this.contactNo=String,
-            this.address=String,
-            this.doctorId=String,
-            this.queueNumber=String,
-            this.description=String,
-            this.clinicSession=String
+    constructor(id=null, patientName=null , contactNo=null , address=null, 
+        queueNumber=null, description=null, clinicSessionId=null){
+            this.patientName=patientName,
+            this.contactNo=contactNo,
+            this.address=address,
+       
+            this.queueNumber=null,
+            this.description=description,
+            this.clinicSession=clinicSessionId
     }
 }
+
+module.exports=AppointmentDto;
