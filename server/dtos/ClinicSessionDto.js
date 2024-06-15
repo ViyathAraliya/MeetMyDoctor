@@ -7,13 +7,15 @@ class ClinicSessionDto {
     * @param {ObjectId} id 
     * @param {ObjectId} doctorId 
     * @param {Date} startsAt 
+    * @param {ObjectId} roomId
     * @param {Date} endsAt 
     */
-    constructor(id = null, doctorId = null, startsAt = null, endsAt = null ) {
+    constructor(id = null, doctorId = null, startsAt = null, endsAt = null, roomID=null ) {
         this.id = id,
             this.doctorId = doctorId,
             this.startsAt = startsAt,
-            this.endsAt = endsAt
+            this.endsAt = endsAt,
+            THIS.roomId=roomID
     };
 }
 

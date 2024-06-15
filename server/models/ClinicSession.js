@@ -8,6 +8,10 @@ const ClinicSessionSchema=new mongoose.Schema({
     
     startsAt: Date,
     endsAt: Date,
+    roomId:{
+        type: mongoose.Schema.ObjectId,
+        ref: 'Room'
+    },
    
     appointments:[{
         type: mongoose.Schema.ObjectId,

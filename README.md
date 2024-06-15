@@ -71,8 +71,12 @@ This web application enables the patients/people to book doctor's appointments a
         - Description: Unique identifier for the Doctors document.
         - Type:  ObjectId (MongoDB ObjectId)
     + doctorId 
-        - Description: iObjecId of the Doctor document related to the Clinic Session.
+        - Description: ObjecId of the Doctor document related to the Clinic Session.
         - Type: ObjectId(MongoDB ObjectId)
+        - Required: Yes
+    + roomId
+        - Desctiption: ObjectId of the Room , where this clinic session will be conducted.
+        - Type: ObjectID(MongoDB ObjectId)
         - Required: Yes
     + startsAt
         - Type: Date 
