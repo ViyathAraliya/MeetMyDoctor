@@ -65,6 +65,7 @@ This web application enables the patients/people to book doctor's appointments a
 
 ### Model: Clinic Session
 - Description: Clinic Session for a specif Room. An Clini Session Document and there references in Other docuements will be automatically be deleted once the relevant Clici Session ends. 
+- Note : composite unique index 
 - Fields: 
     + **id** 
         - Description: Unique identifier for the Doctors document.
@@ -85,6 +86,7 @@ This web application enables the patients/people to book doctor's appointments a
         - Items:
             - Description: References to the 'Appointment' documents releted to this 'Clinic Session'.
             - Type: Apppintment object
+            - Default : []
    
     + maxQueueSize 
         -maximum number of Appoinments the doctor can hanlde
