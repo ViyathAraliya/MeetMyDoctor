@@ -27,7 +27,7 @@ const addClinicSession = async (req, res) => {
        const room= await Room.findById(clinicSessionDto.roomId);
      console.log(room);
         //pushing clinicSession reference to 'clinicSessions' array and saving
-        room.clinicSessions.push(room._id);
+        room.clinicSessions.push(clinicSession._id);
         await room.save();
 
 
