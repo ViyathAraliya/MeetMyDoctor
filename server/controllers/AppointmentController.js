@@ -29,7 +29,7 @@ const addAppointment = async (req, res) => {
     const clinicSession= await ClinicSession.findById(appointment.clinicSession);
   
 
-       //adding 'appointment' reference to cliniSession
+       //adding 'appointment' reference  to 'appointments' array
        clinicSession.appointments.push(savedAppointmentId);
        await clinicSession.save();
   

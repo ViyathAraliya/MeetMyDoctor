@@ -17,6 +17,7 @@ const addClinicSession = async (req, res) => {
 
     const clinicSession = new ClinicSession(clinicSessionDto);
 
+
     try{
         //creating clinic session
         await clinicSession.save();

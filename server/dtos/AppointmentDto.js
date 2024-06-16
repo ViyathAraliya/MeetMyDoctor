@@ -8,7 +8,7 @@ class AppointmentDto{/**
 
  * @param {Number} queueNumber 
  * @param {String} description 
- * @param {ObjectId} clinicSession 
+ * @param {ObjectId} clinicSessionId
  */
     constructor(id=null, patientName=null , contactNo=null , address=null, 
         queueNumber=null, description=null, clinicSessionId=null){
@@ -18,7 +18,7 @@ class AppointmentDto{/**
        
             this.queueNumber=null,
             this.description=description,
-            this.clinicSession=clinicSessionId
+            this.clinicSessionId=clinicSessionId
     }
 }
 
