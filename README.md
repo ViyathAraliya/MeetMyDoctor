@@ -153,17 +153,9 @@ This web application enables the patients/people to book doctor's appointments a
     - AppointmentDto.js
     - RoomDto.js (same fields as in 'Room' model)
 
-
-### Technologies 
-- *Express.js*
-
-### Runtime environment 
-- *Node.js*
-
-### External Libraries
-
-- *Mongoose* 
-
+### Functionalities
+- Creation of all four models.
+- Retirieving of all docuements of each model.
 
 
 
