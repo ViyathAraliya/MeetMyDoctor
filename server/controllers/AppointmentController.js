@@ -2,6 +2,7 @@ const { default: mongoose } = require("mongoose");
 const AppointmentDto = require("../dtos/AppointmentDto");
 const Appointment = require("../models/Appointment");
 const ClinicSession = require("../models/ClinicSession");
+const Doctor = require("../models/Doctor");
 
 const addAppointment = async (req, res) => {
 
@@ -20,12 +21,36 @@ const addAppointment = async (req, res) => {
   });
 
   try {
+    
+    //retrieving related 'ClinicSession' (to add 'appointment reference')
+    const clinicSession = await ClinicSession.findById(appointment.clinicSession);
+
+    //calculating queue number
+    const queueNumber=clinicSession.appointments.length+1;
+
+    appointment.queueNumber=queueNumber;
+
+    //calculating maximum patients per clinic session by doctor
+    const doctorId=clinicSession.doctorId;
+    const doctor=await Doctor.findById(doctorId);
+    const generalSlotDuration=doctor.generalSlotDuration;
+    const diffMilSecs=clinicSession.endsAt-clinicSession.startsAt; //time duration of clinic Session in mili seconds
+    const diffInMinutes=diffMilSecs/(1000*60);
+    const maxPatients=diffInMinutes/generalSlotDuration;
+
+    console.log("diff in mins : ",diffInMinutes);
+    console.log("queueNumber : ",queueNumber);
+    console.log("max patients limit : ", maxPatients);
+    if(queueNumber>maxPatients){ 
+      
+      return res.status(409).send("This clinic session has reached it's maximum number of patients ");
+    }
+
+
     await appointment.save();
     const savedAppointmentId = appointment._id;
 
 
-    //retrieving related 'ClinicSession' (to add 'appointment reference')
-    const clinicSession = await ClinicSession.findById(appointment.clinicSession);
 
 
     //adding 'appointment' reference  to 'appointments' array
