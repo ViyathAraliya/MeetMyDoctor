@@ -18,7 +18,7 @@ const DoctorSchema = new mongoose.Schema({
     specialization: String,
     educationAbbrivation: String,
 
-    //general time per patient
+    //general time per patient in mins
     generalSlotDuration: Number  
 
 })
