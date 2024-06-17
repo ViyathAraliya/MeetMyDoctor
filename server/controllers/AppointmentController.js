@@ -38,9 +38,7 @@ const addAppointment = async (req, res) => {
     const diffInMinutes=diffMilSecs/(1000*60);
     const maxPatients=diffInMinutes/generalSlotDuration;
 
-    console.log("diff in mins : ",diffInMinutes);
-    console.log("queueNumber : ",queueNumber);
-    console.log("max patients limit : ", maxPatients);
+    
     if(queueNumber>maxPatients){ 
       
       return res.status(409).send("This clinic session has reached it's maximum number of patients ");
