@@ -7,12 +7,11 @@ const addAppointment = async (req, res) => {
 
   const { patientName, contactNo, address, queueNumber, description, clinicSessionId } = req.body;
 
-  const appointmentDto = new AppointmentDto(null,patientName, contactNo, address,
+  const appointmentDto = new AppointmentDto(null, patientName, contactNo, address,
     queueNumber, description, clinicSessionId);
 
   // converting 'clinicSessionId' to ObjectId
-
-  const _clinicSessionId = new  mongoose.Types.ObjectId(clinicSessionId);
+  const _clinicSessionId = new mongoose.Types.ObjectId(clinicSessionId);
 
   //validating properties and creating 'Appointment'
   const appointment = new Appointment({
@@ -23,16 +22,16 @@ const addAppointment = async (req, res) => {
   try {
     await appointment.save();
     const savedAppointmentId = appointment._id;
-   
-    
-    //retrieving related 'ClinicSession' (to add 'appointment reference')
-    const clinicSession= await ClinicSession.findById(appointment.clinicSession);
-  
 
-       //adding 'appointment' reference  to 'appointments' array
-       clinicSession.appointments.push(savedAppointmentId);
-       await clinicSession.save();
-  
+
+    //retrieving related 'ClinicSession' (to add 'appointment reference')
+    const clinicSession = await ClinicSession.findById(appointment.clinicSession);
+
+
+    //adding 'appointment' reference  to 'appointments' array
+    clinicSession.appointments.push(savedAppointmentId);
+    await clinicSession.save();
+
 
     res.status(201).send(appointment);
   } catch (error) {
