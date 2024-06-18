@@ -12,6 +12,11 @@ const AppointmentScehema = new mongoose.Schema({
     address: String,
     
     queueNumber: Number,
+    status: {
+        type: String,
+        default: 'notConfirmed'
+
+    },
     description: String,
     clinicSession: {
         type: mongoose.Schema.ObjectId,

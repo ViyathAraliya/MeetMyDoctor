@@ -120,6 +120,8 @@ This web application enables the patients/people to book doctor's appointments a
         - Description: queue number
         - Type: Number
         - Requied: Yes
+    + status
+        - Descriptions: Whether the appointment is confirmed/not confirmed/discarded. If discared, this 'Appointment' document will be deleted and 'queueNumbers' of all 'Appointment' documents will be recalculated.
         
     + description 
         - Description: any additional information about patient, example:- Symptoms, Disease
@@ -135,28 +137,48 @@ This web application enables the patients/people to book doctor's appointments a
 ### Structure
 
 - Server
-    - controllers
+    + controllers
         - DoctorController.js
         - ClinicSesstionController.js 
         - AppointmentsController.js
         - RoomController.js
-    - models
+    + models
         - Doctor.js
         - ClinicSession.js
         - Appointment.js
         - Room.js
-    - app.js (Application Entry Point)
-    - routes.js
+    + app.js (Application Entry Point)
+    + routes.js
 - dtos
-    - DoctorDto.js (same fields as in 'Doctor' model)
-    - ClinicSessionDto.js
-    - AppointmentDto.js
-    - RoomDto.js (same fields as in 'Room' model)
+    + DoctorDto.js (same fields as in 'Doctor' model)
+    + ClinicSessionDto.js
+    + AppointmentDto.js
+    + RoomDto.js (same fields as in 'Room' model)
 
 ### Functionalities
 - Creation of all four models.
 - Retirieving of all docuements of each model.
 
+## Client-Side
+
+### Structure
+
+- Components
+    + userComponents
+        - Appointments.js
+    + customerComponents
+- Home.js
+- App.js
+
+### Features
+#### Appointments
+- Pick "specialization" from select.
+- Loading 'clinicsessions' table according to 'sepecialization'.
+- Pick a 'ClinicSession' from the table. 
+- Customer then submit the request for aoointment and the user confirms or discard it. (Using redux for  globle state cmanagement) 
 
 
 
+
+
+###

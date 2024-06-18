@@ -26,7 +26,10 @@ const addAppointment = async (req, res) => {
     const clinicSession = await ClinicSession.findById(appointment.clinicSession);
 
     //calculating queue number
-    const queueNumber=clinicSession.appointments.length+1;
+    let queueNumber;
+    if(clinicSession!=null){
+   queueNumber=clinicSession.appointments.length+1;}
+    else{queueNumber=1;}
 
     appointment.queueNumber=queueNumber;
 
