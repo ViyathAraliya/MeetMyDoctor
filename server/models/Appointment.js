@@ -1,10 +1,11 @@
 const { default: mongoose } = require("mongoose");
 
+const allowedStatuses=['CONFIRMED','NOT_CONFIRMED_YET','DISCARD']
 
-const AppointmentScehema = new mongoose.Schema({
+const AppointmentSchema = new mongoose.Schema({
     patientName: String,
     contactNo:{ type: String,
-        type: String,
+      
         required: true,
         unique: true,
         index: true
@@ -14,9 +15,12 @@ const AppointmentScehema = new mongoose.Schema({
     queueNumber: Number,
     status: {
         type: String,
-        default: 'notConfirmed'
-
-    },
+        default: 'NOT_CONFIRMED_YET',
+        validate:{
+        validator: function(value){
+            return allowedStatuses.includes(value);},
+            message: props=>`${props.value} is not a valid status`}}
+       ,
     description: String,
     clinicSession: {
         type: mongoose.Schema.ObjectId,
@@ -25,5 +29,5 @@ const AppointmentScehema = new mongoose.Schema({
     }
 });
 
-module.exports=mongoose.model('Appointment', AppointmentScehema);
+module.exports=mongoose.model('Appointment', AppointmentSchema);
 

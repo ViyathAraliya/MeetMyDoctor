@@ -3,6 +3,7 @@ const AppointmentDto = require("../dtos/AppointmentDto");
 const Appointment = require("../models/Appointment");
 const ClinicSession = require("../models/ClinicSession");
 const Doctor = require("../models/Doctor");
+const AppointmentUpdateDto = require("../dtos/AppointmentUpdateDto");
 
 const addAppointment = async (req, res) => {
 
@@ -46,9 +47,10 @@ const addAppointment = async (req, res) => {
       
       return res.status(409).send("This clinic session has reached it's maximum number of patients ");
     }
-
-
+   
     await appointment.save();
+
+    
     const savedAppointmentId = appointment._id;
 
 
@@ -66,6 +68,16 @@ const addAppointment = async (req, res) => {
     res.status(400).send(error);
   }
 
+}
+
+const updateAppointmentStatus=async(req,res)=>{
+  const {appointmentId,status}=req.body;
+  const appointmentUpdateDto=new AppointmentUpdateDto(appointmentId,status);
+  try{
+    const appointment=await Appointment.findById(appointmentId);
+    appointment.status=appointmentUpdateDto.status;
+
+  }catch(error){}
 }
 
 
