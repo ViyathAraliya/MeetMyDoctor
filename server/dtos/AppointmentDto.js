@@ -15,7 +15,7 @@ class AppointmentDto{/**
             this.patientName=patientName,
             this.contactNo=contactNo,
             this.address=address,
-       
+            
             this.queueNumber=null,
             this.description=description,
             this.clinicSessionId=clinicSessionId
