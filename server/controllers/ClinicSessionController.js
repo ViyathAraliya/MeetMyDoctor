@@ -66,7 +66,7 @@ const addClinicSession = async (req, res) => {
     // case 2 step 2: saving the 'CliniSession'
     await clinicSession.save();
 
-    //case 2 step 2: retrivingthe 'Room' document affiliated with this 'ClinicSession'
+    //case 2 step 3: retrivingthe 'Room' document affiliated with this 'ClinicSession'
     const room = await Room.findById(clinicSession.roomId);
 
     //case 2 step 4: pushing reference of this 'ClinicSession'  to 'clinicSessions' array in 'Room' document and saving
@@ -83,7 +83,17 @@ const addClinicSession = async (req, res) => {
 
 }
 
+const getClinicSessions=async(req,res)=>{
+  const clinicSessions=await ClinicSession.find();
+  try{
+    return res.status(200).send(clinicSessions);
+  }catch(error){
+    return res.status(500).send(error);
+  }
+  
+}
+
 
 module.exports = {
-  addClinicSession
+  addClinicSession,getClinicSessions
 }
