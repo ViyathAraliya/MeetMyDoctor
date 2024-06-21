@@ -30,7 +30,19 @@ const addDoctor = async (req, res) => {
     }
 
 }
+const getDoctors = async (req, res) => {
+    try {
+        const doctors = await Doctor.find();
+        return res.status(200).send(doctors);
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).send(error);
+    }
+}
+
+
 
 module.exports = {
-    addDoctor
+    addDoctor,getDoctors
 }
