@@ -71,12 +71,18 @@ function Appointments_customer() {
                             break l3;
                         }
                    }
+                   //step 5: ensure only unfinished clinic sessions are shown
+                   const endsAt=clinicSessions[i].endsAt;
+                   if(new Date(endsAt)<=new Date()){
+                   break l2;
+                   }
 
-                   // step 5 : create clinic session detail
+
+                   // step 6 : create clinic session detail
                     const newDetail={"clinicSessionId":clinicSessions[i]._id,
                         "name":doctors[j].name,"specialization": doctors[j].specialization,
                         "education":doctors[j].educationAbbrivation,"startsAt":clinicSessions[i].startsAt,
-                        "endsAt": clinicSessions[i].endsAt,"roomId":roomNumber
+                        "endsAt": endsAt,"roomId":roomNumber
                     }
                    details.push(newDetail);
                 
@@ -137,7 +143,7 @@ function Appointments_customer() {
                         ))}
                     </tbody>
                 </table>
-                <div>      <button onClick={createClinicDetails}>clinic Session details</button>
+                <div className="clinic_details">      <button onClick={createClinicDetails}>clinic Session details</button>
                  <table className="table table-striped">
                     <thead>
                         
