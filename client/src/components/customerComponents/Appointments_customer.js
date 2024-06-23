@@ -6,46 +6,57 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function Appointments_customer() {
     const [clinicSessions, setClinicSessions] = useState(null);
     const [doctors, setDoctors]=useState(null);
-    const [clinicSessionDetails,setClinicSessionDetails]=useState([]);
     const [rooms,setRooms]=useState([]);
-    
-    useEffect(() => {
+
+    const[loaded,setLoaded]=useState(false);
+    const [clinicSessionDetails,setClinicSessionDetails]=useState([]);
+
+    useEffect(()=>{
         getClinicSessions();
         getDoctors();
         getRooms();
     },[])
-
     
+   
+useEffect(()=>{
+  if(clinicSessions!==null && doctors!==null && rooms!==null)
+    createClinicDetails();
+},[clinicSessions,doctors,rooms]);
 
-    function getClinicSessions() {
-        
-        axios.get("http://localhost:8080/clinicSessions")
-            .then(function (response) {
-                setClinicSessions(response.data)
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-    }
-
-    function getDoctors(){
-        axios.get("http://localhost:8080/doctors")
-        .then(function(response){
-            setDoctors(response.data)
-        })
-        .catch(function(error){
-            console.log(error)
-        })
+   
+  
+  async function getClinicSessions() {
+    try{
+      const res=await  axios.get("http://localhost:8080/clinicSessions");
+      setClinicSessions(res.data);
 
     }
+      catch(error){
+        console.log(error);
+      }
+     
+    }
 
-    function getRooms(){
-        axios.get("http://localhost:8080/rooms")
-        .then(function(response){
-            setRooms(response.data)
-        }).catch(function(error){
-            console.log(error)
-        })
+   async function getDoctors(){
+
+        try{const res=await axios.get("http://localhost:8080/doctors");
+            setDoctors(res.data);
+        }
+        catch(error){
+            console.log(error);
+        }
+      
+    }
+
+  async  function getRooms(){
+       try{
+        const res=await axios.get("http://localhost:8080/rooms");
+        setRooms(res.data);
+
+       } 
+       catch(error){
+        console.log(error);
+       }
     }
     // function 3: create 'clinicDetails' array 
     function createClinicDetails(){  
@@ -55,11 +66,11 @@ function Appointments_customer() {
         for(let i=0;i<clinicSessions.length;i++){
             const doctorId_CS=clinicSessions[i].doctorId;
 
-            // step 2 : access elements in 'doctors'
+        // step 2 : access elements in 'doctors'
           l2:  for(let j=0;j<doctors.length;j++){
                 const doctorId_D=doctors[j]._id;
                 
-                // step 3 : compare ids if match found create element  using the name of the doctor along with other noteworthy attributes
+                // step 3 : compare ids, if match found create element  using the name of the doctor along with other noteworthy attributes
                 if(doctorId_CS==doctorId_D){
 
                     // step 4 : find roomNumber 
@@ -143,7 +154,7 @@ function Appointments_customer() {
                         ))}
                     </tbody>
                 </table>
-                <div className="clinic_details">      <button onClick={createClinicDetails}>clinic Session details</button>
+                <div className="clinic_details">    
                  <table className="table table-striped">
                     <thead>
                         
