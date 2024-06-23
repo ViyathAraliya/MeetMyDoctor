@@ -1,6 +1,6 @@
 const express=require('express');
 const { addDoctor, getDoctors } = require('./controllers/DoctorController');
-const { addRoom} = require('./controllers/RoomController');
+const { addRoom, getRooms} = require('./controllers/RoomController');
 const { addClinicSession, getClinicSessions } = require('./controllers/ClinicSessionController');
 const {addAppointment, updateAppointmentStatus }= require('./controllers/AppointmentController');
 
@@ -16,6 +16,7 @@ router.post('/appointments', addAppointment);
 router.post('/appointments/updateStatus', updateAppointmentStatus);
 router.get('/clinicSessions',getClinicSessions);
 router.get('/doctors',getDoctors);
+router.get('/rooms',getRooms)
 
 
 module.exports=router;

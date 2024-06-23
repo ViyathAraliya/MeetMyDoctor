@@ -13,7 +13,7 @@ const Room = require("../models/Room");
 const addRoom = async (req, res) => {
     const { roomNumber } = req.body;
 
-    //Initializing RoomDto type object and assigning roomNumber
+  
     const roomDto = new RoomDto();
     roomDto.roomNumber = roomNumber;
 
@@ -31,42 +31,45 @@ const addRoom = async (req, res) => {
 //add clinic session to Room
 const addClinicSessionToRoom = async (req, res) => {
 
-    //ObjectId  of 'Room' document, in String format
+    // step 1 : ObjectId  of 'Room' document, in String format
     const _Id = req.params;
 
-    //Deserializing request the request body
+    //step 2 : Deserializing  the request body
     const { id, doctorId, startsAt, endsAt } = req.body;
 
-    // Inizialiting ClinicSession Object
+    //step 3 :  Inizialiting ClinicSession Object
     const clinicSession = new ClinicSession();
 
-    //Setting properties obtained from the dto
+    //step 4 : Setting properties obtained from the dto
     clinicSession.id = id;
     clinicSession.doctorId = doctorId;
     clinicSession.startsAt = startsAt;
     clinicSession.endsAt = endsAt;
 
-    //retrieving 'Room' 
+    //step 5 : retrieving 'Room'  by objectId (in step 1)
     let room = Room.findById(_Id);
 
-    //extracting 'clinicSessions' array from 'room' object
+    // step 6 : extracting 'clinicSessions' array from 'room' object
     const clinicSessions = room.clinicSessions;
 
-    //checking for duplicates
+    // step 7 : checking for duplicates
     for (let i = 0; i < clinicSessions; i++) {
         if (clinicSessions[i] == clinicSession) {
             return res.status(409).send("this clinic session already exists in this room");
         }
     }
 
-    room.clinicSessions.push(clinicSession); //adding clinicSesson to room
-
-
-
-
-
-
-
+    // step 8 : adding clinicSesson to room
+    room.clinicSessions.push(clinicSession); 
 }
 
-module.exports = { addRoom, addClinicSessionToRoom };
+const getRooms=async(req,res)=>{
+    try{
+        const rooms=await Room.find();
+        return res.status(200).send(rooms);
+    }catch(error){
+        return res.status(500).send(error)
+    }
+}
+
+module.exports = { addRoom, addClinicSessionToRoom,getRooms };
