@@ -7,10 +7,12 @@ function Appointments_customer() {
     const [clinicSessions, setClinicSessions] = useState(null);
     const [doctors, setDoctors]=useState(null);
     const [clinicSessionDetails,setClinicSessionDetails]=useState([]);
+    const [rooms,setRooms]=useState([]);
     
     useEffect(() => {
         getClinicSessions();
         getDoctors();
+        getRooms();
     },[])
 
     
@@ -37,22 +39,47 @@ function Appointments_customer() {
 
     }
 
-    // step 4: insert doctor's name, specialization and edcuation to clinicSession row
-    function joinDoctors_ClinicSessions(){
+    function getRooms(){
+        axios.get("http://localhost:8080/rooms")
+        .then(function(response){
+            setRooms(response.data)
+        }).catch(function(error){
+            console.log(error)
+        })
+    }
+    // function 3: create 'clinicDetails' array 
+    function createClinicDetails(){  
         const details=[];
+
+        // step 1 : access elements in 'clinicSessions'
         for(let i=0;i<clinicSessions.length;i++){
             const doctorId_CS=clinicSessions[i].doctorId;
+
+            // step 2 : access elements in 'doctors'
           l2:  for(let j=0;j<doctors.length;j++){
                 const doctorId_D=doctors[j]._id;
-                console.log(doctorId_CS, " vs ", doctorId_D)
+                
+                // step 3 : compare ids if match found create element  using the name of the doctor along with other noteworthy attributes
                 if(doctorId_CS==doctorId_D){
+
+                    // step 4 : find roomNumber 
+                    let roomNumber=null;
+                   l3:  for(let k=0;k<rooms.length;k++ ){
+                 
+                        if(clinicSessions[i].roomId==rooms[k]._id){
+                            roomNumber=rooms[k].roomNumber;
+                            break l3;
+                        }
+                   }
+
+                   // step 5 : create clinic session detail
                     const newDetail={"clinicSessionId":clinicSessions[i]._id,
                         "name":doctors[j].name,"specialization": doctors[j].specialization,
                         "education":doctors[j].educationAbbrivation,"startsAt":clinicSessions[i].startsAt,
-                        "endsAt": clinicSessions[i].endsAt,"roomId":clinicSessions[i].roomId
+                        "endsAt": clinicSessions[i].endsAt,"roomId":roomNumber
                     }
                    details.push(newDetail);
-                   console.log("pushed : ", details.length)
+                
                     break l2;
                 }
             }
@@ -110,7 +137,7 @@ function Appointments_customer() {
                         ))}
                     </tbody>
                 </table>
-                <div>      <button onClick={joinDoctors_ClinicSessions}>clinic Session details</button>
+                <div>      <button onClick={createClinicDetails}>clinic Session details</button>
                  <table className="table table-striped">
                     <thead>
                         
