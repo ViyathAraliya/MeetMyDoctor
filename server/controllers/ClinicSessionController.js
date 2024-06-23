@@ -9,25 +9,32 @@ const Doctor = require("../models/Doctor");
  * @param {Request} req 
  * @param {Response} res 
  */
-const addClinicSession = async (req, res) => {
+const addClinicSession = async (req, res) => {console.log("here")
 
   //step 1: creating the 'ClinicSession' object
   const { id, doctorId, startsAt, endsAt, roomId } = req.body;
   const clinicSessionDto = new ClinicSessionDto(id, doctorId, startsAt, endsAt, roomId);
+
+  //step 2: validating times
+
+  if(new Date(startsAt)<=new Date()){
+    return res.status(409).send("the time you entered as the startng time has already passed");
+  }
+  if(startsAt>=endsAt){
+    return res.status(409).send("The clinic's ending time must be after its starting time.");
+  }
   const clinicSession = new ClinicSession(clinicSessionDto);
 
-
   try {
-    
     const doctorID = clinicSession.doctorId;
     const doctor = await Doctor.findById(doctorID);
    
-    // step 2: validating that the 'Doctor' document is found
+    // step 3: validating that the 'Doctor' document is found
     if(doctor==null){
       return res.status(404).send("doctor not found");
     }
     
-    // step 3: retriving all 'ClinicSession' documents which belong to this doctor
+    // step 4: retriving all 'ClinicSession' documents which belong to this doctor
       const clinicSessions = await ClinicSession.find({doctorId:doctorID});
 
     // case 1: If doctor is not registered with any clinic session , saving 'ClinicSession' without validating time slots
@@ -37,9 +44,8 @@ const addClinicSession = async (req, res) => {
      }
       
 
-
      // case 2: doctor already has clinic sessions
-     // case2 2 step 1: Time slot overlapping prevention
+     // case 2 2 step 1: Time slot overlapping prevention
       for (let i = 0; i < clinicSessions.length; i++) {
         const retreivedClinicSession = clinicSessions[i];
         const retrivedDoctor = clinicSessions[i].doctorId;
