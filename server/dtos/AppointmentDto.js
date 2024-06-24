@@ -3,7 +3,7 @@ const {ObjectId}=require('mongoose')
 class AppointmentDto{/**
  * @param {ObjectId} id, 
  * @param {String} patientName 
- * @param {*Stringg} contactNo 
+ * @param {String} contactNo 
  * @param {String} address 
 
  * @param {Number} queueNumber 

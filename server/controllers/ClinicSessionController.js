@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, Mongoose } = require("mongoose");
 const ClinicSessionDto = require("../dtos/ClinicSessionDto");
 const ClinicSession = require("../models/ClinicSession");
 const Room = require("../models/Room");
@@ -9,97 +9,139 @@ const Doctor = require("../models/Doctor");
  * @param {Request} req 
  * @param {Response} res 
  */
-const addClinicSession = async (req, res) => {console.log("here")
+const addClinicSession = async (req, res) => {
+  //1. check start time and end time
+  //2. check for time slot overlapping for doctor
+  //3. check for time slot overlapping for room
+  //4. save 'ClinicSession' document in 'clinicSessions'
+  //5. add ref of 'ClinicSesison' to 'clinicSessions' array in relevent 'Room' doc and save
 
-  //step 1: creating the 'ClinicSession' object
   const { id, doctorId, startsAt, endsAt, roomId } = req.body;
+
   const clinicSessionDto = new ClinicSessionDto(id, doctorId, startsAt, endsAt, roomId);
 
-  //step 2: validating times
 
-  if(new Date(startsAt)<=new Date()){
-    return res.status(409).send("the time you entered as the startng time has already passed");
+  // 1. check start time and end time 
+  if (new Date(startsAt) < new Date()) {
+    return res.status(422).send("clinic starting time should be in the future");
   }
-  if(startsAt>=endsAt){
-    return res.status(409).send("The clinic's ending time must be after its starting time.");
+  if (startsAt >= endsAt) {
+    return res.status(422).send("clinic ening time should come after the startining time")
   }
-  const clinicSession = new ClinicSession(clinicSessionDto);
-
   try {
-    const doctorID = clinicSession.doctorId;
-    const doctor = await Doctor.findById(doctorID);
-   
-    // step 3: validating that the 'Doctor' document is found
-    if(doctor==null){
-      return res.status(404).send("doctor not found");
-    }
-    
-    // step 4: retriving all 'ClinicSession' documents which belong to this doctor
-      const clinicSessions = await ClinicSession.find({doctorId:doctorID});
+    const doctorIdStr = clinicSessionDto.doctorId;
+    const startsAt = new Date(clinicSessionDto.startsAt);
+    const endsAt = new Date(clinicSessionDto.endsAt);
+    const roomIdStr = clinicSessionDto.roomId;
 
-    // case 1: If doctor is not registered with any clinic session , saving 'ClinicSession' without validating time slots
-     if(clinicSessions.length==0){
-      await clinicSession.save();
-      return res.status(201).send(clinicSession);
-     }
-      
+    // 2. check for time slot overlapping for doctor
+    const doctorId = new mongoose.Types.ObjectId(doctorIdStr);
 
-     // case 2: doctor already has clinic sessions
-     // case 2 2 step 1: Time slot overlapping prevention
+    const clinicSessions = await ClinicSession.find({ doctorId: doctorId });
+
+    if (clinicSessions != null) {
       for (let i = 0; i < clinicSessions.length; i++) {
-        const retreivedClinicSession = clinicSessions[i];
-        const retrivedDoctor = clinicSessions[i].doctorId;
+        const existingStartsAt = clinicSessions[i].startsAt;
+        const existingEndsAt = clinicSessions[i].endsAt;
 
-     
-        if (retrivedDoctor.equals(doctorID)) {  // if this clinic session belongs to this doctor
-          const retreivedStartsAt = retreivedClinicSession.startsAt;// starting tiime of already registered clinic session
-          const retreivedEndsAt = retreivedClinicSession.endsAt;// ending time of   ,,   ,, 
-          const startsAt = clinicSession.startsAt; //,,    ,,    new    ,, 
-          const endsAt = clinicSession.endsAt;// ,,     ,,    new     ,, 
 
-          //ensuring timeSlots dont overlap
-          if (!((startsAt <=retreivedStartsAt  &&  endsAt <= retreivedStartsAt) ||
-            (startsAt >= retreivedEndsAt && endsAt >= retreivedEndsAt))) {
-          return  res.status(409).send(" time slots of the doctor overlaps");
-          }
+        if (!((startsAt <= new Date(existingStartsAt) && endsAt <= new Date(existingStartsAt)) ||
+          (startsAt >= new Date(existingEndsAt) && endsAt >= new Date(existingEndsAt)))) {
+          return res.status(409).send("Time slot overlaps for doctor");
         }
       }
+    }
+   
+    // 3. check for time slot overlapping for room
+    const roomId = new mongoose.Types.ObjectId(roomIdStr);
+    const room = await Room.findById(roomId);
+    const clinicSessionsInRoom = room.clinicSessions;
 
-  
+    if (clinicSessionsInRoom != null) {
+      for (let i = 0; i < clinicSessionsInRoom.length; i++) {
+        const clinicSession_ = await ClinicSession.findById(clinicSessionsInRoom[i]);
+        const existingStartsAt = clinicSession_.startsAt;
+        const existingEndsAt = clinicSession_.endsAt;
 
-    //
+        if (!(((startsAt <= existingStartsAt && endsAt <= existingStartsAt)) ||
+          (startsAt >= existingEndsAt && endsAt >= existingEndsAt))) {
+          return res.status(409).send("Time slot overlaps for room");
+        }
+      }
+    }
 
-    // case 2 step 2: saving the 'CliniSession'
-    await clinicSession.save();
+    //4. save 'ClinicSession' document in 'clinicsession' collection
+    const clinicSession = new ClinicSession();
+    clinicSession.doctorId = doctorId;
+    clinicSession.startsAt = startsAt;
+    clinicSession.endsAt = endsAt;
+    clinicSession.roomId = roomId;
 
-    //case 2 step 3: retrivingthe 'Room' document affiliated with this 'ClinicSession'
-    const room = await Room.findById(clinicSession.roomId);
+    const savedClinicSession = await clinicSession.save();
 
-    //case 2 step 4: pushing reference of this 'ClinicSession'  to 'clinicSessions' array in 'Room' document and saving
-    room.clinicSessions.push(clinicSession._id);
+    //5. Add 'ClinicSession' document ref to 'clinicSessions' array in related 'Room' document  
+    const clinicSessionId = savedClinicSession._id;
+    clinicSessionsInRoom.push(clinicSessionId);
     await room.save();
+    return res.status(201).send("added new clinic session succesfully");
 
-
-
-    return res.status(201).send(clinicSession);
   } catch (error) {
-    console.log(error);
-    return res.status(400).send(error);
+    return res.status(500).send(error);
+  }
+}
+
+const getClinicSessions = async (req, res) => {
+
+  try {
+    const clinicSessions = await ClinicSession.find();
+    return res.status(200).send(clinicSessions);
+  } catch (error) {
+    return res.status(500).send(error);
   }
 
 }
 
-const getClinicSessions=async(req,res)=>{
-  const clinicSessions=await ClinicSession.find();
-  try{
-    return res.status(200).send(clinicSessions);
-  }catch(error){
-    return res.status(500).send(error);
+const deleteClinicSession = async (req, res) => {
+  console.log("hello");
+  const { id } = req.body;
+  const deleteClinicSessionDto = new ClinicSessionDto(id);
+  try {
+    let id = deleteClinicSessionDto.id;
+    id = new mongoose.Types.ObjectId(id);
+    const clinicSession = ClinicSession.findById(id);
+    let roomId = clinicSession.roomId;
+    roomId = new mongoose.Types.ObjectId(roomId);
+
+
+    //step 1: delete 'ClinicSession' from 'clinicsessions'
+    const deletedClinicSession = await ClinicSession.findByIdAndDelete(id);
+    if (!deletedClinicSession) {
+      return res.status(500).send("error occured while trying to delete clinic session");
+    }
+
+    //step 2: delete 'ClincSession' from 'Room'
+
+    const room = await Room.findById(roomId);
+
+    const clinicSessions = room.clinicSessions;
+
+    let updatedCliniSessions = [];
+    for (let i = 0; i < clinicSessions.length; i++) {
+      if (id != clinicSessions[i]) {
+        updatedCliniSessions.push(clinicSessions[i]);
+      }
+    }
+    room.clinicSessions = updatedCliniSessions;
+    await room.save();
+    return res.status(200).send("clinic session succesfully deteted");
+
+  } catch (error) {
+    console.log(error);
   }
-  
+
 }
 
 
 module.exports = {
-  addClinicSession,getClinicSessions
+  addClinicSession, getClinicSessions, deleteClinicSession
 }
