@@ -4,12 +4,23 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function Appointments_customer() {
+    // fetched data
     const [clinicSessions, setClinicSessions] = useState(null);
     const [doctors, setDoctors]=useState(null);
     const [rooms,setRooms]=useState([]);
 
-    const[loaded,setLoaded]=useState(false);
+    // Created data
     const [clinicSessionDetails,setClinicSessionDetails]=useState([]);
+    const [selectedClinicSession, setSelectedClinicSession]=useState(null);
+
+
+    // customer data
+    
+const[patientName,setPatientName]=useState(null);
+const[contactNo,setContactNo]=useState(null);
+const[address,setAddress]=useState(null);
+const[description,setDescription]=useState(null);
+
 
     useEffect(()=>{
         getClinicSessions();
@@ -23,8 +34,7 @@ useEffect(()=>{
     createClinicDetails();
 },[clinicSessions,doctors,rooms]);
 
-   
-  
+// fetching 'ClinicSession' documents
   async function getClinicSessions() {
     try{
       const res=await  axios.get("http://localhost:8080/clinicSessions");
@@ -37,6 +47,7 @@ useEffect(()=>{
      
     }
 
+    // fetching 'Doctors' documents
    async function getDoctors(){
 
         try{const res=await axios.get("http://localhost:8080/doctors");
@@ -48,6 +59,7 @@ useEffect(()=>{
       
     }
 
+ //fetching 'Room' documents
   async  function getRooms(){
        try{
         const res=await axios.get("http://localhost:8080/rooms");
@@ -58,8 +70,8 @@ useEffect(()=>{
         console.log(error);
        }
     }
-    // function 3: create 'clinicDetails' array 
-    function createClinicDetails(){  
+// function 3: create 'clinicDetails' array to display info in a table to be read by customer/patient
+function createClinicDetails(){  
         const details=[];
 
         // step 1 : access elements in 'clinicSessions'
@@ -105,80 +117,95 @@ useEffect(()=>{
 
     }
     
-  
+ 
+function handlePatientName(event){
+    setPatientName(event.target.value);
+}
+
+function handleContactNo(event){
+    setContactNo(event.target.value);
+}
+
+function handleAddress(event){
+    setAddress(event.target.value);
+}
+
+
+
+function handleDescription(event){
+    setDescription(event.target.value);
+}
+
+ // make appoinetment
+
+ async function makeAppointment(rowId){
+    setSelectedClinicSession(rowId);
+    
+    const data={"patientName":patientName,"contactNo":contactNo,"address": address,
+        "description": description, "clinicSessionId": selectedClinicSession
+    }
+    try{
+    const res=await axios.post("http://localhost:8080/appointments",data);
+console.log(res)}
+catch(error){console.log(error);}
+
+}
+
+
+
+
 
     return (
         <>
-            <div className="clinicSessionTable">
+            
+            <form >
+                <label htmlFor="name">Customer/Patient Name</label>
+                <input id="name" onChange={handlePatientName}/>
+                <br/>
+                <label htmlFor="contactNo">Contact Number</label>
+                <input id="contactNo" onChange={handleContactNo}/>
+                <br/>
+                <label htmlFor="address">Address</label>
+                <input id="address" onChange={handleAddress}/>
+                <br/>
+                <label htmlFor="description">Description</label>
+                <input id="description" onChange={handleDescription}/>
+                <br/>
+               
+            </form>
 
-                <h2>Clinic Sessions</h2>
-                <table className="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>doctorID</th>
-                            <th>doctor name</th>
-                            <th>starts at</th>
-                            <th>ends at</th>
-                            <th>room id</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {clinicSessions && clinicSessions.map(clinicSession => (
-                            <tr key={clinicSession._id}><td>
-                                {clinicSession._id}</td>
-                                <td>{clinicSession.startsAt}</td>
-                                <td>{clinicSession.endsAt}</td>
-                                <td>{clinicSession.roomId}</td></tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
             <div className="clinicSessionTable">
                 <h2>Clinic Sessions</h2>
-                <table className="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>doctor</th>
-                            <th>specialization</th>
-                            <th>education</th>
-                            
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {doctors && doctors.map(doctor => (
-                            <tr key={doctor._id}><td>
-                                {doctor.name}</td>
-                                <td>{doctor.specialization}</td>
-                                <td>{doctor.educationAbbrivation}</td>
-                              </tr>
-                        ))}
-                    </tbody>
-                </table>
+               
                 <div className="clinic_details">    
                  <table className="table table-striped">
                     <thead>
                         
                             <tr>
                                 
-                <th>name</th>
+                <th>doctor name</th>
                 <th>specialization</th>
                 <th>edcuation</th>
                 <th>clinic starts At</th>
                 <th>ends At</th>
                 <th>room number</th>
-                                
+                              
                             </tr>
                         
                     </thead>
                     <tbody>
                         {clinicSessionDetails && clinicSessionDetails.map(detail=>(
-                            <tr key={detail.clinicSessionId}>
+                            <tr key={detail.clinicSessionId}
+                          
+                          >
                                 <td>{detail.name}</td>
                                 <td>{detail.specialization}</td>
                                 <td>{detail.education}</td>
                                 <td>{detail.startsAt}</td>
                                 <td>{detail.endsAt}</td>
                                 <td>{detail.roomId}</td>
+                               <td> <button className="btn btn-primary"
+                                onClick={()=>{makeAppointment(detail.clinicSessionId)}}>Make an Appointment</button></td>
                             </tr>
                         
                             
@@ -187,9 +214,9 @@ useEffect(()=>{
 
                  </table>
                 </div>
-               
                 
             </div>
+        
         </>
     )
 }
