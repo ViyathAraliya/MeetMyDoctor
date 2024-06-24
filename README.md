@@ -161,23 +161,39 @@ This web application enables the patients/people to book doctor's appointments a
 
 ## Client-Side
 
-### Structure
+###  Structure
 
 - Components
-    + userComponents
-        - Appointments.js
     + customerComponents
+        - Appointments_customer.js
+    + userComponents
+        - Appointments_user.js
+- redux
+  
+
 - Home.js
 - App.js
 
-### Features
-#### Appointments
+
+###  1. Components
+#### 1. 1. Customer Components
+
+#### 1. 1. 1. MakeAppointments
+<b>features</b>
 - Pick "specialization" from select.
 - Loading 'clinicsessions' table according to 'sepecialization'.
 - Pick a 'ClinicSession' from the table. 
-- Customer then submit the request for aoointment and the user confirms or discard it. (Using redux for  globle state cmanagement) 
+- Customer then submit the request for appointment and the user confirms or discard it. (Using redux for  globle state cmanagement) 
 
+#### 1. 2. User Componenets
 
+#### 1. 2. 1 ManageAppointments
+<b>features</b>
+- Confirm or Discard Appointments
+
+### 2. Redux
+  Redux is used in the client-side of this application for state management.
+  
 
 
 
