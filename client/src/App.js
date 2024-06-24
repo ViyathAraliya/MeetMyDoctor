@@ -2,7 +2,9 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Home from './components/Home';
-import Appointments_customer from './components/customerComponents/Appointments_customer';
+
+import MakeAppointment from './components/customerComponents/MakeAppointment';
+import ManageAppointments from './components/userComponents/ManageAppointments';
 
 function App() {
   return (
@@ -10,7 +12,8 @@ function App() {
 
   <Routes>
   <Route path="/" element={<Home/>}/>
-  <Route path="/appointments_customer" element={<Appointments_customer/>}/>
+  <Route path="/makeAppointment" element={<MakeAppointment/>}/>
+  <Route path="/ManageAppointments" element={<ManageAppointments/>}></Route>
   </Routes>
   </BrowserRouter>
  

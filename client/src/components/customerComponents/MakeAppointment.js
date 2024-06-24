@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from "react-router-dom";
 
 
-function Appointments_customer() {
+function MakeAppointment() {
     // fetched data
     const [clinicSessions, setClinicSessions] = useState(null);
     const [doctors, setDoctors]=useState(null);
@@ -216,9 +217,11 @@ catch(error){console.log(error);}
                 </div>
                 
             </div>
+
+            <li><Link to="/">Home</Link></li> 
         
         </>
     )
 }
 
-export default Appointments_customer;
+export default MakeAppointment;
