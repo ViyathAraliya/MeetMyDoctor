@@ -102,15 +102,18 @@ const getClinicSessions = async (req, res) => {
 }
 
 const deleteClinicSession = async (req, res) => {
-  console.log("hello");
   const { id } = req.body;
   const deleteClinicSessionDto = new ClinicSessionDto(id);
   try {
-    let id = deleteClinicSessionDto.id;
-    id = new mongoose.Types.ObjectId(id);
-    const clinicSession = ClinicSession.findById(id);
-    let roomId = clinicSession.roomId;
-    roomId = new mongoose.Types.ObjectId(roomId);
+    const idStr = deleteClinicSessionDto.id;
+   console.log(idStr)
+   const id = new mongoose.Types.ObjectId(idStr);
+   console.log(id)
+    const clinicSession =await ClinicSession.findById(id);
+  
+    const roomId = clinicSession.roomId;
+
+  console.log(roomId);
 
 
     //step 1: delete 'ClinicSession' from 'clinicsessions'
@@ -120,18 +123,16 @@ const deleteClinicSession = async (req, res) => {
     }
 
     //step 2: delete 'ClincSession' from 'Room'
-
-    const room = await Room.findById(roomId);
-
+    const room = await Room.findById(roomId); 
     const clinicSessions = room.clinicSessions;
-
-    let updatedCliniSessions = [];
-    for (let i = 0; i < clinicSessions.length; i++) {
-      if (id != clinicSessions[i]) {
-        updatedCliniSessions.push(clinicSessions[i]);
+    let updatedClinicSessions=[];
+    for(let i=0;i<clinicSessions.length;i++){
+      if(!(clinicSessions[i].equals(id))){
+        updatedClinicSessions.push(clinicSessions[i]);
       }
     }
-    room.clinicSessions = updatedCliniSessions;
+
+    room.clinicSessions = updatedClinicSessions;
     await room.save();
     return res.status(200).send("clinic session succesfully deteted");
 
