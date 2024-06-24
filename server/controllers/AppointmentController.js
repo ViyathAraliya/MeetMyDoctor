@@ -6,6 +6,7 @@ const Doctor = require("../models/Doctor");
 const AppointmentUpdateDto = require("../dtos/AppointmentUpdateDto");
 
 const addAppointment = async (req, res) => {
+  
 
   const { patientName, contactNo, address, queueNumber, description, clinicSessionId } = req.body;
 
@@ -23,12 +24,15 @@ const addAppointment = async (req, res) => {
 
   try {
 
-    //step 3: retrieving related 'ClinicSession' (to add 'appointment reference')
+    //step 3: retrieving related 'ClinicSession' doc
     const clinicSession = await ClinicSession.findById(appointment.clinicSession);
+    if(clinicSession==null){
+      return res.status(404).send("clinic session not found");
+    }
 
     //step 4 : calculating queue number
     let queueNumber;
-    if (clinicSession != null) {
+    if (clinicSession.appointments != null) {
       queueNumber = clinicSession.appointments.length + 1;
     }
     else { queueNumber = 1; }
@@ -49,14 +53,14 @@ const addAppointment = async (req, res) => {
       return res.status(409).send("This clinic session has reached it's maximum number of patients ");
     }
 
-    //step 7: saving the 'Appointment' object in 'appountment' collection
+    //step 7: saving the 'Appointment' doc in 'appointments' collection
     await appointment.save();
     const savedAppointmentId = appointment._id;
 
-    //step 6: adding 'Appointment' object reference  to 'appointments' array of the related 'ClinicSession'
+    //step 6: adding 'Appointment' doc reference  to 'appointments' array of the related 'ClinicSession'
     clinicSession.appointments.push(savedAppointmentId);
 
-    // saving 8: saving the clininc session
+    // saving 8: saving the clinic session
     await clinicSession.save();
 
 
