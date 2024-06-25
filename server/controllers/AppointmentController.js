@@ -147,9 +147,18 @@ const deleteAppointment = async (appointmentId) => {
 
 }
 
+const getAppointments=async(req,res)=>{
+  try{
+    const appointements=await Appointment.find();
+    return res.status(200).send(appointements);
+  }catch(error){
+    return res.status(500).send(error);
+  }
+}
+
 
 //To confirm the appointment or discard
 
 
 
-module.exports = { addAppointment, updateAppointmentStatus };
+module.exports = { addAppointment, updateAppointmentStatus, getAppointments };
