@@ -66,8 +66,7 @@ const addAppointment = async (req, res) => {
 
     res.status(201).send(appointment);
   } catch (error) {
-    console.log(error);
-
+   
     res.status(400).send(error);
   }
 
@@ -108,18 +107,18 @@ const updateAppointmentStatus = async (req, res) => {
 
 
   } catch (error) {
+
     return res.status(400).send(error);
   }
 
 }
 
 
-
+//loacl method for deleting appointment(used by 'updateAppointmentsStatus')
 const deleteAppointment = async (appointmentId) => {
 
   try {
     //step 1: delete the appointment from a 'appointements'
-    console.log(appointmentId);
     const appointment = await Appointment.findByIdAndDelete(appointmentId);
     if (!appointment) {
       console.log("appointment not retrived")
@@ -141,7 +140,7 @@ const deleteAppointment = async (appointmentId) => {
     return true;
 
   } catch (error) {
-    console.log(error);
+   
     return error;
   }
 

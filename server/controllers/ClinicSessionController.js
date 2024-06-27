@@ -86,6 +86,7 @@ const addClinicSession = async (req, res) => {
     return res.status(201).send("added new clinic session succesfully");
 
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error);
   }
 }
