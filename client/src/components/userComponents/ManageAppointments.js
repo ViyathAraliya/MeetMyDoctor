@@ -154,10 +154,10 @@ function ManageAppointments() {
     }
 
     //delete if status='DISCARD' , update id status('CONFIRMED')
-    async function updateAppointmentStatus(appointmentId,status) {console.log('clicked')
+    async function updateAppointmentStatus(appointmentId,status) {
         try {
-            const data={    "appointmentId" : "667a79b41238291cb92aa04a",
-                "status" : "DISCARD"}
+            const data={    "appointmentId" : appointmentId,
+                "status" : status}
             const res = await axios.post("http://localhost:8080/appointments/updateStatus",data);
             console.log(res);
             getAppointments();
@@ -200,7 +200,8 @@ function ManageAppointments() {
                                 <td>{detail.appointment.status}</td>
                                 <td><button className="btn btn-primary" 
                                 onClick={()=>{updateAppointmentStatus(detail.appointment._id,'DISCARD')}}>discard</button></td>
-                                <td><button className="btn btn-primary">confirm</button></td>
+                                <td><button className="btn btn-primary"
+                                 onClick={()=>{updateAppointmentStatus(detail.appointment._id,'CONFIRMED')}}>confirm</button></td>
                             </tr>)
                     ))
 
