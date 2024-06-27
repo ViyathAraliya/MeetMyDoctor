@@ -18,10 +18,6 @@ function ManageAppointments() {
     //processed data
     const [appointmentDetails, setAppointmentDetails] = useState([]);//appointment,  doctorName, roomNumber, clinicStartsAt, clinicEndsAt
 
-    //displayed
-    const [unconfirmedAppointments, setUnconfirmedAppointments] = useState([]);
-    const [confirmedAppointments, setConfirmedAppointments] = useState([]);
-
 
 
     useEffect(() => {
@@ -30,6 +26,12 @@ function ManageAppointments() {
         getDoctors();
         getRooms();
     }, [])
+
+    useEffect(()=>{
+        if(appointments!==null || doctors!==null || clinicSessions!==null || rooms!==null){
+            createAppointmentDetails();}
+    },[appointments, doctors,clinicSessions,rooms])
+
 
     async function getAppointments() {
         try {
@@ -171,7 +173,6 @@ function ManageAppointments() {
 
 
     return (<><h2>Appointments</h2>
-        <button onClick={createAppointmentDetails}>load</button>
         <div className="unconfirmed appointments">
             <table className="table table-striped">
                 <thead>

@@ -31,8 +31,8 @@ const[description,setDescription]=useState(null);
     
    
 useEffect(()=>{
-  if(clinicSessions!==null && doctors!==null && rooms!==null)
-    createClinicDetails();
+  if(clinicSessions!==null && doctors!==null && rooms!==null){
+    createClinicDetails();}
 },[clinicSessions,doctors,rooms]);
 
 // fetching 'ClinicSession' documents
