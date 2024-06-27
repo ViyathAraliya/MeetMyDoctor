@@ -12,7 +12,7 @@ function MakeAppointment() {
 
     // Created data
     const [clinicSessionDetails,setClinicSessionDetails]=useState([]);
-    const [selectedClinicSession, setSelectedClinicSession]=useState(null);
+ 
 
 
     // customer data
@@ -37,8 +37,10 @@ useEffect(()=>{
 
 // fetching 'ClinicSession' documents
   async function getClinicSessions() {
+    
     try{
       const res=await  axios.get("http://localhost:8080/clinicSessions");
+ 
       setClinicSessions(res.data);
 
     }
@@ -52,6 +54,7 @@ useEffect(()=>{
    async function getDoctors(){
 
         try{const res=await axios.get("http://localhost:8080/doctors");
+          
             setDoctors(res.data);
         }
         catch(error){
@@ -64,6 +67,7 @@ useEffect(()=>{
   async  function getRooms(){
        try{
         const res=await axios.get("http://localhost:8080/rooms");
+     
         setRooms(res.data);
 
        } 
@@ -72,7 +76,7 @@ useEffect(()=>{
        }
     }
 // function 3: create 'clinicDetails' array to display info in a table to be read by customer/patient
-function createClinicDetails(){  
+function createClinicDetails(){ 
         const details=[];
 
         // step 1 : access elements in 'clinicSessions'
@@ -85,12 +89,12 @@ function createClinicDetails(){
                 
                 // step 3 : compare ids, if match found create element  using the name of the doctor along with other noteworthy attributes
                 if(doctorId_CS==doctorId_D){
-
+                   
                     // step 4 : find roomNumber 
                     let roomNumber=null;
                    l3:  for(let k=0;k<rooms.length;k++ ){
                  
-                        if(clinicSessions[i].roomId==rooms[k]._id){
+                        if(clinicSessions[i].roomId==rooms[k]._id){ 
                             roomNumber=rooms[k].roomNumber;
                             break l3;
                         }
@@ -114,6 +118,7 @@ function createClinicDetails(){
                 }
             }
         }
+       
         setClinicSessionDetails(details);
 
     }
@@ -140,10 +145,10 @@ function handleDescription(event){
  // make appoinetment
 
  async function makeAppointment(rowId){
-    setSelectedClinicSession(rowId);
+   
     
     const data={"patientName":patientName,"contactNo":contactNo,"address": address,
-        "description": description, "clinicSessionId": selectedClinicSession
+        "description": description, "clinicSessionId": rowId
     }
     try{
     const res=await axios.post("http://localhost:8080/appointments",data);
