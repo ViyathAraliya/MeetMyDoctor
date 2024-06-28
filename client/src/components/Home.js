@@ -6,6 +6,7 @@ function Home(){
     <label>Hello</label>
    <li><Link to="/makeAppointment">Make an Appointment</Link></li> 
    <li><Link to="/manageAppointments">Manage Appointments</Link></li>
+   <li><Link to="/manageClinicSessions">Manage Clinic Sessions</Link></li>
 
     </>)
 }

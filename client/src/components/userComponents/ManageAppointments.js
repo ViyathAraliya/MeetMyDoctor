@@ -27,10 +27,11 @@ function ManageAppointments() {
         getRooms();
     }, [])
 
-    useEffect(()=>{
-        if(appointments!==null || doctors!==null || clinicSessions!==null || rooms!==null){
-            createAppointmentDetails();}
-    },[appointments, doctors,clinicSessions,rooms])
+    useEffect(() => {
+        if (appointments !== null || doctors !== null || clinicSessions !== null || rooms !== null) {
+            createAppointmentDetails();
+        }
+    }, [appointments, doctors, clinicSessions, rooms])
 
 
     async function getAppointments() {
@@ -71,25 +72,12 @@ function ManageAppointments() {
 
     //  for 'appointmentDetails' state
     async function createAppointmentDetails() {
-        /*   1. initialize empty array named 'appointmentDetails'
-             2. access each 'Appointment' in 'appointments' by for loop 'l1'
-             3. inside l1 : define a json object named 'appointmentDetail'
-             4. inside l1 : assign 'appointment[i]' to 'appointment' propertie in 'appointmentDetail'
-             5. inidee l1 : find 'ClinicSession' documnent by 'clinicSessionId' 
-             6. inside l1 : find the doctor's name from 'doctors'and assisgn to 'doctorName' property in 'appointmentDetail'
-             7. inside l1 : find the roomNumber from 'rooms' and assign to 'roomNumber' property in 'appointmentDetail'
-             8. inside l1 : find 'startsAt' from 'clinicSessions'  and assigng to 'startsAt'   ,,   ,,
-             9. inside l1 : find 'endsAt' from 'clinicSessions' and assign to 'endsAt'  ,,  ,,
-    
-            */
-        // step 1: initialize empty array named 'appointmentDetails'
+
         try {
             let appointmentDetails = [];
 
-            // step 2 : access each 'Appointment' in 'appointments' by for loop 'l1'
+            // step 1 : access each 'Appointment' in 'appointments' by for loop 'l1'
             l1: for (let j = 0; j < appointments.length; j++) {
-
-                // step 3 : inside l1 : define a json object named 'appointmentDetail'
                 let appointmentDetail = {
                     "appointment": null,
                     "doctorName": null,
@@ -98,14 +86,13 @@ function ManageAppointments() {
                     "endsAt": null
                 };
 
-                // step 4. inside l1 : assign 'appointment[i]' to 'appointment' propertie in 'appointmentDetail'
                 const appointment = appointments[j];
                 appointmentDetail.appointment = appointment;
 
-                // step 5 : inidee l1 : find 'ClinicSession' documnent by 'clinicSessionId' 
                 const clinicSessionId = appointment.clinicSession;
                 let clinicSession = null;
 
+                // step 2 : find 'ClinicSession' documnent by comparing the clinicSessionId to 'clinicSessionId' in 'clinicSessions' 
                 l2: for (let i = 0; i < clinicSessions.length; i++) {
                     if (clinicSessionId == clinicSessions[i]._id) {
 
@@ -115,8 +102,7 @@ function ManageAppointments() {
                     }
                 }
 
-
-                //step 6 :  inside l1 : find the doctor's name from 'doctors'and assisgn to 'doctorName' property in 'appointmentDetail'
+                //step 3:  find the doctor's name from 'doctors'and assisgn to 'doctorName' property in 'appointmentDetail'
                 const doctorId = clinicSession.doctorId;
                 l3: for (let i = 0; i < doctors.length; i++) {
                     console.log("com : ", doctorId, " vs ", doctors[i]._id, " : ", doctorId == doctors[i]._id)
@@ -127,7 +113,7 @@ function ManageAppointments() {
                     }
                 }
 
-                // step 7 : inside l1 : find the roomNumber from 'rooms' and assign to 'roomNumber' property in 'appointmentDetail' 
+                // step 4 : find the roomNumber from 'rooms' and assign to 'roomNumber' property in 'appointmentDetail' 
                 const roomId = clinicSession.roomId;
                 l4: for (let i = 0; i < rooms.length; i++) {
                     if (roomId == rooms[i]._id) {
@@ -136,15 +122,13 @@ function ManageAppointments() {
                     }
                 }
 
-                // step 8 : inside l1 : find 'startsAt' from 'clinicSessions'  and assigng to 'startsAt'   ,,   ,,
+                // step 6 : find 'startsAt' from 'clinicSession'  and assigng to 'startsAt'   property in 'appointmentDetail' 
                 appointmentDetail.startsAt = clinicSession.startsAt;
 
-                // step 9 : inside l1 : find 'endsAt' from 'clinicSessions' and assign to 'endsAt'  ,,  ,,
+                // step 7 : find 'endsAt' from 'clinicSession' and assign to 'endsAt'  property in 'appointmentDetail' 
                 appointmentDetail.endsAt = clinicSession.endsAt;
 
                 appointmentDetails.push(appointmentDetail);
-
-
             }
             setAppointmentDetails(appointmentDetails);
         } catch (error) {
@@ -156,11 +140,13 @@ function ManageAppointments() {
     }
 
     //delete if status='DISCARD' , update id status('CONFIRMED')
-    async function updateAppointmentStatus(appointmentId,status) {
+    async function updateAppointmentStatus(appointmentId, status) {
         try {
-            const data={    "appointmentId" : appointmentId,
-                "status" : status}
-            const res = await axios.post("http://localhost:8080/appointments/updateStatus",data);
+            const data = {
+                "appointmentId": appointmentId,
+                "status": status
+            }
+            const res = await axios.post("http://localhost:8080/appointments/updateStatus", data);
             console.log(res);
             getAppointments();
         } catch (error) {
@@ -199,10 +185,10 @@ function ManageAppointments() {
                                 <td>{detail.startsAt}</td>
                                 <td>{detail.endsAt}</td>
                                 <td>{detail.appointment.status}</td>
-                                <td><button className="btn btn-primary" 
-                                onClick={()=>{updateAppointmentStatus(detail.appointment._id,'DISCARD')}}>discard</button></td>
                                 <td><button className="btn btn-primary"
-                                 onClick={()=>{updateAppointmentStatus(detail.appointment._id,'CONFIRMED')}}>confirm</button></td>
+                                    onClick={() => { updateAppointmentStatus(detail.appointment._id, 'DISCARD') }}>discard</button></td>
+                                <td><button className="btn btn-primary"
+                                    onClick={() => { updateAppointmentStatus(detail.appointment._id, 'CONFIRMED') }}>confirm</button></td>
                             </tr>)
                     ))
 
@@ -236,8 +222,8 @@ function ManageAppointments() {
                                 <td>{detail.startsAt}</td>
                                 <td>{detail.endsAt}</td>
                                 <td>{detail.appointment.status}</td>
-                                
-                               
+
+
                             </tr>)
                     ))
 
