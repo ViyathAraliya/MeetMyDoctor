@@ -1,15 +1,33 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+
 import { toast } from "react-toastify";
+
 
 function ManageClinicSessions() {
     const [doctors, setDoctors] = useState(null);
     const [rooms, setRooms] = useState(null);
     const [clinicSessions, setClinicSessions] = useState(null);
 
+    //only difference between doctor and doctorDetail is timeSlots mapped to doctor
     const [doctorDetails, setDoctorDetails] = useState(null);
+
+    //only difference between room and roomDetails is timeSlots mapped to room
     const [roomDetails, setRoomDetails] = useState(null);
 
+    //DateTime 
+    const[minDateTime,setMinDateTime]=useState(getCurrentDateTime());
+
+    const[showTimeSlots, setShowTimeSlots]=useState(false);
+
+    function getCurrentDateTime(){
+        const now=new Date();
+        return now.toISOString().slice(0,16);
+    }
+
+    function handleDateTimeChange(event){
+        setMinDateTime(event.target.value);
+    }
 
     useEffect(() => {
         getDoctors();
@@ -17,6 +35,7 @@ function ManageClinicSessions() {
         getClinicSessions();
 
     }, [])
+
 
     async function getDoctors() {
         try {
@@ -46,21 +65,7 @@ function ManageClinicSessions() {
         } catch (error) {
             console.log(error);
             toast.error(error);
-    }}/* name: String,
-    contactNumber: { 
-        type: String,
-        required: true,
-        unique: true,
-        index: true
-
-    },
-    whatsapp: String, 
-    email: String,
-    specialization: String,
-    educationAbbrivation: String,
-
-    generalSlotDuration: Number   */
-
+    }}
         function createDoctorDetails() {
            
             let tDoctorDetails = [];
@@ -82,7 +87,7 @@ function ManageClinicSessions() {
                 
                     // step 3 : if found push the timeSlot to timeSlots
                     if (doctor._id==clinicSession.doctorId) {
-                        let timeSlot=`${clinicSession.startsAt}-${clinicSession.endsAt}`
+                        let timeSlot=`from ${clinicSession.startsAt} to ${clinicSession.endsAt}`
                         timeSlots.push(timeSlot);
                      }
                 }
@@ -94,11 +99,57 @@ function ManageClinicSessions() {
             setDoctorDetails(tDoctorDetails);
         }
     
+        function createRoomDetails(){
+            let tRoomDetails=[];
+
+            //step 1: accessing each room
+            for(let i=0;i<rooms.length;i++){
+                let tRoomDetail={
+                    "room":null,
+                    "timeSlots":null
+                }
+                const room=rooms[i];
+                tRoomDetail.room=room
+                const clinicSessionsOfRoom=room.clinicSessions;//'ClincSession' references in 'Room' 
+                
+                let timeSlots=[];
+
+                //step 2: finding clincSession documents from clinicSession references
+                for(let j=0;j<clinicSessionsOfRoom.length;j++){
+
+                    let clinicSessionDoc=null;
+                   l3: for(let k=0; k<clinicSessionsOfRoom.length;k++){
+                        if(clinicSessions[k]._id==clinicSessionsOfRoom[j]){
+                             clinicSessionDoc=clinicSessions[k];
+                            break l3;
+                        }
+                    }
+                // step 3: creating time slot string and adding to timeSlots
+                let timeSlot=`from ${clinicSessionDoc.startsAt} to ${clinicSessionDoc.endsAt}`
+                timeSlots.push(timeSlot);
+
+                }
+
+                tRoomDetail.timeSlots=timeSlots;
+                tRoomDetails.push(tRoomDetail);
+
+            }
+
+            setRoomDetails(tRoomDetails);
+            
+        }
+
+        function toggleShowTimeSlots(value){//value : true/false
+            setShowTimeSlots(value);
+        }
+     
     return (<>
-    
-    <div className="doctors">
+    <div className="createClinicSession_manageClinicSessions">
+        <h2>Create Clinic Session</h2>
+    <div className="doctors_manageClinicSessions">
     <button onClick={createDoctorDetails}>Load</button>
-    <table className="table table-striped">
+    <h3>Select Doctor</h3>
+    <table className="table table-striped_manageClinicSessions">
         <thead>
             <tr>
                 <th>Name</th>
@@ -108,6 +159,7 @@ function ManageClinicSessions() {
                 <th>Specialization</th>
                 <th>Educational Abbreviation</th>
                 <th>General Slot Duration</th>
+                <th>current clinic session time slots </th>
             </tr>
         </thead>
         <tbody>
@@ -120,15 +172,53 @@ function ManageClinicSessions() {
                     <td>{detail.doctor.specialization}</td>
                     <td>{detail.doctor.educationAbbrivation}</td>
                     <td>{detail.doctor.generalSlotDuration}</td>
-                    <td>{detail.timeSlots && detail.timeSlots.map(timeSlot=>(
-                        <div key={timeSlot}>{timeSlot}</div>
-                    ))}</td>
+                    <td>{showTimeSlots ? (<ul>{detail.timeSlots && detail.timeSlots.map(timeSlot=>(
+                        <div key={timeSlot}><li>{timeSlot}</li></div>
+                    ))}<button onClick={()=>toggleShowTimeSlots(false)}>minimize</button></ul>):(<button onClick={()=>toggleShowTimeSlots(true)}>show time slots</button>)}</td>
+                    <td><button className="btn btn-primary">select</button></td>
                 </tr>
             ))}
         </tbody>
     </table>
 </div>
 
+
+<div className="rooms_manageClinicSessions">
+    <button onClick={createRoomDetails}>Load</button>
+    <h3>Select room</h3>
+    <table className="table table-striped_manageClinicSessions">
+        <thead>
+            <tr>
+                <th>Room Number</th>
+                <th>current clinic session time slots</th>
+            </tr>
+        </thead>
+        <tbody>{roomDetails && roomDetails.map(detail=>(
+            <tr key={detail.room._id}>
+                <td>{detail.room.roomNumber}</td>
+                <td>{detail.timeSlots && detail.timeSlots.map(timeSlot=>(
+                    <div key={timeSlot}><li>{timeSlot}</li></div>
+                ))}</td>
+                <td><button className="btn btn-primary">select</button></td>
+            </tr>
+        ))}</tbody>
+    </table>
+</div>
+
+<div className="selectDateTime_manageClinicSessions" >
+    <label htmlFor="datetime">select time: </label>
+<input
+id="datetime"
+type="datetime-local"
+aria-label="Date and time" 
+value={minDateTime}
+min={minDateTime}
+onChange={handleDateTimeChange} />
+   
+</div>
+
+
+</div>
       
 
     </>)
