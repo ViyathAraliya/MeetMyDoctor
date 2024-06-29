@@ -18,7 +18,9 @@ function ManageClinicSessions() {
     //DateTime 
     const[minDateTime,setMinDateTime]=useState(getCurrentDateTime());
 
-    const[showTimeSlots, setShowTimeSlots]=useState(false);
+    const[showTimeSlots_doctor, setShowTimeSlots_doctor]=useState(false);
+    const[shotTimeSlots_doctorId,setShowTimeSlots_doctorId]=useState(null);
+    
 
     function getCurrentDateTime(){
         const now=new Date();
@@ -95,7 +97,7 @@ function ManageClinicSessions() {
                 tDoctorDetail.timeSlots=timeSlots;
                 tDoctorDetails.push(tDoctorDetail);
             }
-           console.log(tDoctorDetails)
+           
             setDoctorDetails(tDoctorDetails);
         }
     
@@ -116,15 +118,20 @@ function ManageClinicSessions() {
 
                 //step 2: finding clincSession documents from clinicSession references
                 for(let j=0;j<clinicSessionsOfRoom.length;j++){
-
+                    
                     let clinicSessionDoc=null;
-                   l3: for(let k=0; k<clinicSessionsOfRoom.length;k++){
+                   l3: for(let k=0; k<clinicSessions.length;k++){
+                    
                         if(clinicSessions[k]._id==clinicSessionsOfRoom[j]){
+                         
                              clinicSessionDoc=clinicSessions[k];
+                            
                             break l3;
                         }
                     }
+                   
                 // step 3: creating time slot string and adding to timeSlots
+              
                 let timeSlot=`from ${clinicSessionDoc.startsAt} to ${clinicSessionDoc.endsAt}`
                 timeSlots.push(timeSlot);
 
@@ -139,8 +146,10 @@ function ManageClinicSessions() {
             
         }
 
-        function toggleShowTimeSlots(value){//value : true/false
-            setShowTimeSlots(value);
+        const toggleShowTimeSlots=(value,id)=>{//value : true/false
+            setShowTimeSlots_doctor(value);
+            setShowTimeSlots_doctorId(id);
+          
         }
      
     return (<>
@@ -165,16 +174,16 @@ function ManageClinicSessions() {
         <tbody>
             {doctorDetails && doctorDetails.map(detail => (
                 <tr key={detail.doctor._id}>
-                    <td>{detail.doctor.name}</td>
+                    <td>{detail.doctor._id}</td>
                     <td>{detail.doctor.contactNumber}</td>
                     <td>{detail.doctor.whatsapp}</td>
                     <td>{detail.doctor.email}</td>
                     <td>{detail.doctor.specialization}</td>
                     <td>{detail.doctor.educationAbbrivation}</td>
                     <td>{detail.doctor.generalSlotDuration}</td>
-                    <td>{showTimeSlots ? (<ul>{detail.timeSlots && detail.timeSlots.map(timeSlot=>(
+                    <td>{(showTimeSlots_doctor && detail.doctor._id==shotTimeSlots_doctorId) ? (<ul>{detail.timeSlots && detail.timeSlots.map(timeSlot=>(
                         <div key={timeSlot}><li>{timeSlot}</li></div>
-                    ))}<button onClick={()=>toggleShowTimeSlots(false)}>minimize</button></ul>):(<button onClick={()=>toggleShowTimeSlots(true)}>show time slots</button>)}</td>
+                    ))}<button onClick={()=>toggleShowTimeSlots(false)}>minimize</button></ul>):(<button onClick={()=>toggleShowTimeSlots(true,detail.doctor._id)}>show time slots</button>)}</td>
                     <td><button className="btn btn-primary">select</button></td>
                 </tr>
             ))}
