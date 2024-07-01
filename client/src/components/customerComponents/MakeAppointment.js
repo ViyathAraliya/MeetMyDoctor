@@ -16,24 +16,44 @@ function MakeAppointment() {
 
 
     // customer data
-
     const [patientName, setPatientName] = useState(null);
     const [contactNo, setContactNo] = useState(null);
     const [address, setAddress] = useState(null);
     const [description, setDescription] = useState(null);
 
 
+//returns a formated time String
+    const getTime = (time) => {
+        if (time instanceof Date) {
+
+            const year = time.getFullYear();
+            const month = time.getMonth();
+            const day = time.getDate();
+            const hours = time.getHours();
+            const mins = time.getMinutes();
+
+            let dayt = day < 10 ? `0${day}` : `${day}`
+            let montht = month < 10 ? `0${month}` : `${month}`
+            let hourst = hours < 10 ? `0${hours}` : `${hours}`
+            let minst = mins < 10 ? `0${mins}` : `${mins}`
+            let timeString = `${year}-${montht}-${dayt} ${hourst}:${minst}`;
+            return timeString
+        }
+        else { return "invalid time format"; }
+    }
+
     useEffect(() => {
         getClinicSessions();
         getDoctors();
         getRooms();
+        getTime(new Date());
     }, [])
 
 
     useEffect(() => {
-        
-        if (clinicSessionDetails!=null && doctors!=null && rooms!=null
-             && clinicSessions.length!=0 && doctors.length !=0  && rooms.length!=0) {
+
+        if (clinicSessionDetails != null && doctors != null && rooms != null
+            && clinicSessions.length != 0 && doctors.length != 0 && rooms.length != 0) {
             createClinicDetails();
         }
     }, [clinicSessions, doctors, rooms]);
@@ -81,7 +101,7 @@ function MakeAppointment() {
     }
     // function 3: create 'clinicDetails' array to display info in a table to be read by customer/patient
     function createClinicDetails() {
-       
+
 
         const details = [];
 
@@ -89,11 +109,11 @@ function MakeAppointment() {
         for (let i = 0; i < clinicSessions.length; i++) {
 
             let detail = {
-                "id":clinicSessions[i]._id,
+                "id": clinicSessions[i]._id,
                 "doctor": null,
                 "room": null,
-                "startsAt": clinicSessions[i].startsAt,
-                "endsAt": clinicSessions[i].endsAt
+                "startsAt": getTime(new Date(clinicSessions[i].startsAt)),
+                "endsAt": getTime(new Date(clinicSessions[i].endsAt))
             }
             const doctorId_CS = clinicSessions[i].doctorId;
             const roomId_CS = clinicSessions[i].roomId;
@@ -118,8 +138,8 @@ function MakeAppointment() {
                 }
             }
             details.push(detail);
-            
-            
+
+
         }
         setClinicSessionDetails(details);
     }
@@ -212,7 +232,7 @@ function MakeAppointment() {
                                     <td>{detail.doctor.educationAbbrivation}</td>
                                     <td>{detail.startsAt}</td>
                                     <td>{detail.endsAt}</td>
-                                  
+
                                     <td> <button className="btn btn-primary"
                                         onClick={() => { makeAppointment(detail.clinicSessionId) }}>Make an Appointment</button></td>
                                 </tr>
