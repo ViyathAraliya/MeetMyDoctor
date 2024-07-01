@@ -12,7 +12,7 @@ const getCurrentLocalDateTime = () => {
     const formattedDate = format(parsedDate, "yyyy-MM-dd'T'HH:mm");
     return formattedDate;
 }
-function ManageClinicSessions() {
+function CreateClinicSessions() {
     const [doctors, setDoctors] = useState(null);
     const [rooms, setRooms] = useState(null);
     const [clinicSessions, setClinicSessions] = useState(null);
@@ -341,4 +341,4 @@ function ManageClinicSessions() {
 
     </>)
 }
-export default ManageClinicSessions;
+export default CreateClinicSessions;
