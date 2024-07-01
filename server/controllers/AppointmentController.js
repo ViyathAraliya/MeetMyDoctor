@@ -6,7 +6,7 @@ const Doctor = require("../models/Doctor");
 const AppointmentUpdateDto = require("../dtos/AppointmentUpdateDto");
 
 const addAppointment = async (req, res) => {
-  
+ 
 
   const { patientName, contactNo, address, queueNumber, description, clinicSessionId } = req.body;
 
@@ -25,8 +25,9 @@ const addAppointment = async (req, res) => {
   try {
 
     //step 3: retrieving related 'ClinicSession' doc
+  
     const clinicSession = await ClinicSession.findById(appointment.clinicSession);
-    if(clinicSession==null){
+    if(clinicSession==null){ 
       return res.status(404).send("clinic session not found");
     }
 
@@ -140,7 +141,7 @@ const deleteAppointment = async (appointmentId) => {
     return true;
 
   } catch (error) {
-   
+ 
     return error;
   }
 

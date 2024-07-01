@@ -107,14 +107,12 @@ const deleteClinicSession = async (req, res) => {
   const deleteClinicSessionDto = new ClinicSessionDto(id);
   try {
     const idStr = deleteClinicSessionDto.id;
-   console.log(idStr)
+
    const id = new mongoose.Types.ObjectId(idStr);
-   console.log(id)
+  
     const clinicSession =await ClinicSession.findById(id);
   
     const roomId = clinicSession.roomId;
-
-  console.log(roomId);
 
 
     //step 1: delete 'ClinicSession' from 'clinicsessions'

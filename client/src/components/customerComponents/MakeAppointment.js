@@ -234,7 +234,7 @@ function MakeAppointment() {
                                     <td>{detail.endsAt}</td>
 
                                     <td> <button className="btn btn-primary"
-                                        onClick={() => { makeAppointment(detail.clinicSessionId) }}>Make an Appointment</button></td>
+                                        onClick={() => { makeAppointment(detail.id) }}>Make an Appointment</button></td>
                                 </tr>
 
 
