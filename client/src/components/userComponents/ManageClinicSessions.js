@@ -53,6 +53,14 @@ function ManageClinicSessions() {
 
     }, [])
 
+    useEffect(()=>{
+        if(doctors!=null && rooms!=null && clinicSessions!=null && doctors.length!=0
+            && rooms.length!=0 && clinicSessions.length!=null){
+                createDoctorDetails();
+                createRoomDetails();
+            }
+    },[doctors,rooms,clinicSessions])
+
     // set default endsAt datetim
     useEffect(() => {
 
@@ -186,13 +194,14 @@ function ManageClinicSessions() {
     }
 
     function handleDateTimeChange_endsAt(event) {
+       
         setEndsAt(event.target.value);
     }
 
 
     async function createClinicSession() {
         if (doctorId == null || roomId == null) {
-            return console.log("room and doctor null");
+            return console.log("please select a doctor and a room");
         }
 
         const data = {
@@ -214,7 +223,7 @@ function ManageClinicSessions() {
         <div className="createClinicSession_manageClinicSessions">
             <h2>Create Clinic Session</h2>
             <div className="doctors_manageClinicSessions">
-                <button onClick={createDoctorDetails}>Load</button>
+               
                 <h3>Select Doctor</h3>
                 <table className="table table-striped_manageClinicSessions">
                     <thead>
@@ -232,7 +241,7 @@ function ManageClinicSessions() {
                     <tbody>
                         {doctorDetails && doctorDetails.map((detail, index) => (
                             <tr key={detail.doctor._id}>
-                                <td>{detail.doctor._id}</td>
+                                <td>{detail.doctor.name}</td>
                                 <td>{detail.doctor.contactNumber}</td>
                                 <td>{detail.doctor.whatsapp}</td>
                                 <td>{detail.doctor.email}</td>
@@ -260,7 +269,7 @@ function ManageClinicSessions() {
 
 
             <div className="rooms_manageClinicSessions">
-                <button onClick={createRoomDetails}>Load</button>
+               
                 <h3>Select room</h3>
                 <table className="table table-striped_manageClinicSessions">
                     <thead>
@@ -288,27 +297,7 @@ function ManageClinicSessions() {
                 </table>
             </div>
 
-            <div className="selectStartTime_manageClinicSessions" >
-                <label htmlFor="datetime">select start time: </label>
-                <input
-                    id="datetime"
-                    type="datetime-local"
-                    aria-label="Date and time"
-                    value={startsAt}
-                    min={startsAt}
-                    onChange={handleDateTimeChange_startAt} />
-
-            </div>
-            <div className="selectEndTime_manageClinicSessions">
-                <label htmlFor="datetime">select end time: </label>
-                <input
-                    id="datetime"
-                    type="datetime-local"
-                    aria-label="Date and time"
-                    value={endsAt}
-                    min={endsAt}
-                    onChange={handleDateTimeChange_endsAt} />
-            </div>
+           
             <div className="submitCreateRequest_manageClinicSessions">
                 <label htmlFor="doctor"> Doctor :
                     <span style={{ color: doctorId == null ? 'red' : 'inherit' }}>
@@ -322,6 +311,28 @@ function ManageClinicSessions() {
                         {roomId == null ? "not selected yet" : `room Number : ${room.roomNumber}`}
                     </span>
                 </label>
+                <br></br>
+                <div className="selectStartTime_manageClinicSessions" >
+                <label htmlFor="startsAt">{'select start time : '} </label>
+                <input
+                    id="startsAt"
+                    type="datetime-local"
+                    aria-label="Date and time"
+                    value={startsAt}
+                    min={startsAt}
+                    onChange={handleDateTimeChange_startAt} />
+
+            </div>
+            <div className="selectEndTime_manageClinicSessions">
+                <label htmlFor="endsAt">{'select end time : '} </label>
+                <input
+                    id="endsAt"
+                    type="datetime-local"
+                    aria-label="Date and time"
+                    value={endsAt}
+                    min={endsAt}
+                    onChange={handleDateTimeChange_endsAt} />
+            </div>
                 <br></br>
                 <button onClick={createClinicSession}>Create Clinic Session</button>
             </div>
