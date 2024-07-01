@@ -1,9 +1,17 @@
 import axios from "axios";
+import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 
 
+const getCurrentLocalDateTime=()=>{
+    const currentDate=new Date();
+    const localDateTimeString=currentDate.toLocaleString();
+    const parsedDate=new Date(localDateTimeString);
+    const formattedDate=format(parsedDate,"yyyy-MM-dd'T'HH:mm");
+    return formattedDate;
+}
 function ManageClinicSessions() {
     const [doctors, setDoctors] = useState(null);
     const [rooms, setRooms] = useState(null);
@@ -15,9 +23,7 @@ function ManageClinicSessions() {
     //only difference between room and roomDetails is timeSlots mapped to room
     const [roomDetails, setRoomDetails] = useState(null);
 
-    //DateTime 
-    const [minDateTime, setMinDateTime] = useState(getCurrentDateTime());
-
+    
     // to toggle visibility of time slots in doctor detail table
     const [showTimeSlots_doctor, setShowTimeSlots_doctor] = useState(false);
     const [showTimeSlots_doctorId, setShowTimeSlots_doctorId] = useState(null);
@@ -26,22 +32,27 @@ function ManageClinicSessions() {
     const [showTimeSlots_room, setShowTimeSlots_room] = useState(false);
     const [showTimeSlots_roomId, setShowTimeSlots_roomId] = useState(null);
 
+    const [doctorId,setDoctorId]=useState(null);
+    const [roomId,setRoomId]=useState(null);
+    
+    const [startsAt,setStartsAt]=useState(getCurrentLocalDateTime);
+    const [endsAt,setEndsAt]=useState(getCurrentLocalDateTime);
+    
 
-    function getCurrentDateTime() {
-        const now = new Date();
-        return now.toISOString().slice(0, 16);
-    }
-
-    function handleDateTimeChange(event) {
-        setMinDateTime(event.target.value);
-    }
-
+// fetch data
     useEffect(() => {
         getDoctors();
         getRooms();
         getClinicSessions();
 
+
     }, [])
+
+    // set default endsAt datetim
+    useEffect(()=>{
+        
+        setEndsAt(startsAt);
+    },[startsAt])
 
 
     async function getDoctors() {
@@ -161,7 +172,42 @@ function ManageClinicSessions() {
     const toggleShowTimeTableSlots_room=(value,id)=>{
         setShowTimeSlots_room(value);
         setShowTimeSlots_roomId(id);
-        console.log(value,id)
+        
+    }
+
+    //to handle datetimes
+    function getCurrentDateTime() {
+        const now = new Date();
+        return now.toISOString().slice(0, 16);
+    }
+
+    function handleDateTimeChange_startAt(event) {
+        setStartsAt(event.target.value);
+    }
+    
+    function handleDateTimeChange_endsAt(event){
+        setEndsAt(event.target.value);
+    }
+
+
+    async function createClinicSession(){
+        if(doctorId==null || roomId==null){
+            return console.log("room and doctor null");
+        }
+        
+        const data={
+                    "id":null,
+                    "doctorId":doctorId,
+                    "startsAt":startsAt,
+                    "endsAt":endsAt,
+                    "roomId":roomId
+                }
+        try{
+            const res=await axios.post("http://localhost:8080/clinicSessions",data);
+            console.log(res.data);
+        }catch(error){
+            console.log(error.response.data);
+        }
     }
 
     return (<>
@@ -202,7 +248,7 @@ function ManageClinicSessions() {
                                     </ul>) :
                                     (<button onClick={() => toggleShowTimeSlots_doctor(true, detail.doctor._id)}>show time slots</button>)}
                                     </td>
-                                <td><button className="btn btn-primary">select</button></td>
+                                <td><button className="btn btn-primary" onClick={()=>setDoctorId(detail.doctor._id)}>select</button></td>
                             </tr>
                         ))}
                     </tbody>
@@ -230,25 +276,35 @@ function ManageClinicSessions() {
                                 <button onClick={()=>toggleShowTimeTableSlots_room(false)}>minimize</button></ul>
                                 
                             ) : (<button onClick={()=>toggleShowTimeTableSlots_room(true,detail.room._id)}>show time slots</button>)}</td>
-                            <td><button className="btn btn-primary">select</button></td>
+                            <td><button className="btn btn-primary" onClick={()=>setRoomId(detail.room._id)}>select</button></td>
                         </tr>
                     ))}</tbody>
                 </table>
             </div>
 
-            <div className="selectDateTime_manageClinicSessions" >
-                <label htmlFor="datetime">select time: </label>
+            <div className="selectStartTime_manageClinicSessions" >
+                <label htmlFor="datetime">select start time: </label>
                 <input
                     id="datetime"
                     type="datetime-local"
                     aria-label="Date and time"
-                    value={minDateTime}
-                    min={minDateTime}
-                    onChange={handleDateTimeChange} />
+                    value={startsAt}
+                    min={startsAt}
+                    onChange={handleDateTimeChange_startAt} />
 
             </div>
+            <div className="selectEndTime_manageClinicSessions">
+                <label htmlFor="datetime">select end time: </label>
+                <input
+                id="datetime"
+                type="datetime-local"
+                aria-label="Date and time"
+                value={endsAt}
+                min={endsAt}
+                onChange={handleDateTimeChange_endsAt}/>
+            </div>
 
-
+                    <button onClick={createClinicSession}>Create Clinic Session</button>
         </div>
 
 
