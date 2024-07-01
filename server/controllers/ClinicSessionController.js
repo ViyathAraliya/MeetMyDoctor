@@ -2,7 +2,6 @@ const { default: mongoose, Mongoose } = require("mongoose");
 const ClinicSessionDto = require("../dtos/ClinicSessionDto");
 const ClinicSession = require("../models/ClinicSession");
 const Room = require("../models/Room");
-const Doctor = require("../models/Doctor");
 
 /**
  * 
@@ -17,6 +16,7 @@ const addClinicSession = async (req, res) => {
   //5. add ref of 'ClinicSesison' to 'clinicSessions' array in relevent 'Room' doc and save
 
   const { id, doctorId, startsAt, endsAt, roomId } = req.body;
+
 
   const clinicSessionDto = new ClinicSessionDto(id, doctorId, startsAt, endsAt, roomId);
 
@@ -38,7 +38,7 @@ const addClinicSession = async (req, res) => {
     const doctorId = new mongoose.Types.ObjectId(doctorIdStr);
 
     const clinicSessions = await ClinicSession.find({ doctorId: doctorId });
-
+console.log(5)
     if (clinicSessions != null) {
       for (let i = 0; i < clinicSessions.length; i++) {
         const existingStartsAt = clinicSessions[i].startsAt;
