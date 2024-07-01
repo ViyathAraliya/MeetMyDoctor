@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 
-const getCurrentLocalDateTime=()=>{
-    const currentDate=new Date();
-    const localDateTimeString=currentDate.toLocaleString();
-    const parsedDate=new Date(localDateTimeString);
-    const formattedDate=format(parsedDate,"yyyy-MM-dd'T'HH:mm");
+const getCurrentLocalDateTime = () => {
+    const currentDate = new Date();
+    const localDateTimeString = currentDate.toLocaleString();
+    const parsedDate = new Date(localDateTimeString);
+    const formattedDate = format(parsedDate, "yyyy-MM-dd'T'HH:mm");
     return formattedDate;
 }
 function ManageClinicSessions() {
@@ -23,7 +23,7 @@ function ManageClinicSessions() {
     //only difference between room and roomDetails is timeSlots mapped to room
     const [roomDetails, setRoomDetails] = useState(null);
 
-    
+
     // to toggle visibility of time slots in doctor detail table
     const [showTimeSlots_doctor, setShowTimeSlots_doctor] = useState(false);
     const [showTimeSlots_doctorId, setShowTimeSlots_doctorId] = useState(null);
@@ -32,14 +32,19 @@ function ManageClinicSessions() {
     const [showTimeSlots_room, setShowTimeSlots_room] = useState(false);
     const [showTimeSlots_roomId, setShowTimeSlots_roomId] = useState(null);
 
-    const [doctorId,setDoctorId]=useState(null);
-    const [roomId,setRoomId]=useState(null);
-    
-    const [startsAt,setStartsAt]=useState(getCurrentLocalDateTime);
-    const [endsAt,setEndsAt]=useState(getCurrentLocalDateTime);
-    
+    //store doctorID and roomId
+    const [doctorId, setDoctorId] = useState(null);
+    const [roomId, setRoomId] = useState(null);
 
-// fetch data
+    //store starting and ending times
+    const [startsAt, setStartsAt] = useState(getCurrentLocalDateTime);
+    const [endsAt, setEndsAt] = useState(getCurrentLocalDateTime);
+
+    const [doctor, setDoctor] = useState(null);
+    const [room, setRoom] = useState(null);
+
+
+    // fetch data
     useEffect(() => {
         getDoctors();
         getRooms();
@@ -49,10 +54,10 @@ function ManageClinicSessions() {
     }, [])
 
     // set default endsAt datetim
-    useEffect(()=>{
-        
+    useEffect(() => {
+
         setEndsAt(startsAt);
-    },[startsAt])
+    }, [startsAt])
 
 
     async function getDoctors() {
@@ -169,43 +174,38 @@ function ManageClinicSessions() {
 
     }
 
-    const toggleShowTimeTableSlots_room=(value,id)=>{
+    const toggleShowTimeTableSlots_room = (value, id) => {
         setShowTimeSlots_room(value);
         setShowTimeSlots_roomId(id);
-        
+
     }
 
     //to handle datetimes
-    function getCurrentDateTime() {
-        const now = new Date();
-        return now.toISOString().slice(0, 16);
-    }
-
     function handleDateTimeChange_startAt(event) {
         setStartsAt(event.target.value);
     }
-    
-    function handleDateTimeChange_endsAt(event){
+
+    function handleDateTimeChange_endsAt(event) {
         setEndsAt(event.target.value);
     }
 
 
-    async function createClinicSession(){
-        if(doctorId==null || roomId==null){
+    async function createClinicSession() {
+        if (doctorId == null || roomId == null) {
             return console.log("room and doctor null");
         }
-        
-        const data={
-                    "id":null,
-                    "doctorId":doctorId,
-                    "startsAt":startsAt,
-                    "endsAt":endsAt,
-                    "roomId":roomId
-                }
-        try{
-            const res=await axios.post("http://localhost:8080/clinicSessions",data);
+
+        const data = {
+            "id": null,
+            "doctorId": doctorId,
+            "startsAt": startsAt,
+            "endsAt": endsAt,
+            "roomId": roomId
+        }
+        try {
+            const res = await axios.post("http://localhost:8080/clinicSessions", data);
             console.log(res.data);
-        }catch(error){
+        } catch (error) {
             console.log(error.response.data);
         }
     }
@@ -230,7 +230,7 @@ function ManageClinicSessions() {
                         </tr>
                     </thead>
                     <tbody>
-                        {doctorDetails && doctorDetails.map(detail => (
+                        {doctorDetails && doctorDetails.map((detail, index) => (
                             <tr key={detail.doctor._id}>
                                 <td>{detail.doctor._id}</td>
                                 <td>{detail.doctor.contactNumber}</td>
@@ -242,13 +242,16 @@ function ManageClinicSessions() {
                                 <td>{(showTimeSlots_doctor && detail.doctor._id == showTimeSlots_doctorId) ? (
                                     <ul>{
                                         detail.timeSlots && detail.timeSlots.map(timeSlot => (
-                                        <div key={timeSlot}><li>{timeSlot}</li></div>
-                                    ))
+                                            <div key={timeSlot}><li>{timeSlot}</li></div>
+                                        ))
                                     }<button onClick={() => toggleShowTimeSlots_doctor(false)}>minimize</button>
                                     </ul>) :
                                     (<button onClick={() => toggleShowTimeSlots_doctor(true, detail.doctor._id)}>show time slots</button>)}
-                                    </td>
-                                <td><button className="btn btn-primary" onClick={()=>setDoctorId(detail.doctor._id)}>select</button></td>
+                                </td>
+                                <td><button className="btn btn-primary" onClick={() => {
+                                    setDoctorId(detail.doctor._id);
+                                    setDoctor(doctors[index]);
+                                }}>select</button></td>
                             </tr>
                         ))}
                     </tbody>
@@ -266,17 +269,20 @@ function ManageClinicSessions() {
                             <th>current clinic session time slots</th>
                         </tr>
                     </thead>
-                    <tbody>{roomDetails && roomDetails.map(detail => (
+                    <tbody>{roomDetails && roomDetails.map((detail, index) => (
                         <tr key={detail.room._id}>
                             <td>{detail.room.roomNumber}</td>
                             <td>{(showTimeSlots_room && showTimeSlots_roomId == detail.room._id) ? (
                                 <ul>{detail.timeSlots && detail.timeSlots.map(timeSlot => (
                                     <div key={timeSlot}><li>{timeSlot}</li></div>
                                 ))}
-                                <button onClick={()=>toggleShowTimeTableSlots_room(false)}>minimize</button></ul>
-                                
-                            ) : (<button onClick={()=>toggleShowTimeTableSlots_room(true,detail.room._id)}>show time slots</button>)}</td>
-                            <td><button className="btn btn-primary" onClick={()=>setRoomId(detail.room._id)}>select</button></td>
+                                    <button onClick={() => toggleShowTimeTableSlots_room(false)}>minimize</button></ul>
+
+                            ) : (<button onClick={() => toggleShowTimeTableSlots_room(true, detail.room._id)}>show time slots</button>)}</td>
+                            <td><button className="btn btn-primary" onClick={() => {
+                                setRoomId(detail.room._id);
+                                setRoom(rooms[index]);
+                            }}>select</button></td>
                         </tr>
                     ))}</tbody>
                 </table>
@@ -296,15 +302,29 @@ function ManageClinicSessions() {
             <div className="selectEndTime_manageClinicSessions">
                 <label htmlFor="datetime">select end time: </label>
                 <input
-                id="datetime"
-                type="datetime-local"
-                aria-label="Date and time"
-                value={endsAt}
-                min={endsAt}
-                onChange={handleDateTimeChange_endsAt}/>
+                    id="datetime"
+                    type="datetime-local"
+                    aria-label="Date and time"
+                    value={endsAt}
+                    min={endsAt}
+                    onChange={handleDateTimeChange_endsAt} />
             </div>
-
-                    <button onClick={createClinicSession}>Create Clinic Session</button>
+            <div className="submitCreateRequest_manageClinicSessions">
+                <label htmlFor="doctor"> Doctor :
+                    <span style={{ color: doctorId == null ? 'red' : 'inherit' }}>
+                        {doctorId == null ? "not selected yet" : `name : ${doctor.name} , Specialization : ${doctor.specialization}`}
+                    </span>
+                </label>
+                <br>
+                </br>
+                <label htmlFor='room'>Room :
+                    <span style={{ color: roomId == null ? 'red' : 'inherit' }}>
+                        {roomId == null ? "not selected yet" : `room Number : ${room.roomNumber}`}
+                    </span>
+                </label>
+                <br></br>
+                <button onClick={createClinicSession}>Create Clinic Session</button>
+            </div>
         </div>
 
 
