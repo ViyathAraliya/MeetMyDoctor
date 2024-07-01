@@ -38,7 +38,7 @@ const addClinicSession = async (req, res) => {
     const doctorId = new mongoose.Types.ObjectId(doctorIdStr);
 
     const clinicSessions = await ClinicSession.find({ doctorId: doctorId });
-console.log(5)
+
     if (clinicSessions != null) {
       for (let i = 0; i < clinicSessions.length; i++) {
         const existingStartsAt = clinicSessions[i].startsAt;
