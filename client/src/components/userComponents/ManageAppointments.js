@@ -28,7 +28,9 @@ function ManageAppointments() {
     }, [])
 
     useEffect(() => {
-        if (appointments !== null || doctors !== null || clinicSessions !== null || rooms !== null) {
+        if (appointments != null && doctors != null && clinicSessions != null && rooms != null
+&& appointments.length!=0 && doctors.length!=0 && clinicSessions.length!=0 && rooms.length!=0
+        ) {
             createAppointmentDetails();
         }
     }, [appointments, doctors, clinicSessions, rooms])
@@ -97,7 +99,7 @@ function ManageAppointments() {
                     if (clinicSessionId == clinicSessions[i]._id) {
 
                         clinicSession = clinicSessions[i];
-                        console.log(clinicSession)
+                     
                         break l2;
                     }
                 }
@@ -105,16 +107,16 @@ function ManageAppointments() {
                 //step 3:  find the doctor's name from 'doctors'and assisgn to 'doctorName' property in 'appointmentDetail'
                 const doctorId = clinicSession.doctorId;
                 l3: for (let i = 0; i < doctors.length; i++) {
-                    console.log("com : ", doctorId, " vs ", doctors[i]._id, " : ", doctorId == doctors[i]._id)
+                  
                     if (doctorId == doctors[i]._id) {
                         appointmentDetail.doctorName = doctors[i].name;
-                        console.log("found")
+                    
                         break l3;
                     }
                 }
 
                 // step 4 : find the roomNumber from 'rooms' and assign to 'roomNumber' property in 'appointmentDetail' 
-                const roomId = clinicSession.roomId;
+                const roomId = clinicSession.roomId; 
                 l4: for (let i = 0; i < rooms.length; i++) {
                     if (roomId == rooms[i]._id) {
                         appointmentDetail.roomNumber = rooms[i].roomNumber;
@@ -132,6 +134,7 @@ function ManageAppointments() {
             }
             setAppointmentDetails(appointmentDetails);
         } catch (error) {
+           
             console.log(error)
         }
 
@@ -140,14 +143,15 @@ function ManageAppointments() {
     }
 
     //delete if status='DISCARD' , update id status('CONFIRMED')
-    async function updateAppointmentStatus(appointmentId, status) {
+    async function updateAppointmentStatus(appointmentId, status) {  
         try {
             const data = {
                 "appointmentId": appointmentId,
                 "status": status
             }
+        
             const res = await axios.post("http://localhost:8080/appointments/updateStatus", data);
-            console.log(res);
+           
             getAppointments();
         } catch (error) {
             console.log(error);
