@@ -22,5 +22,5 @@ const DoctorSchema = new mongoose.Schema({
     generalSlotDuration: Number  
 
 })
-
+DoctorSchema.index({ contactNumber: 1 }, { unique: true });
 module.exports = mongoose.model('Doctor', DoctorSchema);
