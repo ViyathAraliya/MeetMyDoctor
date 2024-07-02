@@ -10,7 +10,7 @@ function Home(){
    <li><Link to="/manageDoctors">Manage Doctors</Link></li>
    <li><Link to="/rooms">Manage Rooms</Link></li>
    <li><Link to="/manageClinicSessions">Manage ClincSessions</Link></li>
-
+   
     </>)
 }
 export default Home;
