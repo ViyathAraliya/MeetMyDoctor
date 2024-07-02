@@ -6,7 +6,7 @@ const Doctor = require("../models/Doctor");
 const AppointmentUpdateDto = require("../dtos/AppointmentUpdateDto");
 
 const addAppointment = async (req, res) => {
- 
+  const session = await mongoose.startSession();
 
   const { patientName, contactNo, address, queueNumber, description, clinicSessionId } = req.body;
 
@@ -22,12 +22,15 @@ const addAppointment = async (req, res) => {
     address: appointmentDto.address, clinicSession: _clinicSessionId
   });
 
+  let response = null;
+  let succes = false;
   try {
+    session.startTransaction();
 
     //step 3: retrieving related 'ClinicSession' doc
-  
+
     const clinicSession = await ClinicSession.findById(appointment.clinicSession);
-    if(clinicSession==null){ 
+    if (clinicSession == null) {
       return res.status(404).send("clinic session not found");
     }
 
@@ -56,6 +59,7 @@ const addAppointment = async (req, res) => {
 
     //step 7: saving the 'Appointment' doc in 'appointments' collection
     await appointment.save();
+
     const savedAppointmentId = appointment._id;
 
     //step 6: adding 'Appointment' doc reference  to 'appointments' array of the related 'ClinicSession'
@@ -63,23 +67,36 @@ const addAppointment = async (req, res) => {
 
     // saving 8: saving the clinic session
     await clinicSession.save();
+    response = appointment;
+    succes = true;
 
-
-    res.status(201).send(appointment);
   } catch (error) {
-   
-    res.status(400).send(error);
+    return res.stats(500).send(error);
+  }
+  finally {
+    if (succes) {
+      await session.commitTransaction();
+      await session.endSession();
+      return res.status(201).send(response);
+    }
+
+    await session.abortTransaction();
+    await session.endSession();
+
   }
 
 }
 
 
 const updateAppointmentStatus = async (req, res) => {
+  const session = await mongoose.startSession();
+  let succes = false;
 
   const { appointmentId, status } = req.body;
   const appointmentUpdateDto = new AppointmentUpdateDto(appointmentId, status);
 
   try {
+    session.startTransaction();
     const appointmentId = appointmentUpdateDto.appointmentId;
 
     //case 1: delete if appointment status is "DISCARD"
@@ -102,14 +119,20 @@ const updateAppointmentStatus = async (req, res) => {
       return res.status(404).send('Appontment not found');
     }
 
-    return res.status(200).send("Appintment updated succesfully");
-
-
-
+    succes = true;
 
   } catch (error) {
 
     return res.status(400).send(error);
+  }
+  finally {
+    if (succes) {
+      await session.commitTransaction();
+      await session.endSession();
+      return res.status(200).send("Appintment updated succesfully");
+    }
+    await session.abortTransaction();
+    await session.endSession();
   }
 
 }
@@ -141,17 +164,17 @@ const deleteAppointment = async (appointmentId) => {
     return true;
 
   } catch (error) {
- 
+
     return error;
   }
 
 }
 
-const getAppointments=async(req,res)=>{
-  try{
-    const appointements=await Appointment.find();
+const getAppointments = async (req, res) => {
+  try {
+    const appointements = await Appointment.find();
     return res.status(200).send(appointements);
-  }catch(error){
+  } catch (error) {
     return res.status(500).send(error);
   }
 }
