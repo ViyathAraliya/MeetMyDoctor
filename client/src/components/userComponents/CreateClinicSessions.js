@@ -53,13 +53,13 @@ function CreateClinicSessions() {
 
     }, [])
 
-    useEffect(()=>{
-        if(doctors!=null && rooms!=null && clinicSessions!=null && doctors.length!=0
-            && rooms.length!=0 && clinicSessions.length!=null){
-                createDoctorDetails();
-                createRoomDetails();
-            }
-    },[doctors,rooms,clinicSessions])
+    useEffect(() => {
+
+        createDoctorDetails();
+        createRoomDetails();
+
+
+    }, [doctors, rooms, clinicSessions])
 
     // set default endsAt datetim
     useEffect(() => {
@@ -72,6 +72,7 @@ function CreateClinicSessions() {
         try {
             const res = await axios.get("http://localhost:8080/doctors");
             setDoctors(res.data);
+            
         } catch (error) {
             console.log(error);
             toast.error(error);
@@ -99,11 +100,13 @@ function CreateClinicSessions() {
         }
     }
     function createDoctorDetails() {
-
+        if (doctors == null) { return; }
         let tDoctorDetails = [];
 
         // step 1 : access each doctor
-        for (let i = 0; i < doctors.length; i++) {
+        
+       
+        l1: for (let i = 0; i < doctors.length; i++) {
 
             let tDoctorDetail = {
                 "doctor": null,
@@ -111,16 +114,21 @@ function CreateClinicSessions() {
             }
             const doctor = doctors[i];
             tDoctorDetail.doctor = doctor;
+
             let timeSlots = [];
+          
+            if (clinicSessions != null) {
+               
 
-            //step 2:  find clinic sessions of the doctor
-            for (let j = 0; j < clinicSessions.length; j++) {
-                const clinicSession = clinicSessions[j];
+                //step 2:  find clinic sessions of the doctor
+                for (let j = 0; j < clinicSessions.length; j++) {
+                    const clinicSession = clinicSessions[j];
 
-                // step 3 : if found push the timeSlot to timeSlots
-                if (doctor._id == clinicSession.doctorId) {
-                    let timeSlot = `from ${clinicSession.startsAt} to ${clinicSession.endsAt}`
-                    timeSlots.push(timeSlot);
+                    // step 3 : if found push the timeSlot to timeSlots
+                    if (doctor._id == clinicSession.doctorId) {
+                        let timeSlot = `from ${clinicSession.startsAt} to ${clinicSession.endsAt}`
+                        timeSlots.push(timeSlot);
+                    }
                 }
             }
 
@@ -129,12 +137,15 @@ function CreateClinicSessions() {
         }
 
         setDoctorDetails(tDoctorDetails);
+
+
     }
 
     function createRoomDetails() {
         let tRoomDetails = [];
 
         //step 1: accessing each room
+        if (rooms == null) { return; }
         for (let i = 0; i < rooms.length; i++) {
             let tRoomDetail = {
                 "room": null,
@@ -149,7 +160,7 @@ function CreateClinicSessions() {
             //step 2: finding clincSession documents from clinicSession references
             for (let j = 0; j < clinicSessionsOfRoom.length; j++) {
 
-                let clinicSessionDoc = null;
+                let clinicSessionDoc = null; if (clinicSessions == null) { return; }
                 l3: for (let k = 0; k < clinicSessions.length; k++) {
 
                     if (clinicSessions[k]._id == clinicSessionsOfRoom[j]) {
@@ -194,7 +205,7 @@ function CreateClinicSessions() {
     }
 
     function handleDateTimeChange_endsAt(event) {
-       
+
         setEndsAt(event.target.value);
     }
 
@@ -214,6 +225,7 @@ function CreateClinicSessions() {
         try {
             const res = await axios.post("http://localhost:8080/clinicSessions", data);
             console.log(res.data);
+            
         } catch (error) {
             console.log(error.response.data);
         }
@@ -223,7 +235,7 @@ function CreateClinicSessions() {
         <div className="createClinicSession_manageClinicSessions">
             <h2>Create Clinic Session</h2>
             <div className="doctors_manageClinicSessions">
-               
+
                 <h3>Select Doctor</h3>
                 <table className="table table-striped_manageClinicSessions">
                     <thead>
@@ -269,7 +281,7 @@ function CreateClinicSessions() {
 
 
             <div className="rooms_manageClinicSessions">
-               
+
                 <h3>Select room</h3>
                 <table className="table table-striped_manageClinicSessions">
                     <thead>
@@ -297,7 +309,7 @@ function CreateClinicSessions() {
                 </table>
             </div>
 
-           
+
             <div className="submitCreateRequest_manageClinicSessions">
                 <label htmlFor="doctor"> Doctor :
                     <span style={{ color: doctorId == null ? 'red' : 'inherit' }}>
@@ -313,26 +325,26 @@ function CreateClinicSessions() {
                 </label>
                 <br></br>
                 <div className="selectStartTime_manageClinicSessions" >
-                <label htmlFor="startsAt">{'select start time : '} </label>
-                <input
-                    id="startsAt"
-                    type="datetime-local"
-                    aria-label="Date and time"
-                    value={startsAt}
-                    min={startsAt}
-                    onChange={handleDateTimeChange_startAt} />
+                    <label htmlFor="startsAt">{'select start time : '} </label>
+                    <input
+                        id="startsAt"
+                        type="datetime-local"
+                        aria-label="Date and time"
+                        value={startsAt}
+                        min={startsAt}
+                        onChange={handleDateTimeChange_startAt} />
 
-            </div>
-            <div className="selectEndTime_manageClinicSessions">
-                <label htmlFor="endsAt">{'select end time : '} </label>
-                <input
-                    id="endsAt"
-                    type="datetime-local"
-                    aria-label="Date and time"
-                    value={endsAt}
-                    min={endsAt}
-                    onChange={handleDateTimeChange_endsAt} />
-            </div>
+                </div>
+                <div className="selectEndTime_manageClinicSessions">
+                    <label htmlFor="endsAt">{'select end time : '} </label>
+                    <input
+                        id="endsAt"
+                        type="datetime-local"
+                        aria-label="Date and time"
+                        value={endsAt}
+                        min={endsAt}
+                        onChange={handleDateTimeChange_endsAt} />
+                </div>
                 <br></br>
                 <button onClick={createClinicSession}>Create Clinic Session</button>
             </div>
