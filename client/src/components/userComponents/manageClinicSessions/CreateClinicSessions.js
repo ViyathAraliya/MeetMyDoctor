@@ -265,9 +265,9 @@ function CreateClinicSessions() {
                                         detail.timeSlots && detail.timeSlots.map(timeSlot => (
                                             <div key={timeSlot}><li>{timeSlot}</li></div>
                                         ))
-                                    }<button onClick={() => toggleShowTimeSlots_doctor(false)}>minimize</button>
+                                    }<button className="btn btn-primary"  onClick={() => toggleShowTimeSlots_doctor(false)} >minimize</button>
                                     </ul>) :
-                                    (<button onClick={() => toggleShowTimeSlots_doctor(true, detail.doctor._id)}>show time slots</button>)}
+                                    (<button className="btn btn-primary" onClick={() => toggleShowTimeSlots_doctor(true, detail.doctor._id)}>show time slots</button>)}
                                 </td>
                                 <td><button className="btn btn-primary" onClick={() => {
                                     setDoctorId(detail.doctor._id);
@@ -297,9 +297,9 @@ function CreateClinicSessions() {
                                 <ul>{detail.timeSlots && detail.timeSlots.map(timeSlot => (
                                     <div key={timeSlot}><li>{timeSlot}</li></div>
                                 ))}
-                                    <button onClick={() => toggleShowTimeTableSlots_room(false)}>minimize</button></ul>
+                                    <button className="btn btn-primary" onClick={() => toggleShowTimeTableSlots_room(false)}>minimize</button></ul>
 
-                            ) : (<button onClick={() => toggleShowTimeTableSlots_room(true, detail.room._id)}>show time slots</button>)}</td>
+                            ) : (<button className="btn btn-primary" onClick={() => toggleShowTimeTableSlots_room(true, detail.room._id)}>show time slots</button>)}</td>
                             <td><button className="btn btn-primary" onClick={() => {
                                 setRoomId(detail.room._id);
                                 setRoom(rooms[index]);
@@ -346,7 +346,7 @@ function CreateClinicSessions() {
                         onChange={handleDateTimeChange_endsAt} />
                 </div>
                 <br></br>
-                <button onClick={createClinicSession}>Create Clinic Session</button>
+                <button  className="btn btn-primary" onClick={createClinicSession}>Create Clinic Session</button>
             </div>
         </div>
 

@@ -9,6 +9,7 @@ function Home(){
    <li><Link to="/createClinicSessions">Create Clinic Sessions</Link></li>
    <li><Link to="/manageDoctors">Manage Doctors</Link></li>
    <li><Link to="/rooms">Manage Rooms</Link></li>
+   <li><Link to="/manageClinicSessions">Manage ClincSessions</Link></li>
 
     </>)
 }
