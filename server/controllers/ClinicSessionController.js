@@ -111,6 +111,12 @@ const deleteClinicSession = async (req, res) => {
    const id = new mongoose.Types.ObjectId(idStr);
   
     const clinicSession =await ClinicSession.findById(id);
+
+    const appointments=clinicSession.appointments;
+    if(appointments!=null && appointments.length>0){
+      return res.status(409).send("unable to  delete because there appointments"
+        +"registered with this clinic Session. If no appointment is confirmed yet discard them and try again");
+    }
   
     const roomId = clinicSession.roomId;
 
