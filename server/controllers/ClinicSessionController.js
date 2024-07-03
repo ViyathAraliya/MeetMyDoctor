@@ -9,17 +9,13 @@ const Room = require("../models/Room");
  * @param {Response} res 
  */
 const addClinicSession = async (req, res) => {
-  //1. check start time and end time
-  //2. check for time slot overlapping for doctor
-  //3. check for time slot overlapping for room
-  //4. save 'ClinicSession' document in 'clinicSessions'
-  //5. add ref of 'ClinicSesison' to 'clinicSessions' array in relevent 'Room' doc and save
+  const session = await mongoose.startSession();
+  let response = null;
+  let succes = false;
 
   const { id, doctorId, startsAt, endsAt, roomId } = req.body;
 
-
   const clinicSessionDto = new ClinicSessionDto(id, doctorId, startsAt, endsAt, roomId);
-
 
   // 1. check start time and end time 
   if (new Date(startsAt) < new Date()) {
@@ -29,6 +25,7 @@ const addClinicSession = async (req, res) => {
     return res.status(422).send("clinic ening time should come after the startining time")
   }
   try {
+    await session.startTransaction();
     const doctorIdStr = clinicSessionDto.doctorId;
     const startsAt = new Date(clinicSessionDto.startsAt);
     const endsAt = new Date(clinicSessionDto.endsAt);
@@ -51,7 +48,7 @@ const addClinicSession = async (req, res) => {
         }
       }
     }
-   
+
     // 3. check for time slot overlapping for room
     const roomId = new mongoose.Types.ObjectId(roomIdStr);
     const room = await Room.findById(roomId);
@@ -82,12 +79,23 @@ const addClinicSession = async (req, res) => {
     //5. Add 'ClinicSession' document ref to 'clinicSessions' array in related 'Room' document  
     const clinicSessionId = savedClinicSession._id;
     clinicSessionsInRoom.push(clinicSessionId);
-    await room.save();
-    return res.status(201).send("added new clinic session succesfully");
+    response = await room.save();
+    succes = true
+
+
 
   } catch (error) {
-    console.log(error)
     return res.status(500).send(error);
+  }
+  finally {
+    if (succes) {
+      await session.commitTransaction();
+      await session.endSession();
+      return res.status(201).send(response);
+    }
+    await session.abortTransaction();
+    await session.endSession();
+
   }
 }
 
@@ -103,46 +111,65 @@ const getClinicSessions = async (req, res) => {
 }
 
 const deleteClinicSession = async (req, res) => {
+  const session = await mongoose.startSession();
+  let response = {
+    "clinicSession": null,
+    "room": null
+  };
+  let succes = false;
+
   const { id } = req.body;
   const deleteClinicSessionDto = new ClinicSessionDto(id);
   try {
+    await session.startTransaction();
     const idStr = deleteClinicSessionDto.id;
 
-   const id = new mongoose.Types.ObjectId(idStr);
-  
-    const clinicSession =await ClinicSession.findById(id);
+    const id = new mongoose.Types.ObjectId(idStr);
 
-    const appointments=clinicSession.appointments;
-    if(appointments!=null && appointments.length>0){
+    const clinicSession = await ClinicSession.findById(id);
+
+    const appointments = clinicSession.appointments;
+    if (appointments != null && appointments.length > 0) {
       return res.status(409).send("unable to  delete because there appointments"
-        +"registered with this clinic Session. If no appointment is confirmed yet discard them and try again");
+        + "registered with this clinic Session. If no appointment is confirmed yet discard them and try again");
     }
-  
+
     const roomId = clinicSession.roomId;
 
 
     //step 1: delete 'ClinicSession' from 'clinicsessions'
-    const deletedClinicSession = await ClinicSession.findByIdAndDelete(id);
-    if (!deletedClinicSession) {
+    response.clinicSession = await ClinicSession.findByIdAndDelete(id);
+    if (!(response.clinicSession)) {
       return res.status(500).send("error occured while trying to delete clinic session");
     }
 
     //step 2: delete 'ClincSession' from 'Room'
-    const room = await Room.findById(roomId); 
+    const room = await Room.findById(roomId);
     const clinicSessions = room.clinicSessions;
-    let updatedClinicSessions=[];
-    for(let i=0;i<clinicSessions.length;i++){
-      if(!(clinicSessions[i].equals(id))){
+    let updatedClinicSessions = [];
+    for (let i = 0; i < clinicSessions.length; i++) {
+      if (!(clinicSessions[i].equals(id))) {
         updatedClinicSessions.push(clinicSessions[i]);
       }
     }
 
     room.clinicSessions = updatedClinicSessions;
-    await room.save();
-    return res.status(200).send("clinic session succesfully deteted");
+    response.room = await room.save();
+    succes = true;
+
 
   } catch (error) {
     console.log(error);
+    return res.status(500).send(error);
+  }
+  finally{
+    if(succes){
+      await session.commitTransaction();
+      await session.endSession();
+      return res.status(201).send(response);
+    }
+    await session.abortTransaction();
+    await session.endSession();
   }
 
 }
