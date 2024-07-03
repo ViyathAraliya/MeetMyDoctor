@@ -155,9 +155,33 @@ This web application enables the patients/people to book doctor's appointments a
     + AppointmentDto.js
     + RoomDto.js (same fields as in 'Room' model)
 
-### Functionalities
-- Creation of all four models.
-- Retirieving of all docuements of each model.
+### Controller features
+
+#### DoctorController
+ This Controller handles doctor-related operations.
+ Features:
+  - Create new 'Doctor'.
+  - Delete 'Doctor' after validating for any dependency violations
+
+#### ClinicSessionController
+ Controller handling Clinic Session related operations.
+ Features:
+  - Create  new 'ClinicSession' with required validations and handling of dependencies.
+  - Delete a 'ClinicSession' with required validations and handling of dependencies.
+ 
+#### AppointmentController
+Controller handling Appointment related operations.
+Features:
+- Display clinic session details. 
+- Make Appointment
+- Update 'Appointment status: 'DISCARD'/'CONFIRM' and deletes Appointment if the status is 'DISCARD'.
+
+### RoomController
+Controller handling Room related operations.
+Features: 
+- Add new Rooom.
+- Delete Room after checking dependencies.
+
 
 ## Client-Side
 
@@ -190,6 +214,8 @@ This web application enables the patients/people to book doctor's appointments a
 #### 1. 2. 1 ManageAppointments
 <b>features</b>
 - Confirm or Discard Appointments
+
+#### 1. 
 
 ### 2. Redux
   Redux is used in the client-side of this application for state management.
