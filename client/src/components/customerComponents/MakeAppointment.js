@@ -2,6 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 function MakeAppointment() {
@@ -174,9 +177,14 @@ function MakeAppointment() {
         }
         try {
             const res = await axios.post("http://localhost:8080/appointments", data);
-            console.log(res)
+           
+            toast.success(`Appointment saved succesfully`);
+            console.log(res.statusText)
+           
         }
-        catch (error) { console.log(error); }
+        catch (error) { 
+            toast.error(`error : ${error.response.data}`);
+            console.log(error.response.data); }
 
     }
 
@@ -246,6 +254,7 @@ function MakeAppointment() {
                 </div>
 
             </div>
+            <div><ToastContainer/></div>
 
             <li><Link to="/">Home</Link></li>
 
