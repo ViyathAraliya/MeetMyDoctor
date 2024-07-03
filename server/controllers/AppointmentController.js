@@ -7,6 +7,8 @@ const AppointmentUpdateDto = require("../dtos/AppointmentUpdateDto");
 
 const addAppointment = async (req, res) => {
   const session = await mongoose.startSession();
+  let response = null;
+  let succes = false;
 
   const { patientName, contactNo, address, queueNumber, description, clinicSessionId } = req.body;
 
@@ -22,8 +24,7 @@ const addAppointment = async (req, res) => {
     address: appointmentDto.address, clinicSession: _clinicSessionId
   });
 
-  let response = null;
-  let succes = false;
+  
   try {
     session.startTransaction();
 
@@ -101,7 +102,7 @@ const updateAppointmentStatus = async (req, res) => {
   const appointmentUpdateDto = new AppointmentUpdateDto(appointmentId, status);
 
   try {
-    session.startTransaction();
+   await  session.startTransaction();
     const appointmentId = appointmentUpdateDto.appointmentId;
 
     //case 1: delete if appointment status is "DISCARD"
