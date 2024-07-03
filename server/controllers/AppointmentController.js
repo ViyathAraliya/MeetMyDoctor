@@ -27,6 +27,11 @@ const addAppointment = async (req, res) => {
   try {
     session.startTransaction();
 
+    const contactNumberExists=await Appointment.exists({contactNo:contactNo});
+    if(contactNumberExists){
+      return res.status(409).send("a customer is already registered with the provided contact number");
+    }
+
     //step 3: retrieving related 'ClinicSession' doc
 
     const clinicSession = await ClinicSession.findById(appointment.clinicSession);
@@ -71,7 +76,7 @@ const addAppointment = async (req, res) => {
     succes = true;
 
   } catch (error) {
-    return res.stats(500).send(error);
+    return res.status(500).send(error);
   }
   finally {
     if (succes) {
