@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
     res.send('hello world')
 })
 
-mongoose.connect('mongodb://localhost:27017/meetMyDoctor',
+mongoose.connect('mongodb+srv://viyatharaliya:Threesiths%40123@cluster0.sy97gjq.mongodb.net/meetMyDoctor?retryWrites=true&w=majority&appName=Cluster0',
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
