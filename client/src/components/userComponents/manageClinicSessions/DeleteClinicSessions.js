@@ -43,7 +43,7 @@ function DeleteClinicSessions() {
 
     useEffect(() => {
 
-        if (clinicSessionDetails != null && doctors != null && rooms != null
+        if (clinicSessions != null && doctors != null && rooms != null
             && clinicSessions.length != 0 && doctors.length != 0 && rooms.length != 0) {
             createClinicDetails();
         }

@@ -55,7 +55,7 @@ function MakeAppointment() {
 
     useEffect(() => {
 
-        if (clinicSessionDetails != null && doctors != null && rooms != null
+        if (clinicSessions != null && doctors != null && rooms != null
             && clinicSessions.length != 0 && doctors.length != 0 && rooms.length != 0) {
             createClinicDetails();
         }
@@ -176,15 +176,14 @@ function MakeAppointment() {
             "description": description, "clinicSessionId": rowId
         }
         try {
-            const res = await axios.post("http://localhost:8080/appointments", data);
-           
+            const res = await axios.post("http://localhost:8080/appointments", data);       
             toast.success(`Appointment saved succesfully`);
             console.log(res.statusText)
            
         }
         catch (error) { 
-            toast.error(`error : ${error.response.data}`);
-            console.log(error.response.data); }
+            toast.error(error.response.data);
+            console.log(error.response); }
 
     }
 
