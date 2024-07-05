@@ -23,18 +23,16 @@ const addAppointment = async (req, res) => {
     patientName: appointmentDto.patientName, contactNo: appointmentDto.contactNo,
     address: appointmentDto.address, clinicSession: _clinicSessionId
   });
-
+ 
   
   try {
     session.startTransaction();
-
     const contactNumberExists=await Appointment.exists({contactNo:contactNo});
     if(contactNumberExists){
       return res.status(409).send("a customer is already registered with the provided contact number");
     }
 
     //step 3: retrieving related 'ClinicSession' doc
-
     const clinicSession = await ClinicSession.findById(appointment.clinicSession);
     if (clinicSession == null) {
       return res.status(404).send("clinic session not found");
@@ -59,12 +57,12 @@ const addAppointment = async (req, res) => {
 
 
     if (queueNumber > maxPatients) {
-
       return res.status(409).send("This clinic session has reached it's maximum number of patients ");
     }
 
     //step 7: saving the 'Appointment' doc in 'appointments' collection
-    await appointment.save();
+
+    await appointment.save({session});
 
     const savedAppointmentId = appointment._id;
 
@@ -72,22 +70,23 @@ const addAppointment = async (req, res) => {
     clinicSession.appointments.push(savedAppointmentId);
 
     // saving 8: saving the clinic session
-    await clinicSession.save();
+    
+    await clinicSession.save({session});
     response = appointment;
-    succes = true;
+    succes = false;
 
   } catch (error) {
     return res.status(500).send(error);
   }
   finally {
     if (succes) {
-      await session.commitTransaction();
-      await session.endSession();
+      await session.commitTransaction();    
       return res.status(201).send(response);
     }
-
+    res.status(500).send("internal server error");
     await session.abortTransaction();
     await session.endSession();
+ 
 
   }
 
@@ -102,7 +101,7 @@ const updateAppointmentStatus = async (req, res) => {
   const appointmentUpdateDto = new AppointmentUpdateDto(appointmentId, status);
 
   try {
-   await  session.startTransaction();
+   
     const appointmentId = appointmentUpdateDto.appointmentId;
 
     //case 1: delete if appointment status is "DISCARD"
@@ -151,7 +150,6 @@ const deleteAppointment = async (appointmentId) => {
     //step 1: delete the appointment from a 'appointements'
     const appointment = await Appointment.findByIdAndDelete(appointmentId);
     if (!appointment) {
-      console.log("appointment not retrived")
       return false;
     }
 
@@ -163,12 +161,9 @@ const deleteAppointment = async (appointmentId) => {
     );
 
     if (!clinicSession) {
-      console.log("clinic session not found");
       return false;
     }
-
     return true;
-
   } catch (error) {
 
     return error;
