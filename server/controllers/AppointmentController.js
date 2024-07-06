@@ -83,7 +83,7 @@ const addAppointment = async (req, res) => {
       await session.commitTransaction();
       return res.status(201).send(response);
     }
-   
+
     await session.abortTransaction();
     await session.endSession();
 
@@ -98,12 +98,12 @@ const deleteAppointment = async (req, res) => {
   const appointmentUpdateDto = new AppointmentUpdateDto(appointmentId, status);
 
   let success = false;
-  let reachedEndFail=false;
+  let reachedEndFail = false;
 
   try {
     session.startTransaction();
     const appointmentId = appointmentUpdateDto.appointmentId;
-   
+
 
     //step 1: delete appointment from appointments collection
     const deletedAppointment = await Appointment.findByIdAndDelete(appointmentId, { session: session });
@@ -125,8 +125,8 @@ const deleteAppointment = async (req, res) => {
     }
 
     success = true;
-    if(success==false){
-      reachedEndFail=true;
+    if (success == false) {
+      reachedEndFail = true;
     }
 
 
@@ -138,35 +138,35 @@ const deleteAppointment = async (req, res) => {
       await session.commitTransaction();
       return res.status(204).send("succusfully deleted");
     } else {
-      
+
       await session.abortTransaction();
     }
-if(reachedEndFail){
-  return res.status(500).send("checking roll back")
-}
+    if (reachedEndFail) {
+      return res.status(500).send("checking roll back")
+    }
     session.endSession();
   }
 
 }
 
-const confirmAppointment=async(req,res)=>{
- 
-  const{appointmentId,status}=req.body;
-  const appointementUpdateDto=new AppointmentUpdateDto(appointmentId,status);
+const confirmAppointment = async (req, res) => {
 
-  try{
-    
-    const status=appointementUpdateDto.status;
+  const { appointmentId, status } = req.body;
+  const appointementUpdateDto = new AppointmentUpdateDto(appointmentId, status);
 
-    const appointment=await Appointment.findById(appointementUpdateDto.appointmentId);
-    appointment.status=status;
-    const appointementSaved=await appointment.save();
-    if(appointementSaved.status!=status){
+  try {
+
+    const status = appointementUpdateDto.status;
+
+    const appointment = await Appointment.findById(appointementUpdateDto.appointmentId);
+    appointment.status = status;
+    const appointementSaved = await appointment.save();
+    if (appointementSaved.status != status) {
       return res.status(500).send("couln't save appointment");
     }
     return res.status(204).send("Appointment status updated succesfully!")
 
-  }catch(error){
+  } catch (error) {
     return res.status(500).send("internal server errior");
   }
 
@@ -183,9 +183,45 @@ const getAppointments = async (req, res) => {
   }
 }
 
+const deleteExpiredData = async (req, res) => {
+  try {
+    let haveExpiredUndeletedDocs = fals;
+    const clinicSessions = await ClinicSession.find();
+
+
+    for (let i = 0; i < clinicSessions.length; i++) {
+      const clinicSession = clinicSessions[i];
+      const appointements = clinicSession.appointments;
+      if (clinicSession.endsAt <= new Date()) {
+
+        const clinicSessionDeleted = await clinicSession.deleteOne();
+        if (clinicSessionDeleted == null) {
+          haveExpiredUndeletedDocs = true;
+        }
+
+        //step 2: deleting appointments 
+        for (let j = 0; j < appointements.length; j++) {
+          const appointement = appointements[j];
+          const appointementDeleted = await appointement.findByIdAndDelete(appointement);
+          if (appointementDeleted == null) {
+            haveExpiredUndeletedDocs = true;
+          }
+        }
+      }
+    }
+    if (haveExpiredUndeletedDocs) {
+      return res.status(400).send("one or few expired docs have not been deleted. Find and delete them manually");
+    }
+    return res.status(204).send("deleted expired documnets");
+
+  } catch (error) {
+    return res.status(500).send("internal server error");
+  }
+}
+
 
 //To confirm the appointment or discard
 
 
 
-module.exports = { addAppointment, deleteAppointment, getAppointments ,confirmAppointment}
+module.exports = { addAppointment, deleteAppointment, getAppointments, confirmAppointment }
