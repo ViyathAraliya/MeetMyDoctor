@@ -138,7 +138,7 @@ const deleteClinicSession = async (req, res) => {
 
 
     //step 1: delete 'ClinicSession' from 'clinicsessions'
-    response.clinicSession = await ClinicSession.findByIdAndDelete(id);
+    response.clinicSession = await ClinicSession.findByIdAndDelete(id,{session:session});
     if (!(response.clinicSession)) {
       return res.status(500).send("error occured while trying to delete clinic session");
     }
@@ -154,7 +154,7 @@ const deleteClinicSession = async (req, res) => {
     }
 
     room.clinicSessions = updatedClinicSessions;
-    response.room = await room.save();
+    response.room = await room.save({session:session});
     succes = true;
 
 

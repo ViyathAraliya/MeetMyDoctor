@@ -25,7 +25,7 @@ function MakeAppointment() {
     const [description, setDescription] = useState(null);
 
 
-//returns a formated time String
+    //returns a formated time String
     const getTime = (time) => {
         if (time instanceof Date) {
 
@@ -176,89 +176,93 @@ function MakeAppointment() {
             "description": description, "clinicSessionId": rowId
         }
         try {
-            const res = await axios.post("http://localhost:8080/appointments", data);       
+            const res = await axios.post("http://localhost:8080/appointments", data);
             toast.success(`Appointment saved succesfully`);
             console.log(res.statusText)
-           
+
         }
-        catch (error) { 
-            toast.error(error.response.data);
-            console.log(error.response); }
+        catch (error) {
+            const errorRes = error.response;
+            if (errorRes!=null) {
+                toast.error(errorRes.data);
+                console.log(errorRes.data);
+            }
+            else { console.log(errorRes) }
+
+        }
 
     }
 
 
 
+        return (
+            <>
 
+                <form >
+                    <label htmlFor="name">Customer/Patient Name</label>
+                    <input id="name" onChange={handlePatientName} />
+                    <br />
+                    <label htmlFor="contactNo">Contact Number</label>
+                    <input id="contactNo" onChange={handleContactNo} />
+                    <br />
+                    <label htmlFor="address">Address</label>
+                    <input id="address" onChange={handleAddress} />
+                    <br />
+                    <label htmlFor="description">Description</label>
+                    <input id="description" onChange={handleDescription} />
+                    <br />
 
-    return (
-        <>
+                </form>
 
-            <form >
-                <label htmlFor="name">Customer/Patient Name</label>
-                <input id="name" onChange={handlePatientName} />
-                <br />
-                <label htmlFor="contactNo">Contact Number</label>
-                <input id="contactNo" onChange={handleContactNo} />
-                <br />
-                <label htmlFor="address">Address</label>
-                <input id="address" onChange={handleAddress} />
-                <br />
-                <label htmlFor="description">Description</label>
-                <input id="description" onChange={handleDescription} />
-                <br />
+                <div className="clinicSessionTable">
+                    <h2>Clinic Sessions</h2>
 
-            </form>
+                    <div className="clinic_details">
+                        <table className="table table-striped">
+                            <thead>
 
-            <div className="clinicSessionTable">
-                <h2>Clinic Sessions</h2>
+                                <tr>
 
-                <div className="clinic_details">
-                    <table className="table table-striped">
-                        <thead>
+                                    <th>doctor name</th>
+                                    <th>specialization</th>
+                                    <th>edcuation</th>
+                                    <th>clinic starts At</th>
+                                    <th>ends At</th>
+                                    <th>room number</th>
 
-                            <tr>
-
-                                <th>doctor name</th>
-                                <th>specialization</th>
-                                <th>edcuation</th>
-                                <th>clinic starts At</th>
-                                <th>ends At</th>
-                                <th>room number</th>
-
-                            </tr>
-
-                        </thead>
-                        <tbody>
-                            {clinicSessionDetails && clinicSessionDetails.map(detail => (
-                                <tr key={detail.id}
-
-                                >
-                                    <td>{detail.doctor.name}</td>
-                                    <td>{detail.doctor.specialization}</td>
-                                    <td>{detail.doctor.educationAbbrivation}</td>
-                                    <td>{detail.startsAt}</td>
-                                    <td>{detail.endsAt}</td>
-                                    <td>{detail.room.roomNumber}</td>
-
-                                    <td> <button className="btn btn-primary"
-                                        onClick={() => { makeAppointment(detail.id) }}>Make an Appointment</button></td>
                                 </tr>
 
+                            </thead>
+                            <tbody>
+                                {clinicSessionDetails && clinicSessionDetails.map(detail => (
+                                    <tr key={detail.id}
 
-                            ))}
-                        </tbody>
+                                    >
+                                        <td>{detail.doctor.name}</td>
+                                        <td>{detail.doctor.specialization}</td>
+                                        <td>{detail.doctor.educationAbbrivation}</td>
+                                        <td>{detail.startsAt}</td>
+                                        <td>{detail.endsAt}</td>
+                                        <td>{detail.room.roomNumber}</td>
 
-                    </table>
+                                        <td> <button className="btn btn-primary"
+                                            onClick={() => { makeAppointment(detail.id) }}>Make an Appointment</button></td>
+                                    </tr>
+
+
+                                ))}
+                            </tbody>
+
+                        </table>
+                    </div>
+
                 </div>
+                <div><ToastContainer /></div>
 
-            </div>
-            <div><ToastContainer/></div>
+                <li><Link to="/">Home</Link></li>
 
-            <li><Link to="/">Home</Link></li>
+            </>
+        )
+    }
 
-        </>
-    )
-}
-
-export default MakeAppointment;
+    export default MakeAppointment;

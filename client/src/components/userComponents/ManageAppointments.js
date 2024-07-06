@@ -16,7 +16,7 @@ function ManageAppointments() {
     const [rooms, setRooms] = useState(null);
 
     //processed data
-    const [appointmentDetails, setAppointmentDetails] = useState([]);//appointment,  doctorName, roomNumber, clinicStartsAt, clinicEndsAt
+    const [appointmentDetails, setAppointmentDetails] = useState(null);//appointment,  doctorName, roomNumber, clinicStartsAt, clinicEndsAt
 
 
 
@@ -74,7 +74,7 @@ function ManageAppointments() {
 
     //  for 'appointmentDetails' state
     async function createAppointmentDetails() {
-
+            console.log("create appintmnet details called");
         try {
             let appointmentDetails = [];
 
@@ -132,6 +132,7 @@ function ManageAppointments() {
 
                 appointmentDetails.push(appointmentDetail);
             }
+            console.log(appointmentDetails)
             setAppointmentDetails(appointmentDetails);
         } catch (error) {
            
@@ -143,20 +144,44 @@ function ManageAppointments() {
     }
 
     //delete if status='DISCARD' , update id status('CONFIRMED')
-    async function updateAppointmentStatus(appointmentId, status) {  
+    async function deleteAppointment(appointmentId) {  console.log(1)
+       
         try {
             const data = {
                 "appointmentId": appointmentId,
-                "status": status
+                "status": 'DISCARD'
             }
-        
-            const res = await axios.post("http://localhost:8080/appointments/updateStatus", data);
-           
-            getAppointments();
+
+      
+         const  res = await axios.post("http://localhost:8080/appointments/deleteAppointment", data);
+         console.log(res);
+             getAppointments();
+   
         } catch (error) {
-            console.log(error);
+          
+            const response=error.response;
+            if(response!=null){
+                return console.log(response.data);
+            }
+           return  console.log(error);
         }
 
+    }
+
+    const confirmAppointment=async(appointmnetId)=>{
+        try{
+            const data={
+                "appointmentId":appointmnetId,
+                "status":"CONFIRMED"
+            }
+           
+            const res=await axios.post("http://localhost:8080/appointments/confirmAppointment", data);
+            console.log(res);
+            getAppointments();
+
+        }catch(error){
+            return console.log(error);
+        }
 
     }
 
@@ -190,9 +215,9 @@ function ManageAppointments() {
                                 <td>{detail.endsAt}</td>
                                 <td>{detail.appointment.status}</td>
                                 <td><button className="btn btn-primary"
-                                    onClick={() => { updateAppointmentStatus(detail.appointment._id, 'DISCARD') }}>discard</button></td>
+                                    onClick={() => { deleteAppointment(detail.appointment._id ) }}>discard</button></td>
                                 <td><button className="btn btn-primary"
-                                    onClick={() => { updateAppointmentStatus(detail.appointment._id, 'CONFIRMED') }}>confirm</button></td>
+                                    onClick={() => {confirmAppointment(detail.appointment._id) }}>confirm</button></td>
                             </tr>)
                     ))
 

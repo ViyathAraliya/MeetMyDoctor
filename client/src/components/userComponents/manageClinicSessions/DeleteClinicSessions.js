@@ -146,6 +146,8 @@ function DeleteClinicSessions() {
         }
         try {
             const res = await axios.post("http://localhost:8080/deleteClinicSession", data);
+            getClinicSessions();
+            getRooms();
             console.log(res)
         }
         catch (error) { console.log(error); }

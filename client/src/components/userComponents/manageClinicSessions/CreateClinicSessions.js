@@ -160,7 +160,7 @@ function CreateClinicSessions() {
             //step 2: finding clincSession documents from clinicSession references
             for (let j = 0; j < clinicSessionsOfRoom.length; j++) {
 
-                let clinicSessionDoc = null; if (clinicSessions == null) { return; }
+                let clinicSessionDoc = null; if (clinicSessions == null || clinicSessions.length==0) { return; }
                 l3: for (let k = 0; k < clinicSessions.length; k++) {
 
                     if (clinicSessions[k]._id == clinicSessionsOfRoom[j]) {
@@ -172,7 +172,7 @@ function CreateClinicSessions() {
                 }
 
                 // step 3: creating time slot string and adding to timeSlots
-
+                console.log("7")
                 let timeSlot = `from ${clinicSessionDoc.startsAt} to ${clinicSessionDoc.endsAt}`
                 timeSlots.push(timeSlot);
 

@@ -23,12 +23,12 @@ const addAppointment = async (req, res) => {
     patientName: appointmentDto.patientName, contactNo: appointmentDto.contactNo,
     address: appointmentDto.address, clinicSession: _clinicSessionId
   });
- 
-  
+
+
   try {
     session.startTransaction();
-    const contactNumberExists=await Appointment.exists({contactNo:contactNo});
-    if(contactNumberExists){
+    const contactNumberExists = await Appointment.exists({ contactNo: contactNo });
+    if (contactNumberExists) {
       return res.status(409).send("a customer is already registered with the provided contact number");
     }
 
@@ -62,7 +62,7 @@ const addAppointment = async (req, res) => {
 
     //step 7: saving the 'Appointment' doc in 'appointments' collection
 
-    await appointment.save({session});
+    await appointment.save({ session });
 
     const savedAppointmentId = appointment._id;
 
@@ -70,106 +70,109 @@ const addAppointment = async (req, res) => {
     clinicSession.appointments.push(savedAppointmentId);
 
     // saving 8: saving the clinic session
-    
-    await clinicSession.save({session});
+
+    await clinicSession.save({ session });
     response = appointment;
-    succes = false;
+    succes = true;
 
   } catch (error) {
     return res.status(500).send(error);
   }
   finally {
     if (succes) {
-      await session.commitTransaction();    
+      await session.commitTransaction();
       return res.status(201).send(response);
     }
-    res.status(500).send("internal server error");
+   
     await session.abortTransaction();
     await session.endSession();
- 
+
 
   }
 
 }
 
-
-const updateAppointmentStatus = async (req, res) => {
+const deleteAppointment = async (req, res) => {
   const session = await mongoose.startSession();
-  let succes = false;
-
   const { appointmentId, status } = req.body;
   const appointmentUpdateDto = new AppointmentUpdateDto(appointmentId, status);
 
+  let success = false;
+  let reachedEndFail=false;
+
   try {
-   
+    session.startTransaction();
     const appointmentId = appointmentUpdateDto.appointmentId;
+   
 
-    //case 1: delete if appointment status is "DISCARD"
-    if (appointmentUpdateDto.status == "DISCARD") {
-      const appointmentDeleted = await deleteAppointment(appointmentId);
-      if (!appointmentDeleted) {
-        return res.status(500).send("error in deleting appointment");
-      }
-      return res.status(200).send("appointment deleted succesfully!");
+    //step 1: delete appointment from appointments collection
+    const deletedAppointment = await Appointment.findByIdAndDelete(appointmentId, { session: session });
+
+    if (!deletedAppointment) {
+      return res.status(500).send("An error occured while deleting the appointment");
     }
 
-    //case 2: update 'status' if it's "CONFIRM"
-    const appointment = await Appointment.findByIdAndUpdate(
-      appointmentId,
-      { status: appointmentUpdateDto.status },
-      { new: true }
-    );
-
-    if (!appointment) {
-      return res.status(404).send('Appontment not found');
-    }
-
-    succes = true;
-
-  } catch (error) {
-
-    return res.status(400).send(error);
-  }
-  finally {
-    if (succes) {
-      await session.commitTransaction();
-      await session.endSession();
-      return res.status(200).send("Appintment updated succesfully");
-    }
-    await session.abortTransaction();
-    await session.endSession();
-  }
-
-}
-
-
-//loacl method for deleting appointment(used by 'updateAppointmentsStatus')
-const deleteAppointment = async (appointmentId) => {
-
-  try {
-    //step 1: delete the appointment from a 'appointements'
-    const appointment = await Appointment.findByIdAndDelete(appointmentId);
-    if (!appointment) {
-      return false;
-    }
-
-    //step 2: remove the appointment reference from the 'appointments' list in the relevant 'ClinicSession'
+    //step 2 : delete appointment from related clinicSession
     const clinicSession = await ClinicSession.findOneAndUpdate(
       { appointments: appointmentId },
       { $pull: { appointments: appointmentId } },
-      { new: true }
+      { new: true, session: session }
     );
 
-    if (!clinicSession) {
-      return false;
-    }
-    return true;
-  } catch (error) {
 
-    return error;
+    if (!clinicSession) {
+      return res.status(500).send("An error occured while deleting appointment from clinicSession ");
+    }
+
+    success = true;
+    if(success==false){
+      reachedEndFail=true;
+    }
+
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  } finally {
+    if (success) {
+      await session.commitTransaction();
+      return res.status(204).send("succusfully deleted");
+    } else {
+      
+      await session.abortTransaction();
+    }
+if(reachedEndFail){
+  return res.status(500).send("checking roll back")
+}
+    session.endSession();
   }
 
 }
+
+const confirmAppointment=async(req,res)=>{
+ 
+  const{appointmentId,status}=req.body;
+  const appointementUpdateDto=new AppointmentUpdateDto(appointmentId,status);
+
+  try{
+    
+    const status=appointementUpdateDto.status;
+
+    const appointment=await Appointment.findById(appointementUpdateDto.appointmentId);
+    appointment.status=status;
+    const appointementSaved=await appointment.save();
+    if(appointementSaved.status!=status){
+      return res.status(500).send("couln't save appointment");
+    }
+    return res.status(204).send("Appointment status updated succesfully!")
+
+  }catch(error){
+    return res.status(500).send("internal server errior");
+  }
+
+
+}
+
 
 const getAppointments = async (req, res) => {
   try {
@@ -185,4 +188,4 @@ const getAppointments = async (req, res) => {
 
 
 
-module.exports = { addAppointment, updateAppointmentStatus, getAppointments };
+module.exports = { addAppointment, deleteAppointment, getAppointments ,confirmAppointment}
