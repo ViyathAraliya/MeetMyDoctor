@@ -34,6 +34,7 @@ const cleanUpInvalidDependacies = async (req, res) => {
             let clinicSessionsInRoom = room.clinicSessions;
             for (let j = 0; j < clinicSessionsInRoom.length; j++) {
                 const clinicSessionIdInRoom = clinicSessionsInRoom[j]._id;
+                
                 let clinicSessionExists = await ClinicSession.exists({ _id: clinicSessionIdInRoom });
                 if (!clinicSessionExists) {
                     clinicSessionsInRoom = clinicSessionsInRoom
@@ -66,7 +67,7 @@ const cleanUpInvalidDependacies = async (req, res) => {
         if(haveErrors){
             return res.status(200).send(log);
         }
-        return res.status(200).send("sucessfulyy clleared expired data");
+        return res.status(200).send("sucessfulyy cleared expired data");
     } catch (error) {
         return res.status(500).send("internal server error");
     }
