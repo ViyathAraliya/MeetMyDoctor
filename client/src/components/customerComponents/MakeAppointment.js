@@ -6,7 +6,6 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 
-
 function MakeAppointment() {
     // fetched data
     const [clinicSessions, setClinicSessions] = useState(null);
@@ -46,6 +45,7 @@ function MakeAppointment() {
     }
 
     useEffect(() => {
+     //  deleteSharedDocs();
         getClinicSessions();
         getDoctors();
         getRooms();
@@ -60,6 +60,8 @@ function MakeAppointment() {
             createClinicDetails();
         }
     }, [clinicSessions, doctors, rooms]);
+
+    
 
     // fetching 'ClinicSession' documents
     async function getClinicSessions() {
@@ -76,6 +78,8 @@ function MakeAppointment() {
 
     }
 
+    
+    
     // fetching 'Doctors' documents
     async function getDoctors() {
 
@@ -238,12 +242,12 @@ function MakeAppointment() {
                                     <tr key={detail.id}
 
                                     >
-                                        <td>{detail.doctor.name}</td>
-                                        <td>{detail.doctor.specialization}</td>
-                                        <td>{detail.doctor.educationAbbrivation}</td>
+                                        <td>{detail.doctor?detail.doctor.name:"not found"}</td>
+                                        <td>{detail.doctor?detail.doctor.specialization:"not found"}</td>
+                                        <td>{detail.doctor?detail.doctor.educationAbbrivation:"not found"}</td>
                                         <td>{detail.startsAt}</td>
                                         <td>{detail.endsAt}</td>
-                                        <td>{detail.room.roomNumber}</td>
+                                        <td>{detail.room?detail.room.roomNumber:"not found"}</td>
 
                                         <td> <button className="btn btn-primary"
                                             onClick={() => { makeAppointment(detail.id) }}>Make an Appointment</button></td>

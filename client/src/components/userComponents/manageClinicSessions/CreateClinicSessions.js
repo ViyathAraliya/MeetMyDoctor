@@ -53,11 +53,12 @@ function CreateClinicSessions() {
 
     }, [])
 
-    useEffect(() => {
+    useEffect(() => {if(clinicSessions!=null && rooms!=null && doctors!=null &&
+         clinicSessions.length!=0 && rooms.length!=0 && doctors.length!=0){
 
         createDoctorDetails();
         createRoomDetails();
-
+    }
 
     }, [doctors, rooms, clinicSessions])
 
@@ -160,7 +161,7 @@ function CreateClinicSessions() {
             //step 2: finding clincSession documents from clinicSession references
             for (let j = 0; j < clinicSessionsOfRoom.length; j++) {
 
-                let clinicSessionDoc = null; if (clinicSessions == null || clinicSessions.length==0) { return; }
+                let clinicSessionDoc = null; 
                 l3: for (let k = 0; k < clinicSessions.length; k++) {
 
                     if (clinicSessions[k]._id == clinicSessionsOfRoom[j]) {
@@ -170,10 +171,10 @@ function CreateClinicSessions() {
                         break l3;
                     }
                 }
-
+console.log(1,"here")
                 // step 3: creating time slot string and adding to timeSlots
-                console.log("7")
-                let timeSlot = `from ${clinicSessionDoc.startsAt} to ${clinicSessionDoc.endsAt}`
+                let timeSlot = clinicSessionDoc!=null?`from ${clinicSessionDoc.startsAt} to ${clinicSessionDoc.endsAt}`:`couldnt map clinic session's id to a  clinic session`
+                console.log(2,"here")
                 timeSlots.push(timeSlot);
 
             }

@@ -138,7 +138,7 @@ const deleteClinicSession = async (req, res) => {
 
 
     //step 1: delete 'ClinicSession' from 'clinicsessions'
-    response.clinicSession = await ClinicSession.findByIdAndDelete(id,{session:session});
+    response.clinicSession = await ClinicSession.findByIdAndDelete(id, { session: session });
     if (!(response.clinicSession)) {
       return res.status(500).send("error occured while trying to delete clinic session");
     }
@@ -154,7 +154,7 @@ const deleteClinicSession = async (req, res) => {
     }
 
     room.clinicSessions = updatedClinicSessions;
-    response.room = await room.save({session:session});
+    response.room = await room.save({ session: session });
     succes = true;
 
 
@@ -162,8 +162,8 @@ const deleteClinicSession = async (req, res) => {
     console.log(error);
     return res.status(500).send(error);
   }
-  finally{
-    if(succes){
+  finally {
+    if (succes) {
       await session.commitTransaction();
       await session.endSession();
       return res.status(201).send(response);
@@ -175,19 +175,20 @@ const deleteClinicSession = async (req, res) => {
 }
 
 
-const deleteExpiredDocs = async (req, res) => {
+const deleteExpiredDocs = async (req, res) => {console.log(7)
   try {
-    let haveExpiredDocs=false;
+    let haveExpiredDocs = false;
     let haveExpiredUndeletedDocs = false;
-    
+
     const clinicSessions = await ClinicSession.find();
+
 
 
     for (let i = 0; i < clinicSessions.length; i++) {
       const clinicSession = clinicSessions[i];
       const appointements = clinicSession.appointments;
       if (clinicSession.endsAt <= new Date()) {
-
+        const clinicSessionId = clinicSession._id;
         const clinicSessionDeleted = await clinicSession.deleteOne();
         if (clinicSessionDeleted == null) {
           haveExpiredUndeletedDocs = true;
@@ -198,23 +199,34 @@ const deleteExpiredDocs = async (req, res) => {
           const appointement = appointements[j];
           const appointementDeleted = await appointement.findByIdAndDelete(appointement);
           if (appointementDeleted == null) {
-            haveExpiredDocs=true;
+            haveExpiredDocs = true;
             haveExpiredUndeletedDocs = true;
           }
         }
+        //step 3: deleting clinic session from room
+        await Room.findOneAndUpdate(
+          { clinicSessions: clinicSessionId },
+          { $pull: { clinicSession: clinicSessionId } },
+          { new: true }
+        );
+
+
+
       }
     }
-    if(haveExpiredDocs==false){
+    if (haveExpiredDocs == false) {
       return res.status(201).send("No expired documents were found");
     }
     if (haveExpiredUndeletedDocs) {
       return res.status(400).send("one or few expired docs have not been deleted. Find and delete them manually");
     }
-        
+
     return res.status(201).send("deleted expired documnets");
 
   } catch (error) {
+    console.log(error);
     return res.status(500).send("internal server error");
+   
   }
 }
 

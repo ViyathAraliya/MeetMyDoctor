@@ -180,12 +180,12 @@ function DeleteClinicSessions() {
                                 <tr key={detail.id}
 
                                 >
-                                    <td>{detail.doctor.name}</td>
-                                    <td>{detail.doctor.specialization}</td>
-                                    <td>{detail.doctor.educationAbbrivation}</td>
+                                    <td>{detail.doctor?detail.doctor.name:'npt found'}</td>
+                                    <td>{detail.doctor?detail.doctor.specialization:'not found'}</td>
+                                    <td>{detail.doctor?detail.doctor.educationAbbrivation:'not found'}</td>
                                     <td>{detail.startsAt}</td>
                                     <td>{detail.endsAt}</td>
-                                    <td>{detail.room.roomNumber}</td>
+                                    <td>{detail.room?detail.room.roomNumber:'not found'}</td>
 
                                     <td> <button className="btn btn-primary"
                                         onClick={() => { deleteClinicSession(detail.id) }}>delete</button></td>

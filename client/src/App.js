@@ -13,6 +13,7 @@ import Room from './components/userComponents/manageRooms/Room';
 import CreateClinicSessions from './components/userComponents/manageClinicSessions/CreateClinicSessions';
 import ManageClinicSessions from './components/userComponents/manageClinicSessions/ManageClinicSessions';
 import DeleteClinicSessions from './components/userComponents/manageClinicSessions/DeleteClinicSessions';
+import StorageMM from './components/StorageMM';
 
 function App() {
   return (
@@ -28,7 +29,9 @@ function App() {
   <Route path="/rooms"  element={<Room/>}/>
   <Route path="/manageClinicSessions" element={<ManageClinicSessions/>}/>
   <Route path="/deleteClinicSessions" element={<DeleteClinicSessions/>}/>
+  <Route path="/storage" element={<StorageMM/>}/>
   </Routes>
+  
   </BrowserRouter>
  
   );
