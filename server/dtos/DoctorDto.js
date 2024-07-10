@@ -4,6 +4,7 @@ class DoctorDto {
      * Represents a DTO (Data Transfer Object) for model 'Doctor'.
      * Defines the structure of JSON objects expected in requests.
      * 
+     * @param {String} id
      * @param {String} name 
      * @param {String} contactNumber 
      * @param {String} whatsapp 
@@ -12,7 +13,8 @@ class DoctorDto {
      * @param {String} educationAbbrivation 
      * @param {String} generalSlotDuration 
      */
-    constructor(name, contactNumber, whatsapp, email, specialization, educationAbbrivation, generalSlotDuration) {
+    constructor(id=null,name=null, contactNumber=null, whatsapp=null, email=null, specialization=null,
+         educationAbbrivation=null, generalSlotDuration=null) {
         this.name = name;
         this.contactNumber = contactNumber;
         this.whatsapp = whatsapp;

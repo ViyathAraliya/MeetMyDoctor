@@ -47,7 +47,7 @@ const addClinicSessionToRoom = async (req, res) => {
     clinicSession.endsAt = endsAt;
 
     //step 5 : retrieving 'Room'  by objectId (in step 1)
-    let room = Room.findById(_Id);
+    let room = await Room.findById(_Id);
 
     // step 6 : extracting 'clinicSessions' array from 'room' object
     const clinicSessions = room.clinicSessions;

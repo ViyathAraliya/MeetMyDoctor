@@ -15,7 +15,8 @@ function Home(){
                 console.log(res);
 
             }catch(error){
-                console.log(error.response.message);
+                
+                console.log(error);
             }
     }
 

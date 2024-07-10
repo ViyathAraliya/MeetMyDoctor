@@ -7,13 +7,15 @@ import MakeAppointment from './components/customerComponents/MakeAppointment';
 import ManageAppointments from './components/userComponents/ManageAppointments';
 
 
-import AddDoctor from './components/userComponents/manageDoctors/AddDoctor';
-import ManageDoctors from './components/userComponents/manageDoctors/ManageDoctors';
+
 import Room from './components/userComponents/manageRooms/Room';
 import CreateClinicSessions from './components/userComponents/manageClinicSessions/CreateClinicSessions';
 import ManageClinicSessions from './components/userComponents/manageClinicSessions/ManageClinicSessions';
 import DeleteClinicSessions from './components/userComponents/manageClinicSessions/DeleteClinicSessions';
 import StorageMM from './components/StorageMM';
+import ManageDoctors from './components/userComponents/manageDoctors/ManageDoctors';
+
+
 
 function App() {
   return (
@@ -25,7 +27,7 @@ function App() {
   <Route path="/manageAppointments" element={<ManageAppointments/>}/>
   <Route path="/createClinicSessions" element={<CreateClinicSessions/>}/>
   <Route path="/manageDoctors" element={<ManageDoctors/>}/>
-  <Route path="/addDoctor" element={<AddDoctor/>}/>
+
   <Route path="/rooms"  element={<Room/>}/>
   <Route path="/manageClinicSessions" element={<ManageClinicSessions/>}/>
   <Route path="/deleteClinicSessions" element={<DeleteClinicSessions/>}/>

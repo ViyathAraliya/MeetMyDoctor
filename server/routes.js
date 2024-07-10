@@ -1,5 +1,5 @@
 const express=require('express');
-const { addDoctor, getDoctors } = require('./controllers/DoctorController');
+const { getDoctors, addOrUpdateDoctor, deleteDoctor } = require('./controllers/DoctorController');
 const { addRoom, getRooms} = require('./controllers/RoomController');
 const { addClinicSession, getClinicSessions, deleteClinicSession, deleteExpiredDocs } = require('./controllers/ClinicSessionController');
 const {addAppointment,  getAppointments, deleteAppointment, confirmAppointment }= require('./controllers/AppointmentController');
@@ -7,7 +7,9 @@ const { cleanUpInvalidDependacies } = require('./controllers/CollectionControlle
 
 const router=express.Router();
 
-router.post('/doctors', addDoctor);
+router.post('/doctors', addOrUpdateDoctor);
+router.get('/doctors',getDoctors);
+router.delete('/doctor/delete/:id',deleteDoctor);
 
 
 router.post('/rooms',addRoom);
@@ -18,7 +20,9 @@ router.post('/appointments/deleteAppointment', deleteAppointment);
 router.post('/appointments/confirmAppointment', confirmAppointment);
 router.get('/clinicSessions',getClinicSessions);
 router.delete('/clinicSessionsd/deleteExpiredDocs',deleteExpiredDocs);
-router.get('/doctors',getDoctors);
+
+
+
 router.get('/rooms',getRooms);
 router.post('/deleteClinicSession', deleteClinicSession);
 router.get('/appointments',getAppointments);
