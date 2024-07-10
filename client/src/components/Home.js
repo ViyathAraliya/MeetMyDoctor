@@ -27,7 +27,7 @@ function Home(){
    <li><Link to="/manageDoctors">Manage Doctors</Link></li>
    <li><Link to="/rooms">Manage Rooms</Link></li>
    <li><Link to="/manageClinicSessions">Manage ClincSessions</Link></li>
-   <li><Link to="/storageMM">Manage Store</Link></li>
+   <li><Link to="/storage">Manage Store</Link></li>
    
     </>)
 }
