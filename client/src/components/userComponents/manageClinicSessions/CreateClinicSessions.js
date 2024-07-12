@@ -16,6 +16,7 @@ function CreateClinicSessions() {
     const [doctors, setDoctors] = useState(null);
     const [rooms, setRooms] = useState(null);
     const [clinicSessions, setClinicSessions] = useState(null);
+    
 
     //only difference between doctor and doctorDetail is timeSlots mapped to doctor
     const [doctorDetails, setDoctorDetails] = useState(null);
@@ -53,9 +54,19 @@ function CreateClinicSessions() {
 
     }, [])
 
-    useEffect(() => {if(clinicSessions!=null && rooms!=null && doctors!=null &&
-         clinicSessions.length!=0 && rooms.length!=0 && doctors.length!=0){
+   
 
+    useEffect(() => {if(clinicSessions!=null && 
+        clinicSessions.length!=0 &&
+        rooms!=null && doctors!=null &&
+          
+         rooms.length!=0 && doctors.length!=0){
+
+        createDoctorDetails();
+        createRoomDetails();
+    }
+
+    if(clinicSessions!=null && clinicSessions.length==0){
         createDoctorDetails();
         createRoomDetails();
     }
@@ -74,6 +85,7 @@ function CreateClinicSessions() {
             const res = await axios.get("http://localhost:8080/doctors");
             setDoctors(res.data);
             
+            
         } catch (error) {
             console.log(error);
             toast.error(error);
@@ -83,8 +95,8 @@ function CreateClinicSessions() {
     async function getRooms() {
         try {
             const res = await axios.get("http://localhost:8080/rooms")
-            setRooms(res.data);
-
+           setRooms(res.data);
+            
         } catch (error) {
             console.log(error);
             toast.error(error)
@@ -94,7 +106,11 @@ function CreateClinicSessions() {
     async function getClinicSessions() {
         try {
             const res = await axios.get("http://localhost:8080/clinicSessions")
-            setClinicSessions(res.data);
+            if(res.data==null){
+                setClinicSessions([]);
+            }else{
+            setClinicSessions(res.data);}
+            
         } catch (error) {
             console.log(error);
             toast.error(error);
