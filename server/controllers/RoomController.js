@@ -13,7 +13,7 @@ const Room = require("../models/Room");
 const addRoom = async (req, res) => {
     const { roomNumber } = req.body;
 
-  
+
     const roomDto = new RoomDto();
     roomDto.roomNumber = roomNumber;
 
@@ -23,6 +23,7 @@ const addRoom = async (req, res) => {
         return res.status(201).send(room);
 
     } catch (error) {
+        console.log(error)
         return res.status(400).send(error);
     }
 
@@ -60,16 +61,51 @@ const addClinicSessionToRoom = async (req, res) => {
     }
 
     // step 8 : adding clinicSesson to room
-    room.clinicSessions.push(clinicSession); 
+    room.clinicSessions.push(clinicSession);
 }
 
-const getRooms=async(req,res)=>{
-    try{
-        const rooms=await Room.find();
+const getRooms = async (req, res) => {
+    try {
+        const rooms = await Room.find();
         return res.status(200).send(rooms);
-    }catch(error){
+    } catch (error) {
         return res.status(500).send(error)
     }
 }
 
-module.exports = { addRoom, addClinicSessionToRoom,getRooms };
+const deleteRoom = async (req, res) => {
+    const id = req.params.id;
+    console.log(id)
+    try { console.log(1)
+        //step 1: retrive room 
+        const room = await Room.findById(id);
+        console.log(1)
+        //step 2: check if room is retrived
+        if (room == null) {
+            return res.status(404).json({ message: 'Room not found' });
+        }
+console.log(2)
+        //step 3: check for clinicSessions in room
+        const clinicSessions = room.clinicSessions;
+        if (clinicSessions != null && clinicSessions.length > 0) {
+            return res.status(409).json({
+                message: "Can't delete this room because there are clinic sessions" +
+                    +" registered with this room"
+            })
+        }
+
+        //step 4: delete room if all validations and dependencies are checked
+         await room.deleteOne();
+      
+            return res.status(204).json({ message: "succesfully deleted room" });
+       
+        // using id instead of directly calling room.deleted()  to validate
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: "an internal server error" });
+        
+    }
+}
+
+module.exports = { addRoom, addClinicSessionToRoom, getRooms, deleteRoom };

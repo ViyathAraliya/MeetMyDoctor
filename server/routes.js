@@ -1,6 +1,6 @@
 const express=require('express');
 const { getDoctors, addOrUpdateDoctor, deleteDoctor } = require('./controllers/DoctorController');
-const { addRoom, getRooms} = require('./controllers/RoomController');
+const { addRoom, getRooms, deleteRoom} = require('./controllers/RoomController');
 const { addClinicSession, getClinicSessions, deleteClinicSession, deleteExpiredDocs } = require('./controllers/ClinicSessionController');
 const {addAppointment,  getAppointments, deleteAppointment, confirmAppointment }= require('./controllers/AppointmentController');
 const { cleanUpInvalidDependacies } = require('./controllers/CollectionController');
@@ -13,6 +13,8 @@ router.delete('/doctor/delete/:id',deleteDoctor);
 
 
 router.post('/rooms',addRoom);
+router.delete('/room/delete/:id',deleteRoom);
+
 router.post('/clinicSessions', addClinicSession);
 
 router.post('/appointments', addAppointment);

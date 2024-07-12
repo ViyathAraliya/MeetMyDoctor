@@ -34,20 +34,21 @@ const addOrUpdateDoctor = async (req, res) => {
         });
     }
     try {
-        let doctor_new=null;
-        
-        if (update) {console.log(update)
-           doctor_new = await Doctor.findByIdAndUpdate(doctor._id, {
+        let doctor_new = null;
+
+        if (update) {
+            console.log(update)
+            doctor_new = await Doctor.findByIdAndUpdate(doctor._id, {
                 name, contactNumber, whatsapp, email,
                 specialization, educationAbbrivation, generalSlotDuration
             }, { new: true });
         } else {
-           doctor_new= await doctor.save();
+            doctor_new = await doctor.save();
         }
         res.status(201).send(doctor_new);
 
     } catch (error) {
-       
+
         res.status(400).send(error);
     }
 
@@ -63,18 +64,22 @@ const getDoctors = async (req, res) => {
     }
 }
 
-const deleteDoctor=async (req,res)=>{
-    const _id=req.params.id;
-    console.log(_id)
-    try{
-        const doctorHasClinicSessions=await ClinicSession.exists({doctorId:_id});
-        if(doctorHasClinicSessions){
+const deleteDoctor = async (req, res) => {
+    const _id = req.params.id;
+    
+    try {
+        const doctorHasClinicSessions = await ClinicSession.exists({ doctorId: _id });
+        if (doctorHasClinicSessions) {
             return res.status(409).send("Cant delete becuase doctor is already registered for a clinic session");
         }
-        const deletedDoctor=await Doctor.findByIdAndDelete({_id:_id});
-        return res.status(200).send("doctor deleted succesfullly");
+        const deletedDoctor = await Doctor.findByIdAndDelete({ _id: _id });
+        if (deletedDoctor != null) {
+            return res.status(200).send("doctor deleted succesfullly");
+        }
+        return res.status(400).send("couldnt delete doctor");
     }
-    catch(error){
+
+    catch (error) {
         console.log(error);
         return res.status(500).send(error);
     }
@@ -82,6 +87,8 @@ const deleteDoctor=async (req,res)=>{
 
 
 
+
+
 module.exports = {
-    getDoctors, addOrUpdateDoctor,deleteDoctor
+    getDoctors, addOrUpdateDoctor, deleteDoctor
 }
