@@ -13,10 +13,11 @@ const RoomSchema=new mongoose.Schema({
     clinicSessions:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CliniSession',
-        unique:true,
-        index:true
+        //unique:true,
+        index:true,
+        sparse:true
        
     }]
-})
+});
 
 module.exports=mongoose.model('Room',RoomSchema);
