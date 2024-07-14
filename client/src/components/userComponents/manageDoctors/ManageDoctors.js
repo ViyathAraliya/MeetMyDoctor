@@ -53,6 +53,7 @@ function ManageDoctors() {
             }
             const res = await axios.post("http://localhost:8080/doctors", data)
             console.log(res);
+            getDoctors();
         } catch (error) {
 
             console.log(error);
