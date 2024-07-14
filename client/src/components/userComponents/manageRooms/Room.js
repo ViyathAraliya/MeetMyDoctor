@@ -15,6 +15,7 @@ function Room() {
         try {
             const res = await axios.post("http://localhost:8080/rooms", data);
             console.log(res);
+            getRooms();
 
         } catch (error) {
             console.log(error.message);
@@ -35,6 +36,7 @@ function Room() {
         try {console.log(id)
             const res = await axios.delete(`http://localhost:8080/room/delete/${id}`);
             console.log(res);
+            getRooms();
         } catch (error) {
             console.log(error);
         }
