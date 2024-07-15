@@ -11,34 +11,28 @@ const router=express.Router();
 
 //authRoutes
 router.post('/auth/login',login);
-
-
-
-router.post('/doctors', addOrUpdateDoctor);
 router.get('/doctors',getDoctors);
-router.delete('/doctor/delete/:id',deleteDoctor);
-
-
-router.post('/rooms',addRoom);
-router.delete('/room/delete/:id',deleteRoom);
-
-router.post('/clinicSessions', addClinicSession);
-
-router.post('/appointments', addAppointment);
-router.post('/appointments/deleteAppointment', deleteAppointment);
-router.post('/appointments/confirmAppointment', confirmAppointment);
 router.get('/clinicSessions',getClinicSessions);
-router.delete('/clinicSessionsd/deleteExpiredDocs',deleteExpiredDocs);
-
-
-
 router.get('/rooms',getRooms);
-router.post('/deleteClinicSession', deleteClinicSession);
 router.get('/appointments',getAppointments);
 router.delete('/cleanUpInvalidDependencies',cleanUpInvalidDependacies);
 
 //middleware - applies to all routes below this line
 router.use(verifyJwtToken);
+
+router.post('/doctors', addOrUpdateDoctor);
+router.delete('/doctor/delete/:id',deleteDoctor);
+router.delete('/room/delete/:id',deleteRoom);
+router.post('/clinicSessions', addClinicSession);
+router.post('/rooms',addRoom);
+router.post('/deleteClinicSession', deleteClinicSession);
+router.post('/appointments', addAppointment);
+router.post('/appointments/deleteAppointment', deleteAppointment);
+router.post('/appointments/confirmAppointment', confirmAppointment);
+router.delete('/clinicSessionsd/deleteExpiredDocs',deleteExpiredDocs);
+
+
+
 
 
 module.exports=router;
