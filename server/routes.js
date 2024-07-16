@@ -6,6 +6,7 @@ const {addAppointment,  getAppointments, deleteAppointment, confirmAppointment }
 const { cleanUpInvalidDependacies } = require('./controllers/CollectionController');
 const { login } = require('./controllers/AuthController');
 const { verifyJwtToken } = require('./security/security');
+const { createUser, getUsers } = require('./controllers/UserController');
 
 const router=express.Router();
 
@@ -16,6 +17,10 @@ router.get('/clinicSessions',getClinicSessions);
 router.get('/rooms',getRooms);
 router.get('/appointments',getAppointments);
 router.delete('/cleanUpInvalidDependencies',cleanUpInvalidDependacies);
+
+
+router.post('/users',createUser);
+router.get('/users',getUsers)
 
 //middleware - applies to all routes below this line
 router.use(verifyJwtToken);
@@ -31,6 +36,9 @@ router.post('/appointments/deleteAppointment', deleteAppointment);
 router.post('/appointments/confirmAppointment', confirmAppointment);
 router.delete('/clinicSessionsd/deleteExpiredDocs',deleteExpiredDocs);
 
+
+router.post('/users',createUser);
+router.get('/users',getUsers)
 
 
 
