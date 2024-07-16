@@ -29,6 +29,7 @@ function Home(){
    <li><Link to="/rooms">Manage Rooms</Link></li>
    <li><Link to="/manageClinicSessions">Manage ClincSessions</Link></li>
    <li><Link to="/storage">Manage Store</Link></li>
+   <li><Link to="/users">Users</Link></li>
    
     </>)
 }

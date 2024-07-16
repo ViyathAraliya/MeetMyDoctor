@@ -14,6 +14,7 @@ import ManageClinicSessions from './components/userComponents/manageClinicSessio
 import DeleteClinicSessions from './components/userComponents/manageClinicSessions/DeleteClinicSessions';
 import StorageMM from './components/StorageMM';
 import ManageDoctors from './components/userComponents/manageDoctors/ManageDoctors';
+import Users from './components/userComponents/Users';
 
 
 
@@ -32,6 +33,7 @@ function App() {
   <Route path="/manageClinicSessions" element={<ManageClinicSessions/>}/>
   <Route path="/deleteClinicSessions" element={<DeleteClinicSessions/>}/>
   <Route path="/storage" element={<StorageMM/>}/>
+  <Route path="/users" element={<Users/>}/>
   </Routes>
   
   </BrowserRouter>
