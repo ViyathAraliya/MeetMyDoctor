@@ -20,8 +20,9 @@ import { AuthProvider } from './utils/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './utils/ProtectedRoute';
 import AppointmentHome from './components/AppointmentHome';
-import ViewClinicSessions from './components/view/ViewClinicSessions';
+import ViewClinicSessions from './components/viewCollections/ViewClinicSessions';
 import ClinicSessionsHome from './components/ClinicSessionsHome';
+import ViewAppointments from './components/viewCollections/ViewAppointments';
 
 
 
@@ -38,6 +39,7 @@ function App() {
           {/*unprotected*/}
           <Route path="/makeAppointment" element={<MakeAppointment />} />
           <Route path="/viewClinicSessions" element={<ViewClinicSessions/>} />
+          <Route path="/viewAppointments" element={<ViewAppointments/>}/>
           <Route path="/clinicSesssions" element={<ClinicSessionsHome/>}/>
 
           <Route path="/" element={<Home />} />
