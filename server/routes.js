@@ -17,30 +17,32 @@ router.get('/clinicSessions',getClinicSessions);
 router.get('/rooms',getRooms);
 router.get('/appointments',getAppointments);
 router.delete('/cleanUpInvalidDependencies',cleanUpInvalidDependacies);
+router.delete('/clinicSessionsd/deleteExpiredDocs',deleteExpiredDocs);
 
 
-router.post('/users',createUser);
-router.get('/users',getUsers)
 
-//middleware - applies to all routes below this line
-router.use(verifyJwtToken);
+router.get('/users',getUsers);
+
+
+router.post('/appointments', addAppointment);
+
+router.get('/users',getUsers);
+router.post('/clinicSessions', addClinicSession);
+
 
 router.post('/doctors', addOrUpdateDoctor);
 router.delete('/doctor/delete/:id',deleteDoctor);
 router.delete('/room/delete/:id',deleteRoom);
-router.post('/clinicSessions', addClinicSession);
-router.post('/rooms',addRoom);
-router.post('/deleteClinicSession', deleteClinicSession);
-router.post('/appointments', addAppointment);
 router.post('/appointments/deleteAppointment', deleteAppointment);
 router.post('/appointments/confirmAppointment', confirmAppointment);
-router.delete('/clinicSessionsd/deleteExpiredDocs',deleteExpiredDocs);
-
-
 router.post('/users',createUser);
-router.get('/users',getUsers)
+
+router.post('/rooms',addRoom);
+router.post('/deleteClinicSession', deleteClinicSession);
+router.post('/users',createUser);
 
 
-
+//middleware - applies to all routes below this line
+router.use(verifyJwtToken);
 
 module.exports=router;

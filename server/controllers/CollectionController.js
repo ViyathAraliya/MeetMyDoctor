@@ -1,7 +1,7 @@
 const Appointment = require("../models/Appointment");
 const ClinicSession = require("../models/ClinicSession");
 const Room = require("../models/Room");
-const { deleteClinicSession } = require("./ClinicSessionController");
+
 
 const cleanUpInvalidDependacies = async (req, res) => {
     try {
@@ -29,13 +29,14 @@ const cleanUpInvalidDependacies = async (req, res) => {
         }
 
         //step 2: {Required: ClinicSession, Dependent: Room.clinicSessions}
-        for (let i = 0; i < rooms.length; i++) {
+        for (let i = 0; i < rooms.length; i++) { 
             const room = rooms[i];
             let clinicSessionsInRoom = room.clinicSessions;
             for (let j = 0; j < clinicSessionsInRoom.length; j++) {
                 const clinicSessionIdInRoom = clinicSessionsInRoom[j]._id;
                 
                 let clinicSessionExists = await ClinicSession.exists({ _id: clinicSessionIdInRoom });
+                console.log("deleteing clini: ",clinicSessionExists)
                 if (!clinicSessionExists) {
                     clinicSessionsInRoom = clinicSessionsInRoom
                         .filter(clinicSession => clinicSession != clinicSessionIdInRoom);
@@ -69,6 +70,7 @@ const cleanUpInvalidDependacies = async (req, res) => {
         }
         return res.status(200).send("sucessfulyy cleared expired data");
     } catch (error) {
+        console.log(error)
         return res.status(500).send("internal server error");
     }
 
