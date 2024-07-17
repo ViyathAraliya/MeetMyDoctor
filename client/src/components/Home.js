@@ -22,7 +22,8 @@ function Home(){
 
     return(<>
     <label>Hello</label>
-   <li><Link to="/makeAppointment">Make an Appointment</Link></li> 
+    <li><Link to="/clinicSesssions">ClinicSessions</Link></li>
+   <li><Link to="/appointments">Appointments</Link></li> 
    <li><Link to="/manageAppointments">Manage Appointments</Link></li>
    <li><Link to="/createClinicSessions">Create Clinic Sessions</Link></li>
    <li><Link to="/manageDoctors">Manage Doctors</Link></li>

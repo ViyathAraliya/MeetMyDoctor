@@ -1,16 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from "../../utils/AuthContext";
+
 
 
 function MakeAppointment() {
     // fetched data
     const [clinicSessions, setClinicSessions] = useState(null);
     const [doctors, setDoctors] = useState(null);
-    const [rooms, setRooms] = useState([]);
+    const [rooms, setRooms] = useState([]);          
 
     // Created data
     const [clinicSessionDetails, setClinicSessionDetails] = useState([]);
@@ -173,6 +175,7 @@ function MakeAppointment() {
     // make appoinetment
 
     async function makeAppointment(rowId) {
+        
 
 
         const data = {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../../utils/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -25,7 +25,11 @@ function Login(){
         login(response.data);
 
         toast.success("Login Succesful");
+        console.log(response);
+    }).catch((error)=>{
+        toast.error("invalid credentials");
         console.log(error);
+
     });
 }
 
@@ -44,6 +48,8 @@ function Login(){
                 </div>
                 <button type="submit" className="btn btn-primary">Login</button>
             </form>
+
+            <Link to="/">Home</Link>
         </div>
     );
 

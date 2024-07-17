@@ -15,29 +15,49 @@ import DeleteClinicSessions from './components/userComponents/manageClinicSessio
 import StorageMM from './components/StorageMM';
 import ManageDoctors from './components/userComponents/manageDoctors/ManageDoctors';
 import Users from './components/userComponents/Users';
+import Login from './components/userComponents/Login';
+import { AuthProvider } from './utils/AuthContext';
+import { ToastContainer } from 'react-toastify';
+import ProtectedRoute from './utils/ProtectedRoute';
+import AppointmentHome from './components/AppointmentHome';
+import ViewClinicSessions from './components/view/ViewClinicSessions';
+import ClinicSessionsHome from './components/ClinicSessionsHome';
 
 
 
 function App() {
   return (
-<BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
 
-  <Routes>
-  <Route path="/" element={<Home/>}/>
-  <Route path="/makeAppointment" element={<MakeAppointment/>}/>
-  <Route path="/manageAppointments" element={<ManageAppointments/>}/>
-  <Route path="/createClinicSessions" element={<CreateClinicSessions/>}/>
-  <Route path="/manageDoctors" element={<ManageDoctors/>}/>
+        <Routes>
+          <Route element={<ProtectedRoute/>}>
 
-  <Route path="/rooms"  element={<Room/>}/>
-  <Route path="/manageClinicSessions" element={<ManageClinicSessions/>}/>
-  <Route path="/deleteClinicSessions" element={<DeleteClinicSessions/>}/>
-  <Route path="/storage" element={<StorageMM/>}/>
-  <Route path="/users" element={<Users/>}/>
-  </Routes>
-  
-  </BrowserRouter>
- 
+           </Route>
+
+          {/*unprotected*/}
+          <Route path="/makeAppointment" element={<MakeAppointment />} />
+          <Route path="/viewClinicSessions" element={<ViewClinicSessions/>} />
+          <Route path="/clinicSesssions" element={<ClinicSessionsHome/>}/>
+
+          <Route path="/" element={<Home />} />
+
+          <Route path="/appointments" element={<AppointmentHome/>}></Route>
+          <Route path="/manageAppointments" element={<ManageAppointments />} />
+          <Route path="/createClinicSessions" element={<CreateClinicSessions />} />
+          <Route path="/manageDoctors" element={<ManageDoctors />} />
+          <Route path="/rooms" element={<Room />} />
+          <Route path="/manageClinicSessions" element={<ManageClinicSessions />} />
+          <Route path="/deleteClinicSessions" element={<DeleteClinicSessions />} />
+          <Route path="/storage" element={<StorageMM />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+
+      </BrowserRouter>
+      <ToastContainer/>
+    </AuthProvider>
+
   );
 }
 
