@@ -2,6 +2,7 @@ const { default: mongoose, Mongoose } = require("mongoose");
 const ClinicSessionDto = require("../dtos/ClinicSessionDto");
 const ClinicSession = require("../models/ClinicSession");
 const Room = require("../models/Room");
+const Appointment = require("../models/Appointment");
 
 /**
  * 
@@ -197,7 +198,8 @@ const deleteExpiredDocs = async (req, res) => {console.log(7)
         //step 2: deleting appointments 
         for (let j = 0; j < appointements.length; j++) {
           const appointement = appointements[j];
-          const appointementDeleted = await appointement.findByIdAndDelete(appointement);
+          const appointmentObj=new Appointment();
+          const appointementDeleted = await appointmentObj.findByIdAndDelete(appointement._id);
           if (appointementDeleted == null) {
             haveExpiredDocs = true;
             haveExpiredUndeletedDocs = true;
