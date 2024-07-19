@@ -3,11 +3,12 @@ const {hashPassword}=require('../security/security');
 
 const createUser=async(req,res)=>{
   
-    const{name, email, password}=req.body;
+    const{name,admin, email, password}=req.body;
 
-    try{
+    try{console.log("kk",admin)
         const user=new User();
         user.name=name;
+        user.admin=admin;
         user.email=email;
         user.password=hashPassword(password.toString());
 
@@ -21,7 +22,7 @@ const createUser=async(req,res)=>{
     
 };
 
-const getUsers=async(res,req)=>{
+const getUsers=async(req,res)=>{
   try{
     const users=await User.find({});
     res.status(200).send(users);
