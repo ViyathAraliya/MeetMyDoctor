@@ -9,7 +9,7 @@ function Login(){
     const[password,setPassword]=useState('');
 
     const {login}=useAuth();
-    const navigate=useNavigate();
+ 
 
     const handleLogin=(e)=>{
         e.preventDefault();
