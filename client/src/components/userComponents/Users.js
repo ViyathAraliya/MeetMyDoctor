@@ -82,10 +82,10 @@ function Users() {
     return (<div className="users">
         <div className="currentUser_users">
             <label htmlFor="curentUser">current user</label>
-            <input id="currentUser" value={user.username}readOnly/>
+            <input id="currentUser" value={(user!=null)?user.username:""}readOnly/>
 
             <label htmlFor="email">email</label>
-            <input id="email" value={user.email}/>
+            <input id="email" value={(user!=null)?user.email:""} readOnly/>
         </div>
         <div className="createUser_users">
             <form onSubmit={createUser}>
