@@ -22,11 +22,12 @@ function Login(){
 
     axios.post("http://localhost:8080/auth/login",data)
     .then((response)=>{
-        login(response.data.token);
-        console.log("at login : ",response.data.token)
-
+        login(response.data);
+        console.log("response at login ",response.data)
+        
+      
         toast.success("Login Succesful");
-        console.log(response);
+
     }).catch((error)=>{
         toast.error("invalid credentials");
         console.log(error);

@@ -21,9 +21,13 @@ const login=async(req,res)=>{
             }
          
             const token=generateJwtToken(tokenPayload);
-            console.log(token); 
+            const loginDetails={
+                "email":user.email,
+                "id":user._id,
+                "jwtToken":token
+            }
 
-            res.status(200).send({token});
+            res.status(200).send({loginDetails});
         }else{
             res.status(401).send('Unauthorized');
         }

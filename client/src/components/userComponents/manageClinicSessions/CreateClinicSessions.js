@@ -227,10 +227,10 @@ function CreateClinicSessions() {
         setEndsAt(event.target.value);
     }
 
-const {isAuthenticated, jwtToken}=useAuth();
+const {isAuthenticated, loginDetails}=useAuth();
     async function createClinicSession() {
-
-        console.log("token clientL ",jwtToken);
+        const jwtToken=loginDetails.loginDetails.jwtToken;
+       
         const config={
             headers:{"authorization":`Bearer ${jwtToken}`
         

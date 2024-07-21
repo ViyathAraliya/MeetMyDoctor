@@ -2,36 +2,37 @@ import { createContext,useContext,useEffect,useState }  from "react";
 
 const AuthContext=createContext({
     isAutheticated: false,
-    jwtToken:null,
+    loginDetails:null,
     login:()=>{},
     logout:()=>{}
 });
 
 export const AuthProvider=({children})=>{
     const[isAuthenticated,setIsAuthenticated]=useState(false);
-    const[jwtToken, setJwtToken]=useState(null);
+    const[loginDetails, setLoginDetails]=useState(null);
 
     const login=(data)=>{
+        console.log(data.loginDetails)
         setIsAuthenticated(true);
-        setJwtToken(data);
-        localStorage.setItem("jwtToken",data);
+       setLoginDetails(data);
+        localStorage.setItem("loginDetails",data);
     }
 
     const logout=()=>{
         setIsAuthenticated(false);
-        setJwtToken(null);
-        localStorage.removeItem("jwtToken");
+        setLoginDetails(null);
+        localStorage.removeItem("loginDetails");
     }
 
     useEffect(()=>{
-        const token=localStorage.getItem("jwtToken");
-        if(token){
+        const login_Details=localStorage.getItem("loginDetails");
+        if(login_Details){
             setIsAuthenticated(true);
-            setJwtToken(token);
+            setLoginDetails(loginDetails);
         }
     },[])
 
-    return(<AuthContext.Provider value={{isAuthenticated,jwtToken,login, logout}}>
+    return(<AuthContext.Provider value={{isAuthenticated,loginDetails,login, logout}}>
         {children}
         </AuthContext.Provider>);
 }
