@@ -3,6 +3,7 @@ const {comparePassword, generateJwtToken}=require('../security/security');
 
 const login=async(req,res)=>{
     const{email,password}=req.body;
+    console.log(email, password)
 
     try{
         const user=await User.findOne({
@@ -18,8 +19,9 @@ const login=async(req,res)=>{
                 email: user.email,
                 id:user._id
             }
-
+         
             const token=generateJwtToken(tokenPayload);
+            console.log(token); 
 
             res.status(200).send({token});
         }else{

@@ -11,16 +11,21 @@ const generateJwtToken=(payload)=>{
 
 //middleware to validate JWT Token and process the request
 const verifyJwtToken=(req,res,next)=>{
-    let token=req.header['authorization'];
 
-    if(!token){
+  
+    let token=req.headers['authorization'];
+    console.log("authorization : ",token)
+
+    if(!token){  
         return res.status(401).send('Unauthorized');
     }
 
     token=token.replace('Bearer ','');
+    console.log("token : ",token)
 
     jwt.verify(token, secretKey,(err,user)=>{
         if(err){
+            console.log(err)
             return res.status(401).send('Unauthorized');
         }
 

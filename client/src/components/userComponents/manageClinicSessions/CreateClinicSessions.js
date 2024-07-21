@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
+import { useAuth } from "../../../utils/AuthContext";
 
 
 const getCurrentLocalDateTime = () => {
@@ -187,10 +188,10 @@ function CreateClinicSessions() {
                         break l3;
                     }
                 }
-console.log(1,"here")
+
                 // step 3: creating time slot string and adding to timeSlots
                 let timeSlot = clinicSessionDoc!=null?`from ${clinicSessionDoc.startsAt} to ${clinicSessionDoc.endsAt}`:`couldnt map clinic session's id to a  clinic session`
-                console.log(2,"here")
+               
                 timeSlots.push(timeSlot);
 
             }
@@ -226,8 +227,15 @@ console.log(1,"here")
         setEndsAt(event.target.value);
     }
 
-
+const {isAuthenticated, jwtToken}=useAuth();
     async function createClinicSession() {
+
+        console.log("token clientL ",jwtToken);
+        const config={
+            headers:{"authorization":`Bearer ${jwtToken}`
+        
+        }
+        }
         if (doctorId == null || roomId == null) {
             return console.log("please select a doctor and a room");
         }
@@ -239,9 +247,10 @@ console.log(1,"here")
             "endsAt": endsAt,
             "roomId": roomId
         }
-        try {
-            const res = await axios.post("http://localhost:8080/clinicSessions", data);
-            console.log(res.data);
+        try {if(isAuthenticated){
+            const res = await axios.post("http://localhost:8080/clinicSessions", data,config);
+            console.log(res.data);}
+            else{console.log("not auhhenticated")}
             
         } catch (error) {
             console.log(error.response.data);

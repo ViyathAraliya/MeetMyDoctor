@@ -33,7 +33,7 @@ function App() {
 
         <Routes>
           <Route element={<ProtectedRoute/>}>
-
+          <Route path="/createClinicSessions" element={<CreateClinicSessions />} />
            </Route>
 
           {/*unprotected*/}
@@ -46,7 +46,7 @@ function App() {
 
           <Route path="/appointments" element={<AppointmentHome/>}></Route>
           <Route path="/manageAppointments" element={<ManageAppointments />} />
-          <Route path="/createClinicSessions" element={<CreateClinicSessions />} />
+        
           <Route path="/manageDoctors" element={<ManageDoctors />} />
           <Route path="/rooms" element={<Room />} />
           <Route path="/manageClinicSessions" element={<ManageClinicSessions />} />

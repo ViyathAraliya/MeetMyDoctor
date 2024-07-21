@@ -27,7 +27,7 @@ router.get('/users',getUsers);
 router.post('/appointments', addAppointment);
 
 router.get('/users',getUsers);
-router.post('/clinicSessions', addClinicSession);
+
 
 
 router.post('/doctors', addOrUpdateDoctor);
@@ -44,5 +44,6 @@ router.post('/users',createUser);
 
 //middleware - applies to all routes below this line
 router.use(verifyJwtToken);
+router.post('/clinicSessions', addClinicSession);
 
 module.exports=router;
