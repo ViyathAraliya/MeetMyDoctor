@@ -36,7 +36,7 @@ const cleanUpInvalidDependacies = async (req, res) => {
                 const clinicSessionIdInRoom = clinicSessionsInRoom[j]._id;
                 
                 let clinicSessionExists = await ClinicSession.exists({ _id: clinicSessionIdInRoom });
-                console.log("deleteing clini: ",clinicSessionExists)
+              
                 if (!clinicSessionExists) {
                     clinicSessionsInRoom = clinicSessionsInRoom
                         .filter(clinicSession => clinicSession != clinicSessionIdInRoom);
