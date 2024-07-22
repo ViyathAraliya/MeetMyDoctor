@@ -22,8 +22,10 @@ const login=async(req,res)=>{
          
             const token=generateJwtToken(tokenPayload);
             const loginDetails={
+                
                 "email":user.email,
                 "id":user._id,
+                "admin":user.admin,
                 "jwtToken":token
             }
 
