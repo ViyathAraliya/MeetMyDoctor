@@ -1,10 +1,10 @@
 const User=require('../models/User');
-const {comparePassword, generateJwtToken}=require('../security/security');
+const bcrypt = require('bcryptjs');
+const { generateJwtToken}=require('../security/security');
 
 const login=async(req,res)=>{
     const{email,password}=req.body;
-    console.log(email, password)
-
+   
     try{
         const user=await User.findOne({
             email:email
@@ -13,8 +13,10 @@ const login=async(req,res)=>{
         if(!user){
             return res.status(404).send('User not found');
         }
-
-        if(comparePassword(password.toString(),user.password)){
+console.log()
+        const isMatch =await bcrypt.compare(password, user.password);
+        if(isMatch){
+            console.log("compare okay")
             const tokenPayload={
                 email: user.email,
                 id:user._id
