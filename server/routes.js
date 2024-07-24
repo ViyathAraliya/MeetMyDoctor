@@ -6,7 +6,7 @@ const {addAppointment,  getAppointments, deleteAppointment, confirmAppointment }
 const { cleanUpInvalidDependacies } = require('./controllers/CollectionController');
 const { login } = require('./controllers/AuthController');
 const { verifyJwtToken } = require('./security/security');
-const { createUser, getUsers, deleteUser } = require('./controllers/UserController');
+const { createUser, getUsers, deleteUser, updateUser } = require('./controllers/UserController');
 
 const router=express.Router();
 
@@ -48,6 +48,7 @@ router.use(verifyJwtToken);
 router.post('/clinicSessions', addClinicSession);
 router.post('/users',createUser);
 router.delete('/users/:userId',deleteUser);
+router.put('/users',updateUser);
 
 
 module.exports=router;
