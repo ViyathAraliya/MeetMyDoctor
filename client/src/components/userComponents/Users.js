@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../utils/AuthContext';
+import { toast, ToastContainer } from 'react-toastify';
+import '../../styles/users.css'
 
 function Users() {
 
@@ -36,6 +38,7 @@ function Users() {
             setUsers(res.data);
             console.log(res);
         } catch (error) {
+            toast.error("An error occured while trying to fetch users. Check console for more details");
             console.log(error);
         }
         finally {
@@ -70,10 +73,12 @@ function Users() {
             const res = await axios.post("http://localhost:8080/users", data, config
 
             );
+            toast.success("User succesfully created")
             console.log(res);
 
         }
         catch (error) {
+            toast.error("An error occured while trying to save user. Check console for more details");
             console.log(error.response.data.message);
         } finally {
             setUsername(null);
@@ -101,8 +106,10 @@ function Users() {
         const url = `http://localhost:8080/users/${userId}?isAdmin=${isAdmin}`
         try {
             const res = await axios.delete(url, config);
+            toast.success("User succesfully deleted");
             console.log(res);
         } catch (error) {
+            toast.error("An error occured while trying to delete user")
             console.log(error.response.data.message);
         }
 
@@ -113,6 +120,7 @@ function Users() {
         if (loginDetails == null
              || loginDetails.loginDetails==null
         ) {
+            toast.error("Please login first");
             return console.log("please login first");
         }
         setEditUserDetails(!editUserDetails);
@@ -120,6 +128,7 @@ function Users() {
 
     async function updateUserDetails() {
         if (loginDetails == null || loginDetails.loginDetails==null) {
+            toast.error("please login first")
             return console.log("please login first");
         }
         let editedUsername=loginDetails.loginDetails.username;
@@ -134,14 +143,11 @@ function Users() {
         if (editedUsername== null || editedEmail == null || currentPassword == null || newPassword == null ||
             newPasswordConfirm == null
         ) {
-            console.log(
-                "1. ",editedUsername,"2. ",editedEmail,"3. ",currentPassword,
-                "4 .",newPassword,"5. ",newPasswordConfirm
-            )
-            return console.log("please fill all the fields")
+           toast.error("please fill all the fields");
+            return console.log("please fill all the fields");
         }
         if (newPassword != newPasswordConfirm) {
-
+            toast.error("new password and confirm new password don't match ");
             return console.log("new password and confirm new password don't match ");
         }
 
@@ -163,8 +169,10 @@ function Users() {
         };
         try {
             const res = await axios.put("http://localhost:8080/users", data, config);
+           toast.success("User details succesfully updated");
             console.log(res);
         } catch (error) {
+            toast.error("An error occured while tryin to update user");
             console.log(error);
         }
 
@@ -173,9 +181,9 @@ function Users() {
     }
 
 
-    return (<div className="users">
+    return (<><div className="users_container">
         <div className="editUserDetails_users">
-            <button onClick={editUserDetailsToggle}>Edit User details</button>{
+            <button onClick={editUserDetailsToggle}>Edit Current User details</button>{
                 editUserDetails && (<>
                     <label htmlFor="username_edit">username</label>
                     <input id="username_edit" placeholder={loginDetails.loginDetails.username }
@@ -241,7 +249,10 @@ function Users() {
                 }</tbody>
             </table>
         </div>
-    </div>)
+        <div><ToastContainer /></div>
+    </div>
+    
+    </>)
 }
 
 export default Users;

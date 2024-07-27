@@ -75,6 +75,7 @@ function MakeAppointment() {
 
         }
         catch (error) {
+            toast.error("An error occured while fetching clinic sessions. Check console for more details");
             console.log(error);
         }
 
@@ -91,6 +92,7 @@ function MakeAppointment() {
             setDoctors(res.data);
         }
         catch (error) {
+            toast.error("An error occured while fetching doctors. Check console for more details")
             console.log(error);
         }
 
@@ -105,6 +107,7 @@ function MakeAppointment() {
 
         }
         catch (error) {
+            toast.error("An error occured while fetching rooms. Check console for more details")
             console.log(error);
         }
     }
@@ -194,7 +197,9 @@ function MakeAppointment() {
                 toast.error(errorRes.data);
                 console.log(errorRes.data);
             }
-            else { console.log(errorRes) }
+            else {
+                toast.error("An error occured while saving the appointment. Check console for more details"); 
+                console.log(errorRes) }
 
         }
 
@@ -273,3 +278,4 @@ function MakeAppointment() {
     }
 
     export default MakeAppointment;
+    

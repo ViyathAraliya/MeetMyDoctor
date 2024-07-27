@@ -2,6 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "../../styles/viewClinicSessions.css"
+
 
 
 function ViewClinicSessions() {
@@ -13,7 +16,7 @@ function ViewClinicSessions() {
     // Created data
     const [clinicSessionDetails, setClinicSessionDetails] = useState([]);
 
-//returns a formated time String
+    //returns a formated time String
     const getTime = (time) => {
         if (time instanceof Date) {
 
@@ -59,6 +62,7 @@ function ViewClinicSessions() {
 
         }
         catch (error) {
+            toast.error("An error occured while fetching clinic sessions. Check console for more details");
             console.log(error);
         }
 
@@ -73,6 +77,7 @@ function ViewClinicSessions() {
             setDoctors(res.data);
         }
         catch (error) {
+            toast.error("An error occured while fetching doctors. Check console for more details");
             console.log(error);
         }
 
@@ -87,52 +92,58 @@ function ViewClinicSessions() {
 
         }
         catch (error) {
+            toast.error("An error occured while fetching rooms. Check console for more details");
             console.log(error);
         }
     }
     // function 3: create 'clinicDetails' array to display info in a table to be read by customer/patient
     function createClinicDetails() {
+        try {
 
 
-        const details = [];
+            const details = [];
 
-        // step 1 : access each clinic session 
-        for (let i = 0; i < clinicSessions.length; i++) {
+            // step 1 : access each clinic session 
+            for (let i = 0; i < clinicSessions.length; i++) {
 
-            let detail = {
-                "id": clinicSessions[i]._id,
-                "doctor": null,
-                "room": null,
-                "startsAt": getTime(new Date(clinicSessions[i].startsAt)),
-                "endsAt": getTime(new Date(clinicSessions[i].endsAt))
-            }
-            const doctorId_CS = clinicSessions[i].doctorId;
-            const roomId_CS = clinicSessions[i].roomId;
-
-            //step 2 : find and set doctor document to detail
-            l1: for (let j = 0; j < doctors.length; j++) {
-                const doctorId_D = doctors[j]._id;
-
-                if (doctorId_CS == doctorId_D) {
-                    detail.doctor = doctors[j];
-                    break l1;
+                let detail = {
+                    "id": clinicSessions[i]._id,
+                    "doctor": null,
+                    "room": null,
+                    "startsAt": getTime(new Date(clinicSessions[i].startsAt)),
+                    "endsAt": getTime(new Date(clinicSessions[i].endsAt))
                 }
-            }
+                const doctorId_CS = clinicSessions[i].doctorId;
+                const roomId_CS = clinicSessions[i].roomId;
 
-            //step 3 : find and set room document to detail
-            l2: for (let j = 0; j < rooms.length; j++) {
-                const roomId_R = rooms[j]._id;
+                //step 2 : find and set doctor document to detail
+                l1: for (let j = 0; j < doctors.length; j++) {
+                    const doctorId_D = doctors[j]._id;
 
-                if (roomId_CS == roomId_R) {
-                    detail.room = rooms[j];
-                    break l2;
+                    if (doctorId_CS == doctorId_D) {
+                        detail.doctor = doctors[j];
+                        break l1;
+                    }
                 }
+
+                //step 3 : find and set room document to detail
+                l2: for (let j = 0; j < rooms.length; j++) {
+                    const roomId_R = rooms[j]._id;
+
+                    if (roomId_CS == roomId_R) {
+                        detail.room = rooms[j];
+                        break l2;
+                    }
+                }
+                details.push(detail);
+
+
             }
-            details.push(detail);
-
-
+            setClinicSessionDetails(details);
+        } catch (error) {
+            toast.error("An error occured while mapping data. Check console for more details");
+            console.log(error);
         }
-        setClinicSessionDetails(details);
     }
 
 
@@ -141,50 +152,56 @@ function ViewClinicSessions() {
 
     return (
         <>
-            <div className="clinicSessionTable">
-                <h2>Clinic Sessions</h2>
+            <div className="viewClinicSessions-container">
+                <div className="clinicSessionTable-viewClinicSessions">
+                    <h2 style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white' }}>Clinic Sessions</h2>
 
-                <div className="clinic_details">
-                    <table className="table table-striped">
-                        <thead>
+                    <div className="clinic_details">
+                        <table className="table table-striped"
+                   >
+                            <thead>
 
-                            <tr>
+                                <tr>
 
-                                <th>doctor name</th>
-                                <th>specialization</th>
-                                <th>edcuation</th>
-                                <th>clinic starts At</th>
-                                <th>ends At</th>
-                                <th>room number</th>
+                                    <th>doctor name</th>
+                                    <th>specialization</th>
+                                    <th>edcuation</th>
+                                    <th>clinic starts At</th>
+                                    <th>ends At</th>
+                                    <th>room number</th>
 
-                            </tr>
-
-                        </thead>
-                        <tbody>
-                            {clinicSessionDetails && clinicSessionDetails.map(detail => (
-                                <tr key={detail.id}
-
-                                >
-                                    <td>{detail.doctor?detail.doctor.name:'npt found'}</td>
-                                    <td>{detail.doctor?detail.doctor.specialization:'not found'}</td>
-                                    <td>{detail.doctor?detail.doctor.educationAbbrivation:'not found'}</td>
-                                    <td>{detail.startsAt}</td>
-                                    <td>{detail.endsAt}</td>
-                                    <td>{detail.room?detail.room.roomNumber:'not found'}</td>
-
-                                    
                                 </tr>
 
+                            </thead>
+                            <tbody>
+                                {clinicSessionDetails && clinicSessionDetails.map(detail => (
+                                    <tr key={detail.id}
 
-                            ))}
-                        </tbody>
+                                    >
+                                        <td>{detail.doctor ? detail.doctor.name : 'npt found'}</td>
+                                        <td>{detail.doctor ? detail.doctor.specialization : 'not found'}</td>
+                                        <td>{detail.doctor ? detail.doctor.educationAbbrivation : 'not found'}</td>
+                                        <td>{detail.startsAt}</td>
+                                        <td>{detail.endsAt}</td>
+                                        <td>{detail.room ? detail.room.roomNumber : 'not found'}</td>
 
-                    </table>
+
+                                    </tr>
+
+
+                                ))}
+                            </tbody>
+
+                        </table>
+                    </div>
+
                 </div>
 
-            </div>
+              
+  <Link to="/" style={{ color: 'blue', textDecoration: 'none' }}>Home</Link>
 
-            <li><Link to="/">Home</Link></li>
+                <div><ToastContainer /></div>
+            </div>
 
         </>
     )

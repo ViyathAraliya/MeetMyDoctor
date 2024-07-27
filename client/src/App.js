@@ -10,7 +10,7 @@ import ManageAppointments from './components/userComponents/ManageAppointments';
 
 import Room from './components/userComponents/manageRooms/Room';
 import CreateClinicSessions from './components/userComponents/manageClinicSessions/CreateClinicSessions';
-import ManageClinicSessions from './components/userComponents/manageClinicSessions/ManageClinicSessions';
+
 import DeleteClinicSessions from './components/userComponents/manageClinicSessions/DeleteClinicSessions';
 import StorageMM from './components/StorageMM';
 import ManageDoctors from './components/userComponents/manageDoctors/ManageDoctors';
@@ -34,6 +34,11 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoute/>}>
           <Route path="/createClinicSessions" element={<CreateClinicSessions />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/deleteClinicSessions" element={<DeleteClinicSessions />} />
+          <Route path="/rooms" element={<Room />} />
+          <Route path="/manageAppointments" element={<ManageAppointments />} />
+          <Route path="/manageDoctors" element={<ManageDoctors />} />
            </Route>
 
           {/*unprotected*/}
@@ -45,14 +50,14 @@ function App() {
           <Route path="/" element={<Home />} />
 
           <Route path="/appointments" element={<AppointmentHome/>}></Route>
-          <Route path="/manageAppointments" element={<ManageAppointments />} />
+          
         
-          <Route path="/manageDoctors" element={<ManageDoctors />} />
-          <Route path="/rooms" element={<Room />} />
-          <Route path="/manageClinicSessions" element={<ManageClinicSessions />} />
-          <Route path="/deleteClinicSessions" element={<DeleteClinicSessions />} />
+      
+         
+          
+        
           <Route path="/storage" element={<StorageMM />} />
-          <Route path="/users" element={<Users />} />
+          
           <Route path="/login" element={<Login />} />
         </Routes>
 

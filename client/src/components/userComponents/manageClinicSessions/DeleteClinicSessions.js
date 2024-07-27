@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "../../../styles/clinicSessionTable.css"
 
 
 function DeleteClinicSessions() {
@@ -59,6 +61,7 @@ function DeleteClinicSessions() {
 
         }
         catch (error) {
+            toast.error("An error occured while fetching clinic Sessions. Check console for more details")
             console.log(error);
         }
 
@@ -73,6 +76,7 @@ function DeleteClinicSessions() {
             setDoctors(res.data);
         }
         catch (error) {
+            toast.error("An error occured while fetching doctors. Check console for more details")
             console.log(error);
         }
 
@@ -87,6 +91,7 @@ function DeleteClinicSessions() {
 
         }
         catch (error) {
+            toast.error("An error occured while fetching rooms. Check console for more details");
             console.log(error);
         }
     }
@@ -148,16 +153,26 @@ function DeleteClinicSessions() {
             const res = await axios.post("http://localhost:8080/deleteClinicSession", data);
             getClinicSessions();
             getRooms();
+            toast.success("Clinic session succesfully deleted");
             console.log(res)
         }
-        catch (error) { console.log(error); }
+        catch (error) { 
+            toast.error(error.response.data.message);
+            console.log(error.response.data.message); }
 
     }
 
     return (
         <>
             <div className="clinicSessionTable">
-                <h2>Clinic Sessions</h2>
+                <h2 style={{
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', 
+    color: '#ffffff',
+    padding: '10px', 
+    borderRadius: '4px',
+    textAlign: 'center',
+    marginBottom: '20px' 
+}}>Clinic Sessions</h2>
 
                 <div className="clinic_details">
                     <table className="table table-striped">
@@ -197,10 +212,20 @@ function DeleteClinicSessions() {
 
                     </table>
                 </div>
+                <li><Link to="/" style={{
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', 
+    color: '#ffffff',
+    padding: '10px', 
+    borderRadius: '4px',
+    textAlign: 'center',
+    marginBottom: '20px' 
+}}>Home</Link></li>
+
+            <div><ToastContainer /></div>
 
             </div>
 
-            <li><Link to="/">Home</Link></li>
+            
 
         </>
     )

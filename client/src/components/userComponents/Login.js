@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useAuth } from "../../utils/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import "../../styles/login.css"
 
 function Login(){
     const[username, setUsername]=useState('');
     const[password,setPassword]=useState('');
 
     const {login,logout}=useAuth();
+    const navigate = useNavigate();
  
 
     const handleLogin=(e)=>{
@@ -27,6 +29,9 @@ function Login(){
         
       
         toast.success("Login Succesful");
+        setTimeout(() => {
+            navigate("/");
+        }, 1000); 
 
     }).catch((error)=>{
         toast.error("invalid credentials");
@@ -41,23 +46,24 @@ const handleLogout=()=>{
 }
 
     return(
-        <div className="container">
-            <h1>Login Page</h1>
-            <form onSubmit={handleLogin}>
-                <div className="form-group">
+        <div className="login-container">
+            <h1>Login </h1>
+            <form className="login-form"onSubmit={handleLogin}>
+                <div className="login-from-email">
                     <label htmlFor="email">email</label>
                     <input type="text" className="form-controll" onChange={(e)=>setUsername(e.target.value)}/>
                 </div>
 
-                <div className="form=group">
+                <div className="login-form-password">
                     <label htmlFor="password">Password</label>
-                    <input type="passowrd" className="form-control" onChange={(e)=>setPassword(e.target.value)}/>
+                    <input type="passoword" className="form-control" onChange={(e)=>setPassword(e.target.value)}/>
                 </div>
                 <button type="submit" className="btn btn-primary">Login</button>
+                <button onClick={handleLogout} className="btn btn-primary">logout</button>
             </form>
-            <button onClick={handleLogout}>logout</button>
+         
 
-            <Link to="/">Home</Link>
+            <Link to="/" style={{ color: 'blue', textDecoration: 'none' }}>Home</Link>
         </div>
     );
 

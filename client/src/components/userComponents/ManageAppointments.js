@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { toast, ToastContainer } from "react-toastify";
+import "../../styles/manageAppointments.css"
+
 
 function ManageAppointments() {
     /** 
@@ -29,7 +32,7 @@ function ManageAppointments() {
 
     useEffect(() => {
         if (appointments != null && doctors != null && clinicSessions != null && rooms != null
-&& appointments.length!=0 && doctors.length!=0 && clinicSessions.length!=0 && rooms.length!=0
+            && appointments.length != 0 && doctors.length != 0 && clinicSessions.length != 0 && rooms.length != 0
         ) {
             createAppointmentDetails();
         }
@@ -41,6 +44,7 @@ function ManageAppointments() {
             const res = await axios.get("http://localhost:8080/appointments");
             setAppointments(res.data);
         } catch (error) {
+            toast.error("An error occured while fetching appointments. Check console for more details");
             console.log(error);
         }
     }
@@ -50,6 +54,7 @@ function ManageAppointments() {
             const res = await axios.get("http://localhost:8080/clinicSessions");
             setClinicSessions(res.data);
         } catch (error) {
+            toast.error("An error occured while fetching clinic sessions. Check console for more details");
             console.log(error);
         }
     }
@@ -59,6 +64,7 @@ function ManageAppointments() {
             setDoctors(res.data);
         }
         catch (error) {
+            toast.error("An error occured while fetching doctors. Check console for more details");
             console.log(error);
         }
     }
@@ -68,13 +74,14 @@ function ManageAppointments() {
             const res = await axios.get("http://localhost:8080/rooms");
             setRooms(res.data);
         } catch (error) {
+            toast.error("An error occured while fetching rooms. Check console for more details");
             console.log(error);
         }
     }
 
     //  for 'appointmentDetails' state
     async function createAppointmentDetails() {
-            console.log("create appintmnet details called");
+
         try {
             let appointmentDetails = [];
 
@@ -99,7 +106,7 @@ function ManageAppointments() {
                     if (clinicSessionId == clinicSessions[i]._id) {
 
                         clinicSession = clinicSessions[i];
-                     
+
                         break l2;
                     }
                 }
@@ -107,16 +114,16 @@ function ManageAppointments() {
                 //step 3:  find the doctor's name from 'doctors'and assisgn to 'doctorName' property in 'appointmentDetail'
                 const doctorId = clinicSession.doctorId;
                 l3: for (let i = 0; i < doctors.length; i++) {
-                  
+
                     if (doctorId == doctors[i]._id) {
                         appointmentDetail.doctorName = doctors[i].name;
-                    
+
                         break l3;
                     }
                 }
 
                 // step 4 : find the roomNumber from 'rooms' and assign to 'roomNumber' property in 'appointmentDetail' 
-                const roomId = clinicSession.roomId; 
+                const roomId = clinicSession.roomId;
                 l4: for (let i = 0; i < rooms.length; i++) {
                     if (roomId == rooms[i]._id) {
                         appointmentDetail.roomNumber = rooms[i].roomNumber;
@@ -135,7 +142,7 @@ function ManageAppointments() {
             console.log(appointmentDetails)
             setAppointmentDetails(appointmentDetails);
         } catch (error) {
-           
+            toast.error("An error occured while mapping data. Check console for more details");
             console.log(error)
         }
 
@@ -144,42 +151,45 @@ function ManageAppointments() {
     }
 
     //delete if status='DISCARD' , update id status('CONFIRMED')
-    async function deleteAppointment(appointmentId) {  console.log(1)
-       
+    async function deleteAppointment(appointmentId) {
+        console.log(1)
+
         try {
             const data = {
                 "appointmentId": appointmentId,
                 "status": 'DISCARD'
             }
 
-      
-         const  res = await axios.post("http://localhost:8080/appointments/deleteAppointment", data);
-         console.log(res);
-             getAppointments();
-   
+
+            const res = await axios.post("http://localhost:8080/appointments/deleteAppointment", data);
+            console.log(res);
+            getAppointments();
+
         } catch (error) {
-          
-            const response=error.response;
-            if(response!=null){
+
+            const response = error.response;
+            if (response != null) {
                 return console.log(response.data);
             }
-           return  console.log(error);
+            toast.error("An error occured while trying to delete appointment. Check console for more details");
+            return console.log(error);
         }
 
     }
 
-    const confirmAppointment=async(appointmnetId)=>{
-        try{
-            const data={
-                "appointmentId":appointmnetId,
-                "status":"CONFIRMED"
+    const confirmAppointment = async (appointmnetId) => {
+        try {
+            const data = {
+                "appointmentId": appointmnetId,
+                "status": "CONFIRMED"
             }
-           
-            const res=await axios.post("http://localhost:8080/appointments/confirmAppointment", data);
+
+            const res = await axios.post("http://localhost:8080/appointments/confirmAppointment", data);
             console.log(res);
             getAppointments();
 
-        }catch(error){
+        } catch (error) {
+            toast.error("An error occured while trying to confirm the appointment");
             return console.log(error);
         }
 
@@ -187,78 +197,82 @@ function ManageAppointments() {
 
 
 
-    return (<><h2>Appointments</h2>
-        <div className="unconfirmed appointments">
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>customer/patient name</th>
-                        <th>contact number</th>
-                        <th>doctor name</th>
-                        <th>room number</th>
-                        <th>Queue number</th>
-                        <th>clinic starts At</th>
-                        <th>clinic ends at </th>
-                        <th>status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {appointmentDetails && appointmentDetails.map(detail => (
-                        detail.appointment.status == 'NOT_CONFIRMED_YET' && (
-                            <tr key={detail.appointment._id}>
-                                <td>{detail.appointment.patientName}</td>
-                                <td>{detail.appointment.contactNo}</td>
-                                <td>{detail.doctorName}</td>
-                                <td>{detail.roomNumber}</td>
-                                <td>{detail.appointment.queueNumber}</td>
-                                <td>{detail.startsAt}</td>
-                                <td>{detail.endsAt}</td>
-                                <td>{detail.appointment.status}</td>
-                                <td><button className="btn btn-primary"
-                                    onClick={() => { deleteAppointment(detail.appointment._id ) }}>discard</button></td>
-                                <td><button className="btn btn-primary"
-                                    onClick={() => {confirmAppointment(detail.appointment._id) }}>confirm</button></td>
-                            </tr>)
-                    ))
+    return (<>
+        <div className="manageAppointments"><h2>Appointments</h2>
+            <div className="unconfirmed appointments">
+                <table className="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>customer/patient name</th>
+                            <th>contact number</th>
+                            <th>doctor name</th>
+                            <th>room number</th>
+                            <th>Queue number</th>
+                            <th>clinic starts At</th>
+                            <th>clinic ends at </th>
+                            <th>status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {appointmentDetails && appointmentDetails.map(detail => (
+                            detail.appointment.status == 'NOT_CONFIRMED_YET' && (
+                                <tr key={detail.appointment._id}>
+                                    <td>{detail.appointment.patientName}</td>
+                                    <td>{detail.appointment.contactNo}</td>
+                                    <td>{detail.doctorName}</td>
+                                    <td>{detail.roomNumber}</td>
+                                    <td>{detail.appointment.queueNumber}</td>
+                                    <td>{detail.startsAt}</td>
+                                    <td>{detail.endsAt}</td>
+                                    <td>{detail.appointment.status}</td>
+                                    <td><button className="btn btn-primary"
+                                        onClick={() => { deleteAppointment(detail.appointment._id) }}>discard</button></td>
+                                    <td><button className="btn btn-primary"
+                                        onClick={() => { confirmAppointment(detail.appointment._id) }}>confirm</button></td>
+                                </tr>)
+                        ))
 
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div className="confirmed appointments">
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>customer/patient name</th>
-                        <th>contact number</th>
-                        <th>doctor name</th>
-                        <th>room number</th>
-                        <th>Queue number</th>
-                        <th>clinic starts At</th>
-                        <th>clinic ends at </th>
-                        <th>status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {appointmentDetails && appointmentDetails.map(detail => (
-                        detail.appointment.status === 'CONFIRMED' && (
-                            <tr key={detail.appointment._id}>
-                                <td>{detail.appointment.patientName}</td>
-                                <td>{detail.appointment.contactNo}</td>
-                                <td>{detail.doctorName}</td>
-                                <td>{detail.roomNumber}</td>
-                                <td>{detail.appointment.queueNumber}</td>
-                                <td>{detail.startsAt}</td>
-                                <td>{detail.endsAt}</td>
-                                <td>{detail.appointment.status}</td>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div className="confirmed appointments">
+                <table className="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>customer/patient name</th>
+                            <th>contact number</th>
+                            <th>doctor name</th>
+                            <th>room number</th>
+                            <th>Queue number</th>
+                            <th>clinic starts At</th>
+                            <th>clinic ends at </th>
+                            <th>status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {appointmentDetails && appointmentDetails.map(detail => (
+                            detail.appointment.status === 'CONFIRMED' && (
+                                <tr key={detail.appointment._id}>
+                                    <td>{detail.appointment.patientName}</td>
+                                    <td>{detail.appointment.contactNo}</td>
+                                    <td>{detail.doctorName}</td>
+                                    <td>{detail.roomNumber}</td>
+                                    <td>{detail.appointment.queueNumber}</td>
+                                    <td>{detail.startsAt}</td>
+                                    <td>{detail.endsAt}</td>
+                                    <td>{detail.appointment.status}</td>
 
 
-                            </tr>)
-                    ))
+                                </tr>)
+                        ))
 
-                    }
-                </tbody>
-            </table>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div><ToastContainer /></div>
         </div>
     </>)
 }

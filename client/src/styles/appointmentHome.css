@@ -1,0 +1,41 @@
+
+.appointmentHome-container {
+    background: url('../assets/images/bg9.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 100vh; 
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+}
+.appointment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+    justify-content: center;
+    text-align: center;     
+    padding: 20px;          
+    border: 0px solid #ccc;
+    width: 300px;        
+    margin: 0 auto;       
+    height: 400px;   
+    background: rgba(0, 0, 0, 0.59); 
+    overflow: hidden;          }
+
+
+.appointment  li {
+    list-style-type: none; 
+    margin: 10px 0;        
+}
+
+.appointment  a {
+    text-decoration: none;  
+    color: #ffffff;        
+    font-size: 16px;        
+    font-weight: bold;      }
+
+    .appointment  a:hover {
+        color: #0056b3;         
+        background-color: #e9ecef; 
+        padding: 5px;      
+        border-radius: 4px;   
+    }

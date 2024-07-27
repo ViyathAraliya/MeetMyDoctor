@@ -1,0 +1,52 @@
+.manageAppointments {
+    background-image: url('../assets/images/bg2.jpg'); 
+    background-size: cover;
+    background-position: center; 
+    padding: 20px; 
+    color: #fff; 
+}
+
+.manageAppointments h2 {
+    color: #fff; 
+    margin-bottom: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse; 
+}
+
+.table th, .table td {
+    border: 1px solid #ddd; 
+    padding: 10px; 
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2; 
+}
+
+.table th {
+    background-color: #333; 
+    color: #fff; 
+}
+
+
+.btn-primary {
+    background-color: #007bff; 
+    color: #fff; 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; 
+}
+
+.ToastContainer {
+    position: fixed; 
+    bottom: 20px; 
+    right: 20px; 
+    z-index: 1000; 
+}

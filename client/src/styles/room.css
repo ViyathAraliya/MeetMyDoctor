@@ -1,0 +1,78 @@
+.room_container {
+    background-image: url('../assets/images/bg10.jpg');
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+    padding: 40px; 
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.room {
+    background-color: rgba(255, 255, 255, 0.9); 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+}
+
+
+.room label {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #333; 
+}
+
+
+.room input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    width: calc(100% - 20px); 
+    font-size: 16px;
+}
+
+.room button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.room button:hover {
+    background-color: #0056b3; 
+}
+
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table-grid th, .table-grid td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table-grid th {
+    background-color: #f4f4f4; 
+}
+
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}

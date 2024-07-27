@@ -1,0 +1,76 @@
+.viewClinicSessions-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: url('../assets/images/bg2.jpg') no-repeat center center;
+    background-size: cover; 
+    border-radius: 8px; 
+    margin: 20px;
+    min-height: 100vh; 
+}
+
+
+.clinicSessionTable-viewClinicSessions h2 {
+    font-size: 24px;
+    color: #ffffff; 
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.clinic_details {
+    width: 100%;
+    max-width: 1200px; 
+    overflow-x: auto; 
+    background: rgba(0, 0, 0, 0.7); 
+    border-radius: 8px; 
+    padding: 20px; 
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse; 
+    margin-bottom: 20px;
+}
+
+.table thead th {
+    background-color: #007bff; 
+    color: #ffffff; 
+    padding: 12px; 
+    text-align: left;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2; 
+}
+
+.table tbody tr:hover {
+    background-color: #e9ecef; 
+}
+
+.table td {
+    padding: 12px; 
+    border: 1px solid #ddd; 
+}
+
+.table th {
+    border: 1px solid #ddd;
+}
+
+
+.viewClinicSessions-container a {
+    text-decoration: none;
+    color: #007bff; 
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.viewClinicSessions-container a:hover {
+    color: #0056b3; 
+}
+
+.viewClinicSessions-container > div {
+    margin-top: 20px;
+}
+

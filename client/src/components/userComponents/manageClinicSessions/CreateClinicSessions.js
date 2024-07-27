@@ -2,8 +2,11 @@ import axios from "axios";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
-import { toast } from "react-toastify";
-import { useAuth } from "../../../utils/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
+import { useAuth } from "../../../utils/AuthContext"
+import "../../../styles/createClinicSession_manageClinicSessions.css"
+
+
 
 
 const getCurrentLocalDateTime = () => {
@@ -17,7 +20,7 @@ function CreateClinicSessions() {
     const [doctors, setDoctors] = useState(null);
     const [rooms, setRooms] = useState(null);
     const [clinicSessions, setClinicSessions] = useState(null);
-    
+
 
     //only difference between doctor and doctorDetail is timeSlots mapped to doctor
     const [doctorDetails, setDoctorDetails] = useState(null);
@@ -55,22 +58,23 @@ function CreateClinicSessions() {
 
     }, [])
 
-   
 
-    useEffect(() => {if(clinicSessions!=null && 
-        clinicSessions.length!=0 &&
-        rooms!=null && doctors!=null &&
-          
-         rooms.length!=0 && doctors.length!=0){
 
-        createDoctorDetails();
-        createRoomDetails();
-    }
+    useEffect(() => {
+        if (clinicSessions != null &&
+            clinicSessions.length != 0 &&
+            rooms != null && doctors != null &&
 
-    if(clinicSessions!=null && clinicSessions.length==0){
-        createDoctorDetails();
-        createRoomDetails();
-    }
+            rooms.length != 0 && doctors.length != 0) {
+
+            createDoctorDetails();
+            createRoomDetails();
+        }
+
+        if (clinicSessions != null && clinicSessions.length == 0) {
+            createDoctorDetails();
+            createRoomDetails();
+        }
 
     }, [doctors, rooms, clinicSessions])
 
@@ -85,36 +89,37 @@ function CreateClinicSessions() {
         try {
             const res = await axios.get("http://localhost:8080/doctors");
             setDoctors(res.data);
-            
-            
+
+
         } catch (error) {
             console.log(error);
-            toast.error(error);
+            toast.error("An error occured while fetching doctors. Check console for more details ");
         }
     }
 
     async function getRooms() {
         try {
             const res = await axios.get("http://localhost:8080/rooms")
-           setRooms(res.data);
-            
+            setRooms(res.data);
+
         } catch (error) {
             console.log(error);
-            toast.error(error)
+            toast.error("An error occured while fetching rooms. Check console for more details")
         }
     }
 
     async function getClinicSessions() {
         try {
             const res = await axios.get("http://localhost:8080/clinicSessions")
-            if(res.data==null){
+            if (res.data == null) {
                 setClinicSessions([]);
-            }else{
-            setClinicSessions(res.data);}
-            
+            } else {
+                setClinicSessions(res.data);
+            }
+
         } catch (error) {
             console.log(error);
-            toast.error(error);
+            toast.error("An error occured whole fetching clinic sessions. Check console for more details");
         }
     }
     function createDoctorDetails() {
@@ -122,8 +127,8 @@ function CreateClinicSessions() {
         let tDoctorDetails = [];
 
         // step 1 : access each doctor
-        
-       
+
+
         l1: for (let i = 0; i < doctors.length; i++) {
 
             let tDoctorDetail = {
@@ -134,9 +139,9 @@ function CreateClinicSessions() {
             tDoctorDetail.doctor = doctor;
 
             let timeSlots = [];
-          
+
             if (clinicSessions != null) {
-               
+
 
                 //step 2:  find clinic sessions of the doctor
                 for (let j = 0; j < clinicSessions.length; j++) {
@@ -160,48 +165,52 @@ function CreateClinicSessions() {
     }
 
     function createRoomDetails() {
-        let tRoomDetails = [];
+        try {
+            let tRoomDetails = [];
 
-        //step 1: accessing each room
-        if (rooms == null) { return; }
-        for (let i = 0; i < rooms.length; i++) {
-            let tRoomDetail = {
-                "room": null,
-                "timeSlots": null
-            }
-            const room = rooms[i];
-            tRoomDetail.room = room
-            const clinicSessionsOfRoom = room.clinicSessions;//'ClincSession' references in 'Room' 
+            //step 1: accessing each room
+            if (rooms == null) { return; }
+            for (let i = 0; i < rooms.length; i++) {
+                let tRoomDetail = {
+                    "room": null,
+                    "timeSlots": null
+                }
+                const room = rooms[i];
+                tRoomDetail.room = room
+                const clinicSessionsOfRoom = room.clinicSessions;//'ClincSession' references in 'Room' 
 
-            let timeSlots = [];
+                let timeSlots = [];
 
-            //step 2: finding clincSession documents from clinicSession references
-            for (let j = 0; j < clinicSessionsOfRoom.length; j++) {
+                //step 2: finding clincSession documents from clinicSession references
+                for (let j = 0; j < clinicSessionsOfRoom.length; j++) {
 
-                let clinicSessionDoc = null; 
-                l3: for (let k = 0; k < clinicSessions.length; k++) {
+                    let clinicSessionDoc = null;
+                    l3: for (let k = 0; k < clinicSessions.length; k++) {
 
-                    if (clinicSessions[k]._id == clinicSessionsOfRoom[j]) {
+                        if (clinicSessions[k]._id == clinicSessionsOfRoom[j]) {
 
-                        clinicSessionDoc = clinicSessions[k];
+                            clinicSessionDoc = clinicSessions[k];
 
-                        break l3;
+                            break l3;
+                        }
                     }
+
+                    // step 3: creating time slot string and adding to timeSlots
+                    let timeSlot = clinicSessionDoc != null ? `from ${clinicSessionDoc.startsAt} to ${clinicSessionDoc.endsAt}` : `couldnt map clinic session's id to a  clinic session`
+
+                    timeSlots.push(timeSlot);
+
                 }
 
-                // step 3: creating time slot string and adding to timeSlots
-                let timeSlot = clinicSessionDoc!=null?`from ${clinicSessionDoc.startsAt} to ${clinicSessionDoc.endsAt}`:`couldnt map clinic session's id to a  clinic session`
-               
-                timeSlots.push(timeSlot);
+                tRoomDetail.timeSlots = timeSlots;
+                tRoomDetails.push(tRoomDetail);
 
             }
 
-            tRoomDetail.timeSlots = timeSlots;
-            tRoomDetails.push(tRoomDetail);
-
+            setRoomDetails(tRoomDetails);
+        } catch (error) {
+            toast.error("An error occured while mapping data. Check console for more details");
         }
-
-        setRoomDetails(tRoomDetails);
 
     }
 
@@ -227,16 +236,18 @@ function CreateClinicSessions() {
         setEndsAt(event.target.value);
     }
 
-const {isAuthenticated, loginDetails}=useAuth();
+    const { isAuthenticated, loginDetails } = useAuth();
     async function createClinicSession() {
-        const jwtToken=loginDetails.loginDetails.jwtToken;
-       
-        const config={
-            headers:{"authorization":`Bearer ${jwtToken}`
-        
-        }
+        const jwtToken = loginDetails.loginDetails.jwtToken;
+
+        const config = {
+            headers: {
+                "authorization": `Bearer ${jwtToken}`
+
+            }
         }
         if (doctorId == null || roomId == null) {
+            toast.error("please select a doctor and a room")
             return console.log("please select a doctor and a room");
         }
 
@@ -247,22 +258,43 @@ const {isAuthenticated, loginDetails}=useAuth();
             "endsAt": endsAt,
             "roomId": roomId
         }
-        try {if(isAuthenticated){
-            const res = await axios.post("http://localhost:8080/clinicSessions", data,config);
-            console.log(res.data);}
-            else{console.log("not auhhenticated")}
-            
+        try {
+            if (isAuthenticated) {
+                const res = await axios.post("http://localhost:8080/clinicSessions", data, config);
+                toast.success("Clinic session succesfully created");
+                console.log(res.data);
+            }
+            else {
+                toast.error("not authenticated. Please login")
+                console.log("not auhhenticated")
+            }
+
         } catch (error) {
+            toast.error(error.response.data);
             console.log(error.response.data);
         }
     }
 
     return (<>
         <div className="createClinicSession_manageClinicSessions">
-            <h2>Create Clinic Session</h2>
+            <h1 style={{
+                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                color: '#ffffff',
+                padding: '10px',
+                borderRadius: '4px',
+                textAlign: 'center',
+                marginBottom: '20px'
+            }}>Create Clinic Session</h1>
             <div className="doctors_manageClinicSessions">
 
-                <h3>Select Doctor</h3>
+                <h3 style={{
+                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    color: '#ffffff',
+                    padding: '10px',
+                    borderRadius: '4px',
+                    textAlign: 'center',
+                    marginBottom: '20px'
+                }}>Select Doctor</h3>
                 <table className="table table-striped_manageClinicSessions">
                     <thead>
                         <tr>
@@ -291,7 +323,7 @@ const {isAuthenticated, loginDetails}=useAuth();
                                         detail.timeSlots && detail.timeSlots.map(timeSlot => (
                                             <div key={timeSlot}><li>{timeSlot}</li></div>
                                         ))
-                                    }<button className="btn btn-primary"  onClick={() => toggleShowTimeSlots_doctor(false)} >minimize</button>
+                                    }<button className="btn btn-primary" onClick={() => toggleShowTimeSlots_doctor(false)} >minimize</button>
                                     </ul>) :
                                     (<button className="btn btn-primary" onClick={() => toggleShowTimeSlots_doctor(true, detail.doctor._id)}>show time slots</button>)}
                                 </td>
@@ -308,7 +340,14 @@ const {isAuthenticated, loginDetails}=useAuth();
 
             <div className="rooms_manageClinicSessions">
 
-                <h3>Select room</h3>
+                <h3 style={{
+                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    color: '#ffffff',
+                    padding: '10px',
+                    borderRadius: '4px',
+                    textAlign: 'center',
+                    marginBottom: '20px'
+                }}>Select room</h3>
                 <table className="table table-striped_manageClinicSessions">
                     <thead>
                         <tr>
@@ -372,9 +411,11 @@ const {isAuthenticated, loginDetails}=useAuth();
                         onChange={handleDateTimeChange_endsAt} />
                 </div>
                 <br></br>
-                <button  className="btn btn-primary" onClick={createClinicSession}>Create Clinic Session</button>
+                <button className="btn btn-primary" onClick={createClinicSession}>Create Clinic Session</button>
             </div>
+            <div><ToastContainer /></div>
         </div>
+
 
 
     </>)

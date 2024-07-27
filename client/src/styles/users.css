@@ -1,0 +1,84 @@
+.users_container {
+    background-image: url('../assets/images/bg11.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    padding: 40px; 
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.editUserDetails_users, .createUser_users, .updateUser_users {
+    background-color: rgba(255, 255, 255, 0.8); 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+
+.users_container button {
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.users_container button:hover {
+    background-color: #0056b3; 
+}
+
+
+.users_container label {
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.users_container input, .users_container select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    width: 100%; 
+    font-size: 16px;
+}
+
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table-grid th, .table-grid td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.table-grid th {
+    background-color: #f4f4f4; 
+}
+
+
+.updateUser_users h2 {
+    color: #333; 
+    margin-bottom: 20px;
+}
+
+ */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}

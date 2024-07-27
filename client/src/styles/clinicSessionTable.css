@@ -1,0 +1,90 @@
+.clinicSessionTable {
+    padding: 20px;
+    background: url('../assets/images/bg6.jpg') no-repeat center center;
+    background-size: cover; /* Ensure the background image covers the entire container */
+    border-radius: 8px; /* Rounded corners for the container */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow for better depth */
+    color: #ffffff; /* Default text color to contrast with the background */
+    min-height: 100vh; /* Ensure the table takes up at least the full viewport height */
+    margin: 0 auto; /* Center the container horizontally */
+    width: 90%; /* Optional: Adjust width to fit within the viewport */
+    max-width: 1200px; /* Optional: Set a maximum width */
+}
+
+/* Heading Styling */
+.clinicSessionTable h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #ffffff; /* White color for the heading to stand out */
+    text-align: center; /* Center-align heading text */
+}
+
+/* Clinic Details Section */
+.clinic_details {
+    margin-top: 20px;
+}
+
+/* Table Styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table-striped {
+    border: 1px solid #ddd;
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background for better readability */
+}
+
+.table-striped th, 
+.table-striped td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-striped tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table-striped th {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Button Styling */
+.btn-primary {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 5px;
+    display: inline-block; /* Ensure button respects padding and margins */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Link Styling */
+a {
+    color: #ffffff; /* White color for links to contrast with background */
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline; /* Underline on hover */
+}
+
+/* List Styling */
+li {
+    list-style-type: none; /* Remove default list styling */
+    margin: 10px 0; /* Space around list items */
+}

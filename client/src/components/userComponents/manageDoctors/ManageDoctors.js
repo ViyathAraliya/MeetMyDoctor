@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
+import { toast, ToastContainer } from "react-toastify";
 
 function ManageDoctors() {
 
@@ -22,8 +23,7 @@ function ManageDoctors() {
     const [specialization_edit, setSpecialization_edit] = useState(null);
     const [educationAbbrivation_edit, setEducationAbbrivation_edit] = useState(null);
     const [generalSlotDuration_edit, setGeneralSlotDuration_edit] = useState(null);
-    const [doctor_edit, setDoctor_edit] = useState(null);
-
+  
 
 
     useEffect(() => {
@@ -36,6 +36,7 @@ function ManageDoctors() {
             setDoctors(res.data);
             console.log(res);
         } catch (error) {
+            toast.error("An error occured while fetching doctors. Check console for more details");
             console.log(error);
         }
     }
@@ -52,10 +53,11 @@ function ManageDoctors() {
                 "generalSlotDuration": generalSlotDuration
             }
             const res = await axios.post("http://localhost:8080/doctors", data)
+            toast.success("doctor succesfully saved");
             console.log(res);
             getDoctors();
         } catch (error) {
-
+            toast.error("An error occured while trying to save the doctor. Check console for more details");
             console.log(error);
         }
     }
@@ -86,9 +88,11 @@ function ManageDoctors() {
             }
             console.log(data);
             const res = await axios.post("http://localhost:8080/doctors", data)
+            toast.success("doctor details succesfully updated");
             console.log(res);
             setDoctorEditState(false);
         } catch (error) {
+            toast.error("An error occcured while trying to update doctor. Check console for more details");
             console.log(error);
             setDoctorEditState(true);
         }
@@ -98,9 +102,11 @@ function ManageDoctors() {
     async function deleteDoctor(_id){
         try{
             const res=await axios.delete(`http://localhost:8080/doctor/delete/${_id}`)
+            toast.success("doctor succesfully deleted");
             console.log(res);
             getDoctors();
         }catch(error){
+            toast.error("An error occured while trying to delete doctor. Check console for more details")
             console.log(error);
         }
     }
@@ -180,6 +186,8 @@ function ManageDoctors() {
             </table>
 
         </div>
+        <div><ToastContainer /></div>
+
     </>);
 
 }

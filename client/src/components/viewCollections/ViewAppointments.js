@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { toast, ToastContainer } from "react-toastify";
 
 function ViewAppointments() {
     /** 
@@ -41,6 +42,7 @@ function ViewAppointments() {
             const res = await axios.get("http://localhost:8080/appointments");
             setAppointments(res.data);
         } catch (error) {
+            toast.error("An error occured while fetching appointments. Check console for more details");
             console.log(error);
         }
     }
@@ -50,6 +52,7 @@ function ViewAppointments() {
             const res = await axios.get("http://localhost:8080/clinicSessions");
             setClinicSessions(res.data);
         } catch (error) {
+            toast.error("An error occured while fetching clinic sessions. Check console for more details");
             console.log(error);
         }
     }
@@ -59,6 +62,7 @@ function ViewAppointments() {
             setDoctors(res.data);
         }
         catch (error) {
+            toast.error("An error occured while fetching doctors. Check console for more details");
             console.log(error);
         }
     }
@@ -68,13 +72,14 @@ function ViewAppointments() {
             const res = await axios.get("http://localhost:8080/rooms");
             setRooms(res.data);
         } catch (error) {
+            toast.error("An error occured while fetching rooms. Check console for more details");
             console.log(error);
         }
     }
 
     //  for 'appointmentDetails' state
     async function createAppointmentDetails() {
-            console.log("create appintmnet details called");
+       
         try {
             let appointmentDetails = [];
 
@@ -135,7 +140,7 @@ function ViewAppointments() {
             console.log(appointmentDetails)
             setAppointmentDetails(appointmentDetails);
         } catch (error) {
-           
+           toast.error("An error occured while mapping data. Check console for more details");
             console.log(error)
         }
 
@@ -143,48 +148,7 @@ function ViewAppointments() {
 
     }
 
-    //delete if status='DISCARD' , update id status('CONFIRMED')
-    async function deleteAppointment(appointmentId) {  console.log(1)
-       
-        try {
-            const data = {
-                "appointmentId": appointmentId,
-                "status": 'DISCARD'
-            }
-
-      
-         const  res = await axios.post("http://localhost:8080/appointments/deleteAppointment", data);
-         console.log(res);
-             getAppointments();
-   
-        } catch (error) {
-          
-            const response=error.response;
-            if(response!=null){
-                return console.log(response.data);
-            }
-           return  console.log(error);
-        }
-
-    }
-
-    const confirmAppointment=async(appointmnetId)=>{
-        try{
-            const data={
-                "appointmentId":appointmnetId,
-                "status":"CONFIRMED"
-            }
-           
-            const res=await axios.post("http://localhost:8080/appointments/confirmAppointment", data);
-            console.log(res);
-            getAppointments();
-
-        }catch(error){
-            return console.log(error);
-        }
-
-    }
-
+    
 
 
     return (<><h2>Appointments</h2>
@@ -257,6 +221,7 @@ function ViewAppointments() {
                 </tbody>
             </table>
         </div>
+        <div><ToastContainer /></div>
     </>)
 }
 export default ViewAppointments;
