@@ -189,6 +189,7 @@ const deleteExpiredDocs = async (req, res) => {console.log(7)
     for (let i = 0; i < clinicSessions.length; i++) {
       const clinicSession = clinicSessions[i];
       const appointements = clinicSession.appointments;
+      
       if (clinicSession.endsAt <= new Date()) {
         const clinicSessionId = clinicSession._id;
         const clinicSessionDeleted = await clinicSession.deleteOne();
@@ -197,6 +198,9 @@ const deleteExpiredDocs = async (req, res) => {console.log(7)
         }
 
         //step 2: deleting appointments 
+        if(appointements==null || appointements.length==0){
+          return res.status(201).send("no expired appointments found");
+        }
         for (let j = 0; j < appointements.length; j++) {
           const appointement = appointements[j];
           const appointmentObj=new Appointment();
