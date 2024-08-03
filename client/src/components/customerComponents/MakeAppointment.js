@@ -5,6 +5,7 @@ import { Link, Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from "../../utils/AuthContext";
+import '../../styles/makeAppointment.css'
 
 
 
@@ -209,7 +210,8 @@ function MakeAppointment() {
 
         return (
             <>
-
+    <div className="makeAppointment_container">
+        <div className="makeAppointment-form">
                 <form >
                     <label htmlFor="name">Customer/Patient Name</label>
                     <input id="name" onChange={handlePatientName} />
@@ -225,6 +227,7 @@ function MakeAppointment() {
                     <br />
 
                 </form>
+                </div>
 
                 <div className="clinicSessionTable">
                     <h2>Clinic Sessions</h2>
@@ -272,7 +275,7 @@ function MakeAppointment() {
                 <div><ToastContainer /></div>
 
                 <li><Link to="/">Home</Link></li>
-
+</div>
             </>
         )
     }

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import { toast, ToastContainer } from "react-toastify";
+import "../../../styles/manageDoctors.css"
 
 function ManageDoctors() {
 
@@ -112,6 +113,7 @@ function ManageDoctors() {
     }
 
     return (<>
+    <div className="doctor_container">
         <div className="addNewDoctor">
             <label htmlFor="name" />name<label /><input id="name" onChange={(event) => setName(event.target.value)} />
             <br></br>
@@ -172,9 +174,9 @@ function ManageDoctors() {
                                 <td>{doctor.specialization}</td>
                                 <td>{doctor.educationAbbrivation}</td>
                                 <td>{doctor.generalSlotDuration}</td>
-                                <td><button onClick={() => toggleDoctorEditState(doctor)}>edit</button>
+                                <td><button onClick={() => toggleDoctorEditState(doctor)} className="btn btn-primary">edit</button>
                                 </td>
-                                <td><button onClick={()=>{deleteDoctor(doctor._id)}}>delete</button></td>
+                                <td><button onClick={()=>{deleteDoctor(doctor._id)}} className="btn btn-primary">delete</button></td>
                             </tr>
 
                         )
@@ -187,6 +189,7 @@ function ManageDoctors() {
 
         </div>
         <div><ToastContainer /></div>
+        </div>
 
     </>);
 

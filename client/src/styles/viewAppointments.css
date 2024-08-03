@@ -1,0 +1,61 @@
+.viewAppointments_container {
+    background: url('../assets/images/bg13.jpg') no-repeat center center fixed;
+    background-size: cover;
+    padding: 20px;
+    min-height: 100vh;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+
+.viewAppointments_container h2 {
+    text-align: center;
+    color: #f8f9fa;
+    margin-bottom: 20px;
+}
+
+
+.viewAppointments_container .appointments {
+    margin-bottom: 30px;
+}
+
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(0, 0, 0, 0.7); 
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+
+.table thead th {
+    background-color: #343a40;
+    color: #f8f9fa;
+    padding: 10px;
+    text-align: left;
+}
+
+
+.table tbody tr:nth-child(even) {
+    background-color: #495057;
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: #343a40;
+}
+
+
+.table td {
+    padding: 10px;
+    color: #f8f9fa;
+    border-bottom: 1px solid #495057;
+}
+
+
+.ToastContainer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050;
+}

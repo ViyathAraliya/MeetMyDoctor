@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "../styles/clinicSessionsHome.css"
 
+
 function ClinicSessionsHome() {
     return (
         <div className="clinicSessionsHome-container">

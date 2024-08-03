@@ -1,0 +1,93 @@
+.makeAppointment_container {
+    background-image: url('../assets/images/bg12.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+
+.makeAppointment-form {
+    background: rgba(255, 255, 255, 0.8); 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+
+.makeAppointment-form label {
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.makeAppointment-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; 
+}
+
+
+.clinicSessionTable {
+    background: rgba(255, 255, 255, 0.8); 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.clinicSessionTable .table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.clinicSessionTable thead th {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    text-align: left;
+}
+
+
+.clinicSessionTable tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+
+.clinicSessionTable td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+
+.clinicSessionTable .btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.clinicSessionTable .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+
+.ToastContainer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+li a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+li a:hover {
+    text-decoration: underline;
+}
